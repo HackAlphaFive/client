@@ -1,9 +1,12 @@
 // экран "Лента", только контентная зона, заглушка с картинкой
 import React from 'react';
 
+import styles from './HomePage.module.css';
+
 function HomePage() {
   return (
-    <div>HomePage</div>
+    <div className={styles.homepage}>
+  </div>
   )
 }
 

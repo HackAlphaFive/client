@@ -1,0 +1,18 @@
+@keyframes gradientFlow {
+  0% { background-position: 0% 0%; }
+  25% { background-position: 100% 100%; }
+  50% { background-position: 0% 100%; }
+  75% { background-position: 100% 0%; }
+  100% { background-position: 0% 0%; }
+}
+
+.homepage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #000;
+  background: linear-gradient(135deg, #a6c0fe, #f68084, #fccb90, #d57eeb); /* Нежные, но четкие цвета */
+  background-size: 300% 300%;
+  animation: gradientFlow 30s ease infinite;
+}

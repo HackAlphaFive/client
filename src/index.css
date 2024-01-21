@@ -1,5 +1,14 @@
+@import '@alfalab/core-components/vars/typography.css';
+
+:root {
+   --white-color: #fff;
+}
+
 body {
+  font-family: 'Roboto', sans-serif;
   width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .text_centered {
