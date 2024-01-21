@@ -1,15 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import styles from './Sidebar.module.css';
+import { Link } from '@alfalab/core-components/link';
 
-// Определение типа для одного элемента в массиве items
 export type SidebarItem = {
   href: string;
   text: string;
   target?: string;
 };
 
-// Определение типов для props компонента Sidebar
 export type SidebarProps = {
   items: SidebarItem[];
 };
@@ -21,13 +20,20 @@ const Sidebar = ({ items }: SidebarProps) => {
         <ul className={styles.sidebarList}>
           {items.map((item, index) => (
             <li key={index} className={styles.sidebarItem}>
-            <Link to={item.href}>{item.text}</Link>
-        </li>
-      ))}
-    </ul>
-  </nav>
-</aside>
-);
+              <Link
+                view='primary'
+                Component={RouterLink}
+                href={item.href}
+                underline={false}
+              >
+                {item.text}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  );
 };
 
 export default Sidebar;

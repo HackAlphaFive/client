@@ -1,7 +1,5 @@
-@import '@alfalab/core-components/vars/typography.css';
-
 :root {
-   --white-color: #fff;
+  --color-white: #fff;
 }
 
 body {
