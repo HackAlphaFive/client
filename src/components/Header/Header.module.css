@@ -1,0 +1,33 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1280px;
+  margin: 32px auto;
+}
+.searchInput {
+  width: 372px;
+  margin-right: 55px;
+}
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.logo {
+  margin-right: 5px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+}
+.alertButton:hover {
+  background-color: rgb(186, 187, 194);
+}
+.avatar {
+  margin-left: 24px;
+  background-color: red;
+  width: 42px;
+  height: 42px;
+}
