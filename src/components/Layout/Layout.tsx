@@ -3,11 +3,22 @@ import { Outlet } from 'react-router-dom';
 import Header from '../Header/Header';
 import Sidebar, { SidebarItem } from '../Sidebar/Sidebar';
 
+import homeIcon from '../../assets/sidebar-icons/home.png';
+import iprIcon from '../../assets/sidebar-icons/ipr.png';
+
 import styles from './Layout.module.css';
 
 const sidebarItems: SidebarItem[] = [
-  { href: '/', text: 'Главная' },
-  { href: '/ipr', text: 'Страница ИПР' }
+  {
+    href: '/',
+    text: 'Главная',
+    icon: homeIcon,
+  },
+  {
+    href: '/ipr',
+    text: 'Страница ИПР',
+    icon: iprIcon
+  },
 ];
 
 function Layout() {
