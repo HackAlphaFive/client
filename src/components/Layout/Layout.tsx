@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from '../Header/Header';
 import Sidebar, { SidebarItem } from '../Sidebar/Sidebar';
+import Footer from '../Footer/Footer';
 
 import homeIcon from '../../assets/sidebar-icons/home.png';
 import iprIcon from '../../assets/sidebar-icons/ipr.png';
@@ -21,18 +22,48 @@ const sidebarItems: SidebarItem[] = [
   },
 ];
 
+const footerItems: SidebarItem[] = [
+  {
+    href: '#',
+    text: 'Подвальчик',
+  },
+  {
+    href: '#',
+    text: 'Все о работе',
+  },
+  {
+    href: '#',
+    text: 'Подразделения',
+  },
+  {
+    href: '#',
+    text: 'Связь',
+  },
+  {
+    href: '#',
+    text: 'Подразделения',
+  },
+  {
+    href: '#',
+    text: 'Подразделения',
+  },
+];
+
 function Layout() {
   return (
       <div className={styles.layout}>
-        <header className={styles.header}>
+        <div className={styles.header}>
           <Header />
-        </header>
-        <aside className={styles.sidebar}>
+        </div>
+        <div className={styles.sidebar}>
           <Sidebar items={sidebarItems} />
-        </aside>
-        <main className={styles.main}>
+        </div>
+        <div className={styles.main}>
           <Outlet />
-        </main>
+        </div>
+        <div className={styles.footer}>
+          <Footer items={footerItems}/>
+        </div>
       </div>
   );
 }
