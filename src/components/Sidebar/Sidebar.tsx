@@ -1,9 +1,11 @@
 import React from 'react';
+
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import styles from './Sidebar.module.css';
 import { Link } from '@alfalab/core-components/link';
 import { NoShape } from '@alfalab/core-components/icon-view/no-shape';
+
 import {ReactComponent as ArrowIcon} from '../../assets/sidebar-icons/Arrow.svg';
+import styles from './Sidebar.module.css';
 
 export type SidebarItem = {
   href: string;
