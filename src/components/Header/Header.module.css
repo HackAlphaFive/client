@@ -10,11 +10,17 @@
   margin-right: 55px;
 }
 .navigation {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 28px;
 }
 .logo {
+  width: 144px;
+  height: 29px;
+  object-fit: contain;
+  position: relative;
+  top: 4px;
   margin-right: 5px;
 }
 
@@ -27,7 +33,61 @@
 }
 .avatar {
   margin-left: 24px;
-  background-color: red;
-  width: 42px;
-  height: 42px;
+  padding: 1px;
+  transition: transform 0.3s ease-in-out;
+}
+.avatar:hover {
+  transform: scale(1.2, 1.2);
+  cursor: pointer;
+}
+.popover{
+  border-radius: 5px;
+  padding: 5px;
+}
+.popoverList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.popoverItem{
+  padding: 5px;
+  border-bottom: 2px solid white;
+  transition: border-bottom 0.3s ease-in-out;
+}
+.popoverItem:nth-of-type(1){
+  margin-bottom: 5px;
+}
+.popoverItem:hover{
+  cursor: pointer;
+  border-bottom: 2px solid #353539;
+}
+.popoverMain{
+  margin: 5px;
+}
+.popoverHeader {
+  color: #353539;
+  margin: 0;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+.popoverText {
+  margin: 0;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  color: #babbc2;
+}
+.tooltipText {
+  width: 150px;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  color: #353539;
 }
