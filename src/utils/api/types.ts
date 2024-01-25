@@ -1,3 +1,9 @@
+export type TToken = {
+  accessToken: string;
+  refreshToken: string;
+  type: 'Bearer';
+};
+
 export type TCatcher<T> = (url: string, options: RequestInit, err: unknown) => Promise<T>;
 
 export type TResponseRefreshToken = {

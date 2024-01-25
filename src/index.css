@@ -1,5 +1,7 @@
 :root {
   --color-white: #fff;
+  --color-success: #17D055;
+  --color-failure: #F14539;
 }
 
 body {
@@ -7,10 +9,6 @@ body {
   width: 100%;
   margin: 0;
   padding: 0;
-}
-
-.text_centered {
-  text-align: center;
 }
 
 .elem_centered {
@@ -22,4 +20,60 @@ body {
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+
+
+/* ------- ТИПОГРАФИКА ------- */
+.text_color_main {
+  color: var(--Main-colors-Main-text, #353539);
+}
+
+.text_type_heading1 {
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 48px;
+  color: var(--Main-colors-Headline-text), #0B1F35;
+}
+
+.text_type_heading2 {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--Main-colors-Headline-text), #0B1F35;
+}
+
+.text_type_heading3 {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+  /* у данного стиля и стилей меньше размером цвет назначается через добавление класса text_color_main */
+}
+
+.text_type_large {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.text_type_middle {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.text_type_small {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.text_centered {
+  text-align: center;
 }
