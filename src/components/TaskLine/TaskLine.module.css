@@ -1,0 +1,86 @@
+.taskLine {
+  display: flex;
+  align-items: center;
+}
+.taskName {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+}
+.taskText {
+  margin: 0;
+  width: 593px;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: #353539;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.taskDate {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+  transition: opacity .3s ease-in-out;
+}
+.taskDate:hover{
+  cursor: pointer;
+  opacity: 0.6;
+}
+.textDate {
+  margin: 0;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  color: #353539;
+}
+.grey{
+  composes: textDate;
+  color: #797A7E;
+}
+.taskStatus {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 16px;
+}
+.textStatus {
+  margin: 0;
+  width: 110px;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: #353539;
+}
+.popoverList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.popover {
+  background: #EEEFF1;
+  border-radius: 0px 0px 6px 6px;
+  padding: 24px;
+}
+.popoverItem {
+  padding: 16px;
+  max-width: 116px;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  color: #353539;
+}
+.popoverItem:nth-of-type(2) {
+  color: #F14539;
+}

@@ -1,9 +1,12 @@
-import React from 'react';
+import React from "react";
+import TaskTable from "../../components/TaskTable/TaskTable";
 
 function IPRPage() {
   return (
-    <div>IPRPage</div>
-  )
+    <div>
+      <TaskTable />
+    </div>
+  );
 }
 
 export default IPRPage;
