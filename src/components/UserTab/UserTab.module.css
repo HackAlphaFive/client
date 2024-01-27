@@ -1,0 +1,29 @@
+.userTabContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+}
+
+.userTabTitle {
+  color: var(--Main-colors-Main-text, #353539);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+.userTabText {
+  color: var(--Main-colors-Tooltip-text, #BABBC2);
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0;
+  padding: 0;
+}

@@ -1,6 +1,7 @@
 .layout {
   display: grid;
-  grid-template-columns: 360px 1fr; /* Ширина сайдбара 360px и оставшееся пространство для контента */
+  column-gap: 24px;
+  grid-template-columns: 193px 1fr;
   grid-template-rows: auto 1fr auto; /* Высота шапки, содержимого и футера */
   height: 100vh; /* Полная высота вьюпорта */
   width: 100%;
