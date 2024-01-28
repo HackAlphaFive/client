@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { SelectDesktop } from '@alfalab/core-components/select/desktop';
 import { DimensionsListIcons, StatusList, StatusListRU } from '../../utils/types';
 import FilterDropDown from '../Icons/FilterDropDown/FilterDropDown';
 import { translateStatus } from '../../utils/utils';
 import { Radio } from '@alfalab/core-components/radio';
-import styles from './TabSortStatus.module.css';
+import styles from './TabFiltrStatus.module.css';
 import { Gap } from '@alfalab/core-components/gap';
 
 type TProps = {
@@ -12,7 +12,7 @@ type TProps = {
   mode?: 'ipr' | 'task';
 }
 
-function TabSortStatusIPR({popoverWidth = '206px', mode = 'ipr'} : TProps): JSX.Element {
+function TabFiltrStatus({popoverWidth = '206px', mode = 'ipr'} : TProps): JSX.Element {
   const options = [
     // content рисуется в инпуте при выборе данного пункта
     { key: '0', content: <div className={`${styles.item} text_color_main text_type_middle`}>Все статусы</div> },
@@ -24,9 +24,6 @@ function TabSortStatusIPR({popoverWidth = '206px', mode = 'ipr'} : TProps): JSX.
   ];
 
   const [selected, setSelected] = useState<StatusList | undefined>(undefined);
-  useEffect(() => console.log(selected));
-
-  const myRef = useRef<HTMLDivElement>();
 
   return (
     <SelectDesktop
@@ -72,4 +69,4 @@ function TabSortStatusIPR({popoverWidth = '206px', mode = 'ipr'} : TProps): JSX.
   )
 }
 
-export default TabSortStatusIPR;
+export default TabFiltrStatus;

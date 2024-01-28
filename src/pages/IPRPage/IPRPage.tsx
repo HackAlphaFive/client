@@ -1,10 +1,9 @@
 import React from 'react';
-import UserTab from '../../components/UserTab/UserTab';
 
 function IPRPage() {
   return (
-    <div>
-      <UserTab />
+    <div style={{width: '222px'}}>
+      <div>IPRPage</div>
     </div>
   )
 }
