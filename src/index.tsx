@@ -10,10 +10,12 @@ import { createRoot } from 'react-dom/client';
 const domNode = document.getElementById('root');
 const root = createRoot(domNode!);
 
+const BASENAME = process.env.NODE_ENV === 'development' ? "" : "/client";
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename={BASENAME}>
         <App />
       </BrowserRouter>
     </Provider>
