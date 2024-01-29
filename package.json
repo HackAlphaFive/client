@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://hackalphafive.github.io/client",
   "dependencies": {
     "@alfalab/core-components": "^44.5.1",
     "@redux-devtools/extension": "^3.3.0",
@@ -27,11 +28,14 @@
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^9.0.7",
+    "gh-pages": "^6.1.1",
     "typescript": "^4.9.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
