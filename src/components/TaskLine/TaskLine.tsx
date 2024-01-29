@@ -1,31 +1,148 @@
-import React, { FC, useState } from "react";
+import React, {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import styles from "./TaskLine.module.css";
+import Сomments from "../Сomments/Сomments";
 import { ChevronDownMIcon } from "@alfalab/icons-glyph/ChevronDownMIcon";
 import { CalendarMIcon } from "@alfalab/icons-glyph/CalendarMIcon";
 import { DotsThreeVerticalMIcon } from "@alfalab/icons-glyph/DotsThreeVerticalMIcon";
 import { Popover } from "@alfalab/core-components/popover";
 import { IconButton } from "@alfalab/core-components/icon-button";
 import { Calendar } from "@alfalab/core-components/calendar";
+import { Radio } from "@alfalab/core-components/radio";
+import { RadioGroup } from "@alfalab/core-components/radio-group";
+import { StatusListRU } from "../../utils/types";
 
 type TProps = {
   taskText: string;
   date?: string;
-  status: string;
+  status?: string;
+  uniqueId: string;
 };
 
-const TaskLine: FC<TProps> = ({ taskText, date, status }) => {
-  const [isOpenPopoverEdit, setisOpenPopoverEdit] = useState(false);
-  const [elemPopoverEdit, setElementPopoverEdit] =
-    useState<null | HTMLButtonElement>(null);
-  const [isOpenPopoverCalendar, setIsOpenPopoverCalendar] = useState(false);
-  const [elemPopoverCalendar, setElementPopoverCalendar] =
-    useState<null | HTMLDivElement>(null);
-  // const [value, setValue] = useState<number>();
+const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
+  const jobTitle: string = "directr";
+  //стейт для выбора статуса
+  const [value, setValue] = useState(status ? status : StatusListRU.NoStatus);
+  //стейт для открытия и закрытия поповера с удалением/редактированием
+  const [isOpenEdit, setOpenEdit] = useState(false);
+
+  //стейт для записи элемента к которму крепится поповер с удалением/редактированием
+  const [elemEdit, setElementEdit] = useState<null | HTMLButtonElement>(null);
+
+  //стейт для открытия и закрытия поповера с календарем
+  const [isOpenCalendar, setOpenCalendar] = useState(false);
+
+  //стейт для записи элемента к которму крепится поповер с календарем
+  const [elemCalendar, setElementCalendar] = useState<null | HTMLDivElement>(
+    null
+  );
+  //стейт для открытия и закрытия поповера со статусами
+  const [isOpenStatus, setOpenStatus] = useState(false);
+
+  //стейт для записи элемента к которму крепится поповер со статусами
+  const [elemStatus, setElementStatus] = useState<null | HTMLParagraphElement>(
+    null
+  );
+
+  //стейт для открытия и закрытия поповера с календарем
+  const [isOpenTask, setOpenTask] = useState(false);
+
+  //стейт для записи элемента к которму крепится поповер с календарем
+  const [elemTask, setElementTask] = useState<null | HTMLDivElement>(null);
+
+  //стейт для записи конечной даты
   const [from, setFrom] = useState<number>();
+
+  //стейт для записи начальной даты
   const [to, setTo] = useState<number>();
 
+  //Стей для даты старта, отправляемой не бэк
+  const [startDate, setStart] = useState<string>();
+
+  //Стей для даты окончания, отправляемой не бэк
+  const [endDate, setEnd] = useState<string>();
+
+  useEffect(() => {
+    //Функция закрытия поповеров при клике вне
+    const closePopover = (
+      e: MouseEvent,
+      popoverId: string,
+      buttonId: string,
+      typePopover: string
+    ) => {
+      const popover = document.getElementById(popoverId) as HTMLElement;
+      const button = document.getElementById(buttonId) as HTMLElement;
+      if (
+        !(
+          e.composedPath().includes(popover) ||
+          e.composedPath().includes(button)
+        )
+      ) {
+        typePopover === "edit"
+          ? setOpenEdit(false)
+          : typePopover === "calendar"
+          ? setOpenCalendar(false)
+          : setOpenStatus(false);
+      }
+    };
+
+    document.addEventListener("click", (e) =>
+      closePopover(e, uniqueId + "editPopover", uniqueId + "editButton", "edit")
+    );
+    document.addEventListener("click", (e) =>
+      closePopover(
+        e,
+        uniqueId + "calendarPopover",
+        uniqueId + "calendarButton",
+        "calendar"
+      )
+    );
+    document.addEventListener("click", (e) =>
+      closePopover(
+        e,
+        uniqueId + "statusPopover",
+        uniqueId + "statusButton",
+        "status"
+      )
+    );
+
+    return () => {
+      document.removeEventListener("click", (e) =>
+        closePopover(
+          e,
+          uniqueId + "editPopover",
+          uniqueId + "editButton",
+          "edit"
+        )
+      );
+      document.removeEventListener("click", (e) =>
+        closePopover(
+          e,
+          uniqueId + "calendarPopover",
+          uniqueId + "calendarButton",
+          "calendar"
+        )
+      );
+      document.removeEventListener("click", (e) =>
+      closePopover(
+        e,
+        uniqueId + "statusPopover",
+        uniqueId + "statusButton",
+        "status"
+      )
+    );
+    };
+  }, []);
+
   //Функция обработчик диапазона дат
-  const handlerCalendar = (e: number | undefined) => {
+  const handlerCalendar = (e?: number) => {
     if (!from) {
       setFrom(e);
     } else {
@@ -39,7 +156,7 @@ const TaskLine: FC<TProps> = ({ taskText, date, status }) => {
   };
 
   //Функция преобразовывает число из формата timestamp в ДД.ММ.ГГ
-  const getDateString = React.useCallback((date: Date) => {
+  const getDateString = useCallback((date: Date, format: string) => {
     if (!date) return "";
     const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
     const month =
@@ -48,94 +165,231 @@ const TaskLine: FC<TProps> = ({ taskText, date, status }) => {
         : date.getMonth() + 1;
     const year = date.getFullYear();
 
-    return `${day}.${month}.${year}`;
+    return format === "-"
+      ? `${year}-${month}-${day}`
+      : `${day}.${month}.${year}`;
   }, []);
 
   //Функция возвращает диапазон дат ввиде строки
-  const selectedRange = React.useMemo(() => {
+  const selectedRange = useMemo(() => {
     if (from && to) {
       const selectedFromDate = new Date(from);
       const selectedToDate = new Date(to);
-      return `${getDateString(selectedFromDate)} - ${getDateString(
-        selectedToDate
-      )}`;
+      if (from > to) {
+        setStart(getDateString(selectedToDate, "-"));
+        setEnd(getDateString(selectedFromDate, "-"));
+        console.log(`${startDate} - ${endDate}`);
+        return `${getDateString(selectedToDate, "")} - ${getDateString(
+          selectedFromDate,
+          ""
+        )}`;
+      } else {
+        setStart(getDateString(selectedFromDate, "-"));
+        setEnd(getDateString(selectedToDate, "-"));
+        return `${getDateString(selectedFromDate, "")} - ${getDateString(
+          selectedToDate,
+          ""
+        )}`;
+      }
     }
   }, [from, to]);
-  //Функция открывает поповер
-  const openPopoverCalendar = () => {
-    setIsOpenPopoverCalendar((isOpen) => !isOpen);
+
+  //Функция закрепления рефа за елементом
+  const handleUnique = useCallback(
+    <T,>(elem: T, state: Dispatch<SetStateAction<T | null>>) => {
+      state(elem);
+    },
+    []
+  );
+
+  //Функция открытия/закрытия попофера по клику на иконку
+  const openPopoverUnique = useCallback(
+    (state: Dispatch<SetStateAction<boolean>>) => {
+      state((isOpen) => !isOpen);
+    },
+    []
+  );
+
+  //Функция для проверки какой радиобокс выбран
+  const onChange = (
+    _: React.ChangeEvent<Element> | React.MouseEvent<Element, MouseEvent>,
+    payload: { value: string }
+  ) => {
+    setValue(payload.value);
+    setOpenStatus(false);
   };
-  //Функция определяет, к какому елементу закрепляется поповер
-  const handleCalendarRef = (node: HTMLDivElement) => {
-    setElementPopoverCalendar(node);
-  };
-  //Функция открывает поповер
-  const openPopoverEdit = () => {
-    setisOpenPopoverEdit((isOpen) => !isOpen);
-  };
-  //Функция определяет, к какому елементу закрепляется поповер
-  const handleEditRef = (node: HTMLButtonElement) => {
-    setElementPopoverEdit(node);
-  };
+
   return (
-    <div className={styles.taskLine}>
-      <div className={styles.taskName}>
-        <ChevronDownMIcon />
-        <p className={styles.taskText}>{taskText}</p>
-      </div>
+    <>
       <div
-        className={styles.taskDate}
-        onClick={openPopoverCalendar}
-        ref={handleCalendarRef}
+        className={styles.taskLine}
+        ref={(e: HTMLDivElement) =>
+          handleUnique<HTMLDivElement>(e, setElementTask)
+        }
       >
-        <CalendarMIcon className={(date) ? styles.textDate : styles.grey}/>
-        <p className={(date) ? styles.textDate : styles.grey}>{(from && to) ? selectedRange : date ? date : 'Укажите диапазон дат'}</p>
+        <div
+          onClick={() => openPopoverUnique(setOpenTask)}
+          className={styles.taskName}
+        >
+          <ChevronDownMIcon className={styles.downArrow} />
+          <p className={styles.taskText}>{taskText}</p>
+        </div>
+        <div
+          id={uniqueId + "calendarButton"}
+          className={
+            jobTitle === "director" ? styles.taskDate : styles.taskDateOff
+          }
+          onClick={
+            jobTitle === "director"
+              ? () => openPopoverUnique(setOpenCalendar)
+              : undefined
+          }
+          ref={(e: HTMLDivElement) =>
+            handleUnique<HTMLDivElement>(e, setElementCalendar)
+          }
+        >
+          <CalendarMIcon
+            className={
+              date
+                ? styles.textDate
+                : selectedRange
+                ? styles.textDate
+                : styles.grey
+            }
+          />
+          <p
+            className={
+              date
+                ? styles.textDate
+                : selectedRange
+                ? styles.textDate
+                : styles.grey
+            }
+          >
+            {from && to ? selectedRange : date ? date : "Укажите диапазон дат"}
+          </p>
+        </div>
+        <Popover
+          open={isOpenCalendar}
+          anchorElement={elemCalendar}
+          position="bottom"
+          preventFlip={true}
+          zIndex={41}
+          offset={[-70, 2]}
+        >
+          {" "}
+          <div id={uniqueId + "calendarPopover"}>
+            <Calendar
+              open={true}
+              showCurrentYearSelector={true}
+              selectedFrom={from}
+              selectedTo={to}
+              selectorView="month-only"
+              onChange={handlerCalendar}
+              rangeComplete={true}
+            />
+          </div>
+        </Popover>
+        <div className={styles.taskStatus}>
+          <p
+            className={
+              value === StatusListRU.Done
+                ? styles.textStatusGreen
+                : value === StatusListRU.NoStatus
+                ? styles.textStatusGrey
+                : styles.textStatus
+            }
+            ref={(e: HTMLParagraphElement) =>
+              handleUnique<HTMLParagraphElement>(e, setElementStatus)
+            }
+          >
+            {value}
+          </p>
+          {jobTitle === "director" ? (
+            <IconButton
+              className={styles.alertButton}
+              view="primary"
+              size={24}
+              icon={DotsThreeVerticalMIcon}
+              ref={(e: HTMLButtonElement) =>
+                handleUnique<HTMLButtonElement>(e, setElementEdit)
+              }
+              onClick={() => openPopoverUnique(setOpenEdit)}
+              id={uniqueId + "editButton"}
+            />
+          ) : (
+            <ChevronDownMIcon
+              id={uniqueId + "statusButton"}
+              onClick={() => openPopoverUnique(setOpenStatus)}
+              className={styles.downArrow}
+            />
+          )}
+        </div>
+        <Popover
+          open={isOpenEdit}
+          anchorElement={elemEdit}
+          position="bottom"
+          preventFlip={true}
+          zIndex={41}
+          popperClassName={styles.popoverEdit}
+          offset={[-70, 2]}
+        >
+          <ul id={uniqueId + "editPopover"} className={styles.popoverList}>
+            <li className={styles.popoverItem}>Редактировать</li>
+            <li className={styles.popoverItem}>Удалить</li>
+          </ul>
+        </Popover>
+        <Popover
+          open={isOpenStatus}
+          anchorElement={elemStatus}
+          position="bottom"
+          preventFlip={true}
+          zIndex={41}
+          popperClassName={styles.radioGroup}
+          offset={[20, 14]}
+        >
+          <div id={uniqueId + "statusPopover"}>
+            <RadioGroup
+              className={styles.radioContainer}
+              value={value}
+              onChange={onChange}
+            >
+              <Radio
+                size="m"
+                label={
+                  <p className={styles.radioText}>{StatusListRU.InProgress}</p>
+                }
+                block={true}
+                value={StatusListRU.InProgress}
+                checked={value === StatusListRU.InProgress}
+                circleClassName={styles.greyBg}
+              />
+              <Radio
+                size="m"
+                label={
+                  <p className={styles.radioTextGreen}>{StatusListRU.Done}</p>
+                }
+                block={true}
+                value={StatusListRU.Done}
+                checked={value === StatusListRU.Done}
+                contentClassName={styles.radioTextGreen}
+              />
+            </RadioGroup>
+          </div>
+        </Popover>
       </div>
       <Popover
-        open={isOpenPopoverCalendar}
-        anchorElement={elemPopoverCalendar}
+        open={isOpenTask}
+        anchorElement={elemTask}
+        useAnchorWidth={true}
         position="bottom"
         preventFlip={true}
         zIndex={40}
-        popperClassName={styles.calendar}
-        offset={[-70, 2]}
+        popperClassName={styles.popoverTask}
       >
-        <Calendar
-          open={true}
-          showCurrentYearSelector={true}
-          selectedFrom={from}
-          selectedTo={to}
-          selectorView="month-only"
-          onChange={handlerCalendar}
-          rangeComplete={true}
-        />
+        <Сomments />
       </Popover>
-      <div className={styles.taskStatus}>
-        <p className={styles.textStatus}>{status}</p>
-        <IconButton
-          className={styles.alertButton}
-          view="primary"
-          size={24}
-          icon={DotsThreeVerticalMIcon}
-          ref={handleEditRef}
-          onClick={openPopoverEdit}
-        />
-      </div>
-      <Popover
-        open={isOpenPopoverEdit}
-        anchorElement={elemPopoverEdit}
-        position="bottom"
-        preventFlip={true}
-        zIndex={40}
-        popperClassName={styles.popover}
-        offset={[-70, 2]}
-      >
-        <ul className={styles.popoverList}>
-          <li className={styles.popoverItem}>Редактировать</li>
-          <li className={styles.popoverItem}>Удалить</li>
-        </ul>
-      </Popover>
-    </div>
+    </>
   );
 };
 

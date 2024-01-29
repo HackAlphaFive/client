@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 
 import styles from "./Header.module.css";
 import logo from "../../images/logo.svg";
@@ -17,6 +17,31 @@ const Header: FC = () => {
   const [isOpen, setisOpen] = useState(false);
   const [isClose, setisClose] = useState<undefined | boolean>();
   const [elem, setElement] = useState<null | HTMLDivElement>(null);
+
+  useEffect(() => {
+    const closePopover = (e: MouseEvent) => {
+      const profileAvatar = document.getElementById(
+        "profileAvatar"
+      ) as HTMLElement;
+      const profilePopover = document.getElementById(
+        "profilePopover"
+      ) as HTMLElement;
+      if (
+        !(
+          e.composedPath().includes(profilePopover) ||
+          e.composedPath().includes(profileAvatar)
+        )
+      ) {
+        setisOpen(false);
+      }
+    };
+
+    document.addEventListener("click", closePopover);
+
+    return () => {
+      document.removeEventListener("click", closePopover);
+    };
+  }, []);
 
   const closeTooltip = () => {
     setisClose(false);
@@ -61,7 +86,7 @@ const Header: FC = () => {
           size={24}
           icon={BellMIcon}
         />
-        <div onClick={openPopover} ref={handleCircleRef}>
+        <div id="profileAvatar" onClick={openPopover} ref={handleCircleRef}>
           <Tooltip
             position="left"
             fallbackPlacements={["bottom"]}
@@ -72,7 +97,9 @@ const Header: FC = () => {
             offset={[2, -12]}
             zIndex={51}
             onOpenDelay={0}
-            content={<div className={styles.tooltip}>Выберите пользователя.</div>}
+            content={
+              <div className={styles.tooltip}>Выберите пользователя.</div>
+            }
           >
             <Circle className={styles.avatar} imageUrl={avatar} size={40} />
           </Tooltip>
@@ -86,7 +113,7 @@ const Header: FC = () => {
           popperClassName={styles.popover}
           offset={[-138, 2]}
         >
-          <ul className={styles.popoverList}>
+          <ul id="profilePopover" className={styles.popoverList}>
             <li className={styles.popoverItem}>
               <PureCell.Content>
                 <PureCell.Addon addonPadding="none" verticalAlign="center">
