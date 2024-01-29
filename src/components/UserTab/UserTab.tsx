@@ -1,24 +1,28 @@
-import React from 'react';
+import { FC } from 'react';
 import { Circle } from "@alfalab/core-components/icon-view/circle";
 import { PureCell } from "@alfalab/core-components/pure-cell";
 
-import avatar from "../../images/Avatar.png";
 import styles from './UserTab.module.css';
 
-type Props = {}
+type TProps = {
+  avatar: string,
+  username: string,
+  position: string,
+  cellExtraClassNameCell?: string,
+};
 
-const UserTab = (props: Props) => {
+const UserTab: FC<TProps> = ({ avatar, username, position, cellExtraClassNameCell }) => {
   return (
-    <PureCell>
+    <PureCell className={`${styles.cell} ${cellExtraClassNameCell}`}>
       <PureCell.Graphics verticalAlign='center'>
         <Circle imageUrl={avatar} size={64}/>
       </PureCell.Graphics>
-      <PureCell.Main className={styles.userTabContainer}>
-        <p className={styles.userTabTitle}>Имя Фамилия</p>
-        <p className={styles.userTabText}>Должность</p>
+      <PureCell.Main className={`${styles.textContainer}`}>
+        <p className={`text text_color_main text_type_middle text_ellipsis ${styles.text}`}>{username}</p>
+        <p className={`text text_color_tooltip text_type_small text_ellipsis ${styles.text}`}>{position}</p>
       </PureCell.Main>
     </PureCell>
     )
   }
 
-export default UserTab
+export default UserTab;
