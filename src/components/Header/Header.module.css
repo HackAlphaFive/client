@@ -42,12 +42,11 @@
 }
 .popover{
   border-radius: 5px;
-  padding: 5px;
 }
 .popoverList {
   list-style-type: none;
   margin: 0;
-  padding: 0;
+  padding: 5px;
 }
 .popoverItem{
   padding: 5px;
