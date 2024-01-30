@@ -1,0 +1,97 @@
+.iprRow {
+  display: flex;
+  align-items: center;
+  background: #FFF;
+  border-bottom: 1px solid #BABBC2;
+  height: 120px;
+  width: 100%;
+}
+
+.iprRowUserTab {
+  max-width: 385px;
+}
+
+.iprRowTitle {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  padding: 16px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  color: var(--Main-colors-Main-text, #353539);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+}
+
+.iprRowTitleEmpty {
+  color: var(--Main-colors-Secondary-text, #797A7E);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.iprRowDates{
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  height: 100%;
+  width: 222px;
+
+  color: var(--Main-colors-Main-text, #353539);
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 142.857% */
+}
+
+.calendarIcon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+}
+
+.iprRowStatus {
+  height: 100%;
+  width: 142px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+
+  color: var(--Main-colors-Main-text, #353539);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.iprRowStatusEmpty {
+  font-size: 14px;
+  line-height: 20px; /* 142.857% */
+}
+
+.iprRowBtn {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 56px;
+  cursor: pointer;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.iprRowBtnAdd {
+  background-color: var(--Main-colors-Black-main, #000);;
+}
+
+.chevronIcon {
+  width: 24px;
+  height: 24px;
+}
