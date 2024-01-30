@@ -2,6 +2,8 @@
   --color-white: #fff;
   --color-success: #17D055;
   --color-failure: #F14539;
+  --color-tooltip: #BABBC2;
+  --color-tooltip-dark: #797A7E;
 }
 
 body {
@@ -25,8 +27,17 @@ body {
 
 
 /* ------- ТИПОГРАФИКА ------- */
+.text {
+  margin: 0;
+  padding: 0;
+}
+
 .text_color_main {
   color: var(--Main-colors-Main-text, #353539);
+}
+
+.text_color_tooltip {
+  color: var(--Main-colors-Tooltip-text, var(--color-tooltip));
 }
 
 .text_type_heading1 {
@@ -34,7 +45,7 @@ body {
   font-style: normal;
   font-weight: 700;
   line-height: 48px;
-  color: var(--Main-colors-Headline-text), #0B1F35;
+  color: var(--Main-colors-Headline-text, #0B1F35);
 }
 
 .text_type_heading2 {
@@ -42,7 +53,7 @@ body {
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
-  color: var(--Main-colors-Headline-text), #0B1F35;
+  color: var(--Main-colors-Headline-text, #0B1F35);
 }
 
 .text_type_heading3 {
@@ -76,4 +87,10 @@ body {
 
 .text_centered {
   text-align: center;
+}
+
+.text_ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

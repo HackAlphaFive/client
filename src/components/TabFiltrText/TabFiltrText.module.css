@@ -1,0 +1,25 @@
+.magnifier {
+  /* цвет svg-шки возьмётся от данного родителя */
+  color: var(--color-tooltip-dark);
+  padding-top: 5px;
+}
+
+/* смена цвета для svg-шки */
+.magnifier svg path {
+  fill: currentColor;
+}
+
+.optionsList {
+  padding: 20px 12px 24px 12px;
+  box-sizing: border-box;
+  width: 385px;
+}
+
+.field {
+  width: 385px;
+}
+
+.cell {
+  box-sizing: border-box;
+  width: 320px;
+}
