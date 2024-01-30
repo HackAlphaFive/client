@@ -17,9 +17,9 @@ export enum StatusListRU {
 export type StatusListTask = Exclude<StatusList, StatusList.NoStatus>;
 
 export enum DimensionsListIcons {
-  xs = '12px',
-  s = '16px',
-  m = '20px',
-  l = '24px',
-  xl = '28px',
+  xs = 12,
+  s = 16,
+  m = 20,
+  l = 24,
+  xl = 28,
 }

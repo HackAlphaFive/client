@@ -31,7 +31,7 @@ const Sidebar = ({ items }: SidebarProps) => {
             Component={RouterLink}
             href={item.href}
             underline={false}
-            leftAddons={<NoShape imageUrl={item.icon} size={40}/>}
+            leftAddons={<NoShape imageUrl={item.icon} size={32}/>}
             className={styles.sidebarLink}
           >
             {item.text}
