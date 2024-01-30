@@ -4,7 +4,7 @@ import TaskTable from "../../components/TaskTable/TaskTable";
 function IPRPage() {
   return (
     <div>
-      <TaskTable />
+      IPRPage
     </div>
   );
 }

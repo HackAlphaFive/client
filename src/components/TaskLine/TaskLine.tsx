@@ -27,7 +27,7 @@ type TProps = {
 };
 
 const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
-  const jobTitle: string = "directr";
+  const jobTitle: string = "director";
   //стейт для выбора статуса
   const [value, setValue] = useState(status ? status : StatusListRU.NoStatus);
   //стейт для открытия и закрытия поповера с удалением/редактированием
@@ -70,12 +70,15 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
   const [endDate, setEnd] = useState<string>();
 
   useEffect(() => {
+    if (!isOpenCalendar && !isOpenEdit && !isOpenStatus && !isOpenTask) {
+      return;
+    }
     //Функция закрытия поповеров при клике вне
     const closePopover = (
       e: MouseEvent,
       popoverId: string,
       buttonId: string,
-      typePopover: string
+      state: React.Dispatch<React.SetStateAction<boolean>>
     ) => {
       const popover = document.getElementById(popoverId) as HTMLElement;
       const button = document.getElementById(buttonId) as HTMLElement;
@@ -85,61 +88,55 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
           e.composedPath().includes(button)
         )
       ) {
-        typePopover === "edit"
-          ? setOpenEdit(false)
-          : typePopover === "calendar"
-          ? setOpenCalendar(false)
-          : setOpenStatus(false);
+        state(false);
       }
     };
-
-    document.addEventListener("click", (e) =>
-      closePopover(e, uniqueId + "editPopover", uniqueId + "editButton", "edit")
-    );
-    document.addEventListener("click", (e) =>
+    //Ниже функции колбэки, чтобы снимать слушатель
+    const editCallback = (e: MouseEvent) => {
+      closePopover(
+        e,
+        uniqueId + "editPopover",
+        uniqueId + "editButton",
+        setOpenEdit
+      );
+    };
+    const calendarCallback = (e: MouseEvent) => {
       closePopover(
         e,
         uniqueId + "calendarPopover",
         uniqueId + "calendarButton",
-        "calendar"
-      )
-    );
-    document.addEventListener("click", (e) =>
+        setOpenCalendar
+      );
+    };
+    const statusCallback = (e: MouseEvent) => {
       closePopover(
         e,
         uniqueId + "statusPopover",
         uniqueId + "statusButton",
-        "status"
-      )
-    );
+        setOpenStatus
+      );
+    };
+    const taskCallback = (e: MouseEvent) => {
+      closePopover(
+        e,
+        uniqueId + "taskPopover",
+        uniqueId + "taskButton",
+        setOpenTask
+      );
+    };
+
+    isOpenEdit && document.addEventListener("click", editCallback);
+    isOpenCalendar && document.addEventListener("click", calendarCallback);
+    isOpenStatus && document.addEventListener("click", statusCallback);
+    isOpenTask && document.addEventListener("click", taskCallback);
 
     return () => {
-      document.removeEventListener("click", (e) =>
-        closePopover(
-          e,
-          uniqueId + "editPopover",
-          uniqueId + "editButton",
-          "edit"
-        )
-      );
-      document.removeEventListener("click", (e) =>
-        closePopover(
-          e,
-          uniqueId + "calendarPopover",
-          uniqueId + "calendarButton",
-          "calendar"
-        )
-      );
-      document.removeEventListener("click", (e) =>
-      closePopover(
-        e,
-        uniqueId + "statusPopover",
-        uniqueId + "statusButton",
-        "status"
-      )
-    );
+      document.removeEventListener("click", editCallback);
+      document.removeEventListener("click", calendarCallback);
+      document.removeEventListener("click", statusCallback);
+      document.removeEventListener("click", taskCallback);
     };
-  }, []);
+  }, [isOpenCalendar, isOpenEdit, isOpenStatus, isOpenTask]);
 
   //Функция обработчик диапазона дат
   const handlerCalendar = (e?: number) => {
@@ -228,10 +225,11 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
         }
       >
         <div
+          id={uniqueId + "taskButton"}
           onClick={() => openPopoverUnique(setOpenTask)}
           className={styles.taskName}
         >
-          <ChevronDownMIcon className={styles.downArrow} />
+          <ChevronDownMIcon className={styles.taskButton} />
           <p className={styles.taskText}>{taskText}</p>
         </div>
         <div
@@ -250,11 +248,7 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
         >
           <CalendarMIcon
             className={
-              date
-                ? styles.textDate
-                : selectedRange
-                ? styles.textDate
-                : styles.grey
+              date ? styles.black : selectedRange ? styles.black : styles.grey
             }
           />
           <p
@@ -263,7 +257,7 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
                 ? styles.textDate
                 : selectedRange
                 ? styles.textDate
-                : styles.grey
+                : styles.textDateGrey
             }
           >
             {from && to ? selectedRange : date ? date : "Укажите диапазон дат"}
@@ -305,9 +299,11 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
           >
             {value}
           </p>
+        </div>
+        <div className={styles.taskIcon}>
           {jobTitle === "director" ? (
             <IconButton
-              className={styles.alertButton}
+              className={styles.editButton}
               view="primary"
               size={24}
               icon={DotsThreeVerticalMIcon}
@@ -385,9 +381,10 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
         position="bottom"
         preventFlip={true}
         zIndex={40}
-        popperClassName={styles.popoverTask}
       >
-        <Сomments />
+        <div id={uniqueId + "taskPopover"} className={styles.popoverTask}>
+          <Сomments />
+        </div>
       </Popover>
     </>
   );

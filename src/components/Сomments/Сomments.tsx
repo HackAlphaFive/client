@@ -1,8 +1,9 @@
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import styles from "./Сomments.module.css";
 import { Input } from "@alfalab/core-components/input";
 import { Circle } from "@alfalab/core-components/icon-view/circle";
 import iconSubmit from "../../images/comments-button.svg";
+import iconSubmitDisabled from '../../images/comments-button-disabled.svg'
 import avatar from "../../images/Avatar.png";
 import Comment from "../Comment/Comment";
 
@@ -10,10 +11,10 @@ const Сomments: FC = () => {
   const commentData = {
     name: "Максим Благин",
     avatar: avatar,
-    date: "2 недели назад"
+    date: "2 недели назад",
   };
 
-  const [value, setValue] = useState<string>();
+  const [value, setValue] = useState<string>("");
   const [comm, setComment] = useState<
     Array<{
       name: string;
@@ -22,7 +23,19 @@ const Сomments: FC = () => {
       date: string;
     }>
   >([]);
+  console.log(value?.length === 0);
+  useEffect(() => {
+    document.addEventListener("keypress", sendOnEnter);
 
+    return () => document.removeEventListener("keypress", sendOnEnter);
+  });
+
+  //asdasd
+  const sendOnEnter = (e: KeyboardEvent) => {
+    if (e.code === "Enter" && (value?.length as number) > 0) {
+      handleInput();
+    }
+  };
   //Обработчик инпута ввода, который по клику на кнопку отправить, создает комментарий и помещает его в массив, после очищает инпут
   const handleInput = () => {
     const inputComment = document.getElementById("comment") as HTMLInputElement;
@@ -30,20 +43,25 @@ const Сomments: FC = () => {
       name: commentData.name,
       avatar: commentData.avatar,
       text: inputComment.value,
-      date: commentData.date
+      date: commentData.date,
     };
     const arr = [...comm];
-    arr.push(comment)
-    inputComment.value = "";
+    arr.push(comment);
     setComment(arr);
-    setValue('')
+    setValue("");
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setValue(value);
   };
 
   //Функция переворачивает очередность массива и перебирает его, создавая элементы комментарий
   const createComments = useMemo(() => {
-   return comm.reverse().map((item) => (<Comment comment={item} />))
-  },[comm])
-  console.log(comm)
+    return comm
+      .reverse()
+      .map((item, index) => <Comment key={index} comment={item} />);
+  }, [comm]);
 
   return (
     <div className={styles.commentsContainer}>
@@ -56,24 +74,19 @@ const Сomments: FC = () => {
           size="m"
           label="Введите комментарий"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={handleChange}
           fieldClassName={styles.field}
           inputClassName={styles.input}
           labelClassName={styles.label}
-          min={10}
-          max={250}
           id="comment"
         />
         <button
           className={styles.sendButton}
           type="button"
           onClick={handleInput}
+          disabled={value?.length === 0}
         >
-          <img
-            className={styles.sendIcon}
-            src={iconSubmit}
-            alt="Иконка отправки сообщения"
-          />
+          <img className={styles.sendIcon} src={value?.length === 0 ? iconSubmitDisabled : iconSubmit} alt="Иконка отправки комментария" />
         </button>
       </div>
     </div>

@@ -3,7 +3,6 @@ import TaskLine from "../../components/TaskLine/TaskLine";
 import styles from "./TaskTable.module.css";
 import { getUniqId } from "../../utils/utils";
 import { StatusListRU } from "../../utils/types";
-import TabSortStatusIPR from "../TabSortStatus/TabSortStatus";
 
 const TaskTable: FC = () => {
   const task = {
@@ -13,8 +12,6 @@ const TaskTable: FC = () => {
   };
 
   return (
-    <>
-      <TabSortStatusIPR mode="task" />
       <ul className={styles.tableList}>
         <li className={styles.tableItem}>
           <TaskLine
@@ -42,7 +39,6 @@ const TaskTable: FC = () => {
           />
         </li>
       </ul>
-    </>
   );
 };
 

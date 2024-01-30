@@ -7,13 +7,15 @@
   align-items: center;
   padding: 16px;
   gap: 12px;
+  transition: transform 0.3s ease-in-out;
 }
-.taskName:hover{
+.taskName:hover {
   cursor: pointer;
+  transform: scale(1.05, 1.05);
 }
 .taskText {
   margin: 0;
-  width: 593px;
+  width: 551px;
   font-family: Roboto;
   font-size: 16px;
   font-style: normal;
@@ -43,6 +45,7 @@
 }
 .textDate {
   margin: 0;
+  width: 154px;
   font-family: Roboto;
   font-size: 14px;
   font-style: normal;
@@ -50,7 +53,13 @@
   line-height: 20px;
   color: #353539;
 }
+.black {
+  color: #353539;
+}
 .grey {
+  color: #797a7e;
+}
+.textDateGrey {
   composes: textDate;
   color: #797a7e;
 }
@@ -58,7 +67,6 @@
   display: flex;
   align-items: center;
   padding: 16px;
-  gap: 16px;
 }
 .textStatus {
   margin: 0;
@@ -71,13 +79,7 @@
   color: #353539;
 }
 .textStatusGreen {
-  margin: 0;
-  width: 110px;
-  font-family: Roboto;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
+  composes: textStatus;
   color: #17d055;
 }
 .textStatusGrey {
@@ -108,6 +110,11 @@
   font-weight: 500;
   line-height: 24px;
   color: #353539;
+  transition: transform 0.3s ease-in-out;
+}
+.popoverItem:hover {
+  cursor: pointer;
+  transform: scale(1.1, 1.1);
 }
 .popoverItem:nth-of-type(2) {
   color: #f14539;
@@ -117,6 +124,8 @@
   height: 295px;
 }
 .downArrow {
+  padding: 16px;
+  margin-right: 24px;
   transition: transform 0.3s ease-in-out;
 }
 .downArrow:hover {
@@ -125,8 +134,6 @@
 }
 .popoverTask {
   padding: 56px;
-  border: 1px solid #d5d6dc;
-  box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.15);
 }
 .radioGroup {
   background: #eeeff1;
@@ -159,6 +166,11 @@
   line-height: 24px;
   color: #17d055;
 }
-.greyBg{
-   background-color: #797a7e;
+.greyBg {
+  background-color: #797a7e;
 }
+.editButton {
+  padding: 16px;
+  margin-left: 24px;
+}
+

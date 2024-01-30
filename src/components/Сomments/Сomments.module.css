@@ -17,6 +17,7 @@
 .field {
   width: 372px;
   height: 60px;
+  margin-bottom: 24px;
 }
 .input {
   padding-top: 24px;
@@ -27,13 +28,18 @@
 .bottom {
   display: flex;
   gap: 9px;
+  align-items: flex-start;
 }
 .sendButton {
   margin: 0;
-  padding: 0 26px;
+  padding: 20px 26px;
   border-radius: 12px;
-  border: 1px solid var(--Buttons-Stroke, #0e0e0e);
+  border: 1px solid #0e0e0e;
   background: #fff;
+}
+.sendButton:disabled {
+  background: #f8f8f8;
+  border: 1px solid #babbc2;
 }
 .sendButton:hover {
   cursor: pointer;
