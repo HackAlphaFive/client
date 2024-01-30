@@ -9,7 +9,6 @@
 
 .header {
   grid-column: 1 / -1; /* Шапка растягивается на весь широкий ряд */
-  height: 124px;
 }
 
 .sidebar {

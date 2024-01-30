@@ -17,11 +17,8 @@ function App(): JSX.Element {
 
         <Route path='/' element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path='ipr' element={<IPRPage />}>
-            <Route path='my' element={<div>MyIPRS</div>} />
-            <Route path='subordinates' element={<div>SubordinatesIPRS</div>} />
-            <Route path='*' element={<Navigate to={`/${nameFor404}`} />} />
-          </Route>
+          <Route path='ipr' element={<IPRPage />} />
+          <Route path='ipr/:id' element={<div>КАКОЙ-ТО КОНКРЕТНЫЙ ИПР</div>} />
           <Route path='*' element={<Navigate to={`/${nameFor404}`} />} />
         </Route>
         <Route path={nameFor404} element={<NotFound404Page />} />

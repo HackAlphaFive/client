@@ -42,8 +42,8 @@ const IPRRow: React.FC<IPRRowProps> = ({ isLeader, tab, ipr }) => {
           </>
         ) : (
           <>
-            <div className={`${styles.iprRowTitle} ${styles.iprRowTitleEmpty}`}>{'У сотрудника нет ИПР'}</div>
-            <div className={`${styles.iprRowStatus} ${styles.iprRowStatusEmpty}`}>{'Добавить ИПР'}</div>
+            <div className={`${styles.iprRowTitle} ${styles.iprRowTitleEmpty}`}>У сотрудника нет ИПР</div>
+            <div className={`${styles.iprRowStatus} ${styles.iprRowStatusEmpty}`}>Добавить ИПР</div>
             <button className={`${styles.iprRowBtn} ${styles.iprRowBtnAdd}`} onClick={() => {/* Логика добавления ИПР */}}>
               <Add className={styles.addIcon}/>
             </button>
