@@ -1,0 +1,171 @@
+.taskLine {
+  display: flex;
+  align-items: center;
+}
+.taskName {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+  transition: transform 0.3s ease-in-out;
+}
+.taskName:hover {
+  cursor: pointer;
+  transform: scale(1.05, 1.05);
+}
+.taskText {
+  margin: 0;
+  width: 551px;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: #353539;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.taskDate {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+  transition: opacity 0.3s ease-in-out;
+}
+.taskDateOff {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+}
+.taskDate:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+.textDate {
+  margin: 0;
+  width: 154px;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  color: #353539;
+}
+.black {
+  color: #353539;
+}
+.grey {
+  color: #797a7e;
+}
+.textDateGrey {
+  composes: textDate;
+  color: #797a7e;
+}
+.taskStatus {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+.textStatus {
+  margin: 0;
+  width: 110px;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: #353539;
+}
+.textStatusGreen {
+  composes: textStatus;
+  color: #17d055;
+}
+.textStatusGrey {
+  margin: 0;
+  width: 110px;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: #797a7e;
+}
+.popoverList {
+  list-style-type: none;
+  margin: 0;
+  padding: 24px;
+}
+.popoverEdit {
+  background: #eeeff1;
+  border-radius: 0px 0px 6px 6px;
+}
+.popoverItem {
+  padding: 16px;
+  max-width: 116px;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  color: #353539;
+  transition: transform 0.3s ease-in-out;
+}
+.popoverItem:hover {
+  cursor: pointer;
+  transform: scale(1.1, 1.1);
+}
+.popoverItem:nth-of-type(2) {
+  color: #f14539;
+}
+.calendarContainer {
+  width: 254px;
+  height: 295px;
+}
+.popoverTask {
+  padding: 56px;
+}
+.radioGroup {
+  background: #eeeff1;
+  padding: 20px 12px 24px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.radioContainer {
+  width: 156px;
+}
+.radioCircle {
+  background: #eeeff1;
+}
+.radioText {
+  margin: 0;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: #353539;
+}
+.radioTextGreen {
+  margin: 0;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: #17d055;
+}
+.greyBg {
+  background-color: #797a7e;
+}
+.taskIcon {
+  padding: 16px;
+  margin-left: 24px;
+  transition: transform 0.3s ease-in-out;
+}
+.taskIcon:hover {
+  cursor: pointer;
+  transform: scale(1.2, 1.2);
+}
