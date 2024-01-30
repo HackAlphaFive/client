@@ -123,15 +123,6 @@
   width: 254px;
   height: 295px;
 }
-.downArrow {
-  padding: 16px;
-  margin-right: 24px;
-  transition: transform 0.3s ease-in-out;
-}
-.downArrow:hover {
-  cursor: pointer;
-  transform: scale(1.2, 1.2);
-}
 .popoverTask {
   padding: 56px;
 }
@@ -169,8 +160,12 @@
 .greyBg {
   background-color: #797a7e;
 }
-.editButton {
+.taskIcon {
   padding: 16px;
   margin-left: 24px;
+  transition: transform 0.3s ease-in-out;
 }
-
+.taskIcon:hover {
+  cursor: pointer;
+  transform: scale(1.2, 1.2);
+}

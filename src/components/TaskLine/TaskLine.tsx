@@ -303,7 +303,6 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
         <div className={styles.taskIcon}>
           {jobTitle === "director" ? (
             <IconButton
-              className={styles.editButton}
               view="primary"
               size={24}
               icon={DotsThreeVerticalMIcon}
@@ -314,7 +313,10 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
               id={uniqueId + "editButton"}
             />
           ) : (
-            <ChevronDownMIcon
+            <IconButton
+              icon={ChevronDownMIcon}
+              view="primary"
+              size={24}
               id={uniqueId + "statusButton"}
               onClick={() => openPopoverUnique(setOpenStatus)}
               className={styles.downArrow}
