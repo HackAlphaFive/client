@@ -66,3 +66,14 @@ export async function refreshToken<T>(): Promise<T> {
   )
     .then(handleResponse<T>);
 }
+
+/*fetch('http://80.78.242.89/api/v1/auth/', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    username: 'superior',
+    password: 'superhardpassword12'
+  }),
+})*/

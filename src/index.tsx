@@ -7,10 +7,10 @@ import { store } from "./services/store";
 import { BrowserRouter } from "react-router-dom";
 import { createRoot } from 'react-dom/client';
 
+const BASENAME = process.env.NODE_ENV === 'development' ? "" : "/client";
+
 const domNode = document.getElementById('root');
 const root = createRoot(domNode!);
-
-const BASENAME = process.env.NODE_ENV === 'development' ? "" : "/client";
 
 root.render(
   <React.StrictMode>

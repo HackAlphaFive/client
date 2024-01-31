@@ -8,6 +8,7 @@ import UserTab from '../../components/UserTab/UserTab';
 import photoIMG from '../../images/Avatar.png';
 import IPRRow from '../../components/IPRRow/IPRRow';
 import { IPRExample, noIPRExample } from '../../utils/mock/mock';
+import TaskTable from '../../components/TaskTable/TaskTable';
 
 function IPRPage() {
   // TODO
@@ -87,8 +88,9 @@ function IPRPage() {
             position={user.position}
           />
           <Gap size='4xl' />
-          <IPRRow isLeader={false} tab='myIPR' ipr={IPRExample}/>
           <div>Список моих ипр будет тут</div>
+          <IPRRow isLeader={false} tab='myIPR' ipr={IPRExample}/>
+          <TaskTable />
         </>
       )}
     </>
