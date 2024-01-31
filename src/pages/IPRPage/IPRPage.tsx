@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router';
 import IPRRow from '../../components/IPRRow/IPRRow';
+import TaskTable from '../../components/TaskTable/TaskTable';
 
 const IPRExample = {
   "id": 10,
@@ -31,13 +32,14 @@ function IPRPage() {
   return (
     <div>
       {/* Для руководителя на вкладке "ИПР сотрудников" */}
-    <IPRRow isLeader={true} tab="employeeIPR" ipr={IPRExample} />
+    {/* <IPRRow isLeader={true} tab="employeeIPR" ipr={IPRExample} /> */}
       {/* Если сотрудник без ИПР */}
-    <IPRRow isLeader={true} tab="employeeIPR" ipr={noIPRExample} />
+    {/* <IPRRow isLeader={true} tab="employeeIPR" ipr={noIPRExample} /> */}
       {/* Для руководителя на вкладке "Мой ИПР" */}
-    <IPRRow isLeader={true} tab="myIPR" ipr={IPRExample} />
+    {/* <IPRRow isLeader={true} tab="myIPR" ipr={IPRExample} /> */}
       {/* Для сотрудника (только вкладка "Мой ИПР") */}
-    <IPRRow isLeader={false} tab="myIPR" ipr={IPRExample} />
+    {/* <IPRRow isLeader={false} tab="myIPR" ipr={IPRExample} /> */}
+    <TaskTable />
       <Outlet />
     </div>
   )

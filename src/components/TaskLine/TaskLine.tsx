@@ -18,6 +18,7 @@ import { Calendar } from "@alfalab/core-components/calendar";
 import { Radio } from "@alfalab/core-components/radio";
 import { RadioGroup } from "@alfalab/core-components/radio-group";
 import { StatusListRU } from "../../utils/types";
+import TaskForm from "../TaskForm/TaskForm";
 
 type TProps = {
   taskText: string;
@@ -29,7 +30,7 @@ type TProps = {
 const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
   const jobTitle: string = "director";
   //стейт для выбора статуса
-  const [value, setValue] = useState(status ? status : StatusListRU.NoStatus);
+  const [valueStatus, setValueStatus] = useState(status ? status : StatusListRU.NoStatus);
   //стейт для открытия и закрытия поповера с удалением/редактированием
   const [isOpenEdit, setOpenEdit] = useState(false);
 
@@ -64,10 +65,13 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
   const [to, setTo] = useState<number>();
 
   //Стей для даты старта, отправляемой не бэк
-  const [startDate, setStart] = useState<string>();
+  const [startDate, setStart] = useState<string>('');
 
   //Стей для даты окончания, отправляемой не бэк
-  const [endDate, setEnd] = useState<string>();
+  const [endDate, setEnd] = useState<string>('');
+
+  //Стейт для редактирования
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     if (!isOpenCalendar && !isOpenEdit && !isOpenStatus && !isOpenTask) {
@@ -116,25 +120,25 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
         setOpenStatus
       );
     };
-    const taskCallback = (e: MouseEvent) => {
-      closePopover(
-        e,
-        uniqueId + "taskPopover",
-        uniqueId + "taskButton",
-        setOpenTask
-      );
-    };
+    // const taskCallback = (e: MouseEvent) => {
+    //   closePopover(
+    //     e,
+    //     uniqueId + "taskPopover",
+    //     uniqueId + "taskButton",
+    //     setOpenTask
+    //   );
+    // };
 
     isOpenEdit && document.addEventListener("click", editCallback);
     isOpenCalendar && document.addEventListener("click", calendarCallback);
     isOpenStatus && document.addEventListener("click", statusCallback);
-    isOpenTask && document.addEventListener("click", taskCallback);
+    // isOpenTask && document.addEventListener("click", taskCallback);
 
     return () => {
       document.removeEventListener("click", editCallback);
       document.removeEventListener("click", calendarCallback);
       document.removeEventListener("click", statusCallback);
-      document.removeEventListener("click", taskCallback);
+      // document.removeEventListener("click", taskCallback);
     };
   }, [isOpenCalendar, isOpenEdit, isOpenStatus, isOpenTask]);
 
@@ -175,7 +179,6 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
       if (from > to) {
         setStart(getDateString(selectedToDate, "-"));
         setEnd(getDateString(selectedFromDate, "-"));
-        console.log(`${startDate} - ${endDate}`);
         return `${getDateString(selectedToDate, "")} - ${getDateString(
           selectedFromDate,
           ""
@@ -212,8 +215,14 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
     _: React.ChangeEvent<Element> | React.MouseEvent<Element, MouseEvent>,
     payload: { value: string }
   ) => {
-    setValue(payload.value);
+    setValueStatus(payload.value);
     setOpenStatus(false);
+  };
+
+  const handleEdit = () => {
+    setEditMode(true);
+    setOpenEdit(false);
+    setOpenTask(true);
   };
 
   return (
@@ -235,10 +244,12 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
         <div
           id={uniqueId + "calendarButton"}
           className={
-            jobTitle === "director" ? styles.taskDate : styles.taskDateOff
+            jobTitle === "director" && editMode
+              ? styles.taskDate
+              : styles.taskDateOff
           }
           onClick={
-            jobTitle === "director"
+            jobTitle === "director" && editMode
               ? () => openPopoverUnique(setOpenCalendar)
               : undefined
           }
@@ -287,9 +298,9 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
         <div className={styles.taskStatus}>
           <p
             className={
-              value === StatusListRU.Done
+              valueStatus === StatusListRU.Done
                 ? styles.textStatusGreen
-                : value === StatusListRU.NoStatus
+                : valueStatus === StatusListRU.NoStatus
                 ? styles.textStatusGrey
                 : styles.textStatus
             }
@@ -297,7 +308,7 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
               handleUnique<HTMLParagraphElement>(e, setElementStatus)
             }
           >
-            {value}
+            {valueStatus}
           </p>
         </div>
         <div className={styles.taskIcon}>
@@ -333,7 +344,9 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
           offset={[-70, 2]}
         >
           <ul id={uniqueId + "editPopover"} className={styles.popoverList}>
-            <li className={styles.popoverItem}>Редактировать</li>
+            <li className={styles.popoverItem} onClick={handleEdit}>
+              Редактировать
+            </li>
             <li className={styles.popoverItem}>Удалить</li>
           </ul>
         </Popover>
@@ -349,7 +362,7 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
           <div id={uniqueId + "statusPopover"}>
             <RadioGroup
               className={styles.radioContainer}
-              value={value}
+              value={valueStatus}
               onChange={onChange}
             >
               <Radio
@@ -359,7 +372,7 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
                 }
                 block={true}
                 value={StatusListRU.InProgress}
-                checked={value === StatusListRU.InProgress}
+                checked={valueStatus === StatusListRU.InProgress}
                 circleClassName={styles.greyBg}
               />
               <Radio
@@ -369,7 +382,7 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
                 }
                 block={true}
                 value={StatusListRU.Done}
-                checked={value === StatusListRU.Done}
+                checked={valueStatus === StatusListRU.Done}
                 contentClassName={styles.radioTextGreen}
               />
             </RadioGroup>
@@ -385,6 +398,7 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
         zIndex={40}
       >
         <div id={uniqueId + "taskPopover"} className={styles.popoverTask}>
+          <TaskForm editMode={editMode} jobtitle={jobTitle} startDate={startDate} status={valueStatus} endDate={endDate} setEditMode={setEditMode}/>
           <Сomments />
         </div>
       </Popover>

@@ -15,7 +15,6 @@ import { Tooltip } from "@alfalab/core-components/tooltip";
 
 const Header: FC = () => {
   const [isOpen, setisOpen] = useState(false);
-  const [isClose, setisClose] = useState<undefined | boolean>();
   const [elem, setElement] = useState<null | HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,9 +42,6 @@ const Header: FC = () => {
     };
   }, []);
 
-  const closeTooltip = () => {
-    setisClose(false);
-  };
   //Функция открытия выпающего
   const openPopover = () => {
     setisOpen((isOpen) => !isOpen);
@@ -91,8 +87,6 @@ const Header: FC = () => {
             position="left"
             fallbackPlacements={["bottom"]}
             trigger="hover"
-            onClose={closeTooltip}
-            open={isClose}
             anchor={elem}
             offset={[2, -12]}
             zIndex={51}
