@@ -1,7 +1,7 @@
 export const config = {
   baseUrl: 'http://80.78.242.89/api/v1',
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json;charset=utf-8",
   }
 };
 

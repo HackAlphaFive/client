@@ -1,8 +1,29 @@
 import { StatusList } from "../types";
 
-export type TToken = {
-  accessToken: string;
-  type: 'Bearer';
+export type TUser = {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  patronymic: string | undefined;
+  photo: string;
+  email: string;
+  position: string;
+    /**
+   * Массив из id непосредственных руководителей данного пользователя
+   */
+  superior: Array<number>;
+  /**
+   * Массив из id подчиненных
+   */
+  subordinates: Array<number>;
+  isSuperior: boolean;
+};
+export type TResponseUsersMe = Omit<TUser, 'isSuperior'>;
+export type TResponseGetSomeUser = Omit<TUser, 'isSuperior'>;
+
+export type TResponseLogin = {
+  token: string;
 };
 
 export type TComment = {

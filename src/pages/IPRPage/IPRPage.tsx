@@ -88,6 +88,7 @@ function IPRPage() {
           <Gap size='4xl' />
 
           <TableMyIPR />
+          <img src="http://backend:8000/media/users/default-photo.jpg" alt="qwertyMY" />
         </>
       )}
     </>

@@ -12,11 +12,16 @@ import { Circle } from "@alfalab/core-components/icon-view/circle";
 import { Popover } from "@alfalab/core-components/popover";
 import { PureCell } from "@alfalab/core-components/pure-cell";
 import { Tooltip } from "@alfalab/core-components/tooltip";
+import { useSelector } from "../../services/hooks";
+import { getAnotherUsersFromState } from "../../services/selectors/authSelector";
+import { getUniqId } from "../../utils/utils";
 
 const Header: FC = () => {
+  // console.log('рендер шапки');
   const [isOpen, setisOpen] = useState(false);
   const [isClose, setisClose] = useState<undefined | boolean>();
   const [elem, setElement] = useState<null | HTMLDivElement>(null);
+  const users = useSelector(getAnotherUsersFromState);
 
   useEffect(() => {
     const closePopover = (e: MouseEvent) => {
@@ -114,36 +119,25 @@ const Header: FC = () => {
           offset={[-138, 2]}
         >
           <ul id="profilePopover" className={styles.popoverList}>
-            <li className={styles.popoverItem}>
-              <PureCell.Content>
-                <PureCell.Addon addonPadding="none" verticalAlign="center">
-                  <Circle imageUrl={avatar} size={40} />
-                </PureCell.Addon>
-                <PureCell.Main className={styles.popoverMain}>
-                  <p className={styles.popoverHeader}>
-                    Коломиец Ксения Валерьевна
-                  </p>
-                  <p className={styles.popoverText}>
-                    Ведущий специалист по тестированию
-                  </p>
-                </PureCell.Main>
-              </PureCell.Content>
-            </li>
-            <li className={styles.popoverItem}>
-              <PureCell.Content>
-                <PureCell.Addon addonPadding="none" verticalAlign="center">
-                  <Circle imageUrl={avatar} size={40} />
-                </PureCell.Addon>
-                <PureCell.Main className={styles.popoverMain}>
-                  <p className={styles.popoverHeader}>
-                    Коломиец Ксения Валерьевна
-                  </p>
-                  <p className={styles.popoverText}>
-                    Ведущий специалист по тестированию
-                  </p>
-                </PureCell.Main>
-              </PureCell.Content>
-            </li>
+            {users.map(user => {
+              return (
+                <li className={styles.popoverItem} key={getUniqId()}>
+                  <PureCell.Content>
+                    <PureCell.Addon addonPadding="none" verticalAlign="center">
+                      <Circle imageUrl={user.photo} size={40} />
+                    </PureCell.Addon>
+                    <PureCell.Main className={styles.popoverMain}>
+                      <p className={styles.popoverHeader}>
+                        {`${user.last_name} ${user.first_name} ${user.patronymic}`}
+                      </p>
+                      <p className={styles.popoverText}>
+                        {user.position}
+                      </p>
+                    </PureCell.Main>
+                  </PureCell.Content>
+                </li>
+              )
+            })}
           </ul>
         </Popover>
       </div>
