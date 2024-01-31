@@ -8,11 +8,12 @@ import styles from './TabFiltrStatus.module.css';
 import { Gap } from '@alfalab/core-components/gap';
 
 type TProps = {
-  popoverWidth?: string;
+  width?: string;
   mode?: 'ipr' | 'task';
+  label?: string;
 }
 
-function TabFiltrStatus({popoverWidth = '206px', mode = 'ipr'} : TProps): JSX.Element {
+function TabFiltrStatus({width = '206px', mode = 'ipr', label = 'Статус ИПР'} : TProps): JSX.Element {
   const options = [
     // content рисуется в инпуте при выборе данного пункта
     { key: '0', content: <div className={`${styles.item} text_color_main text_type_middle`}>Все статусы</div> },
@@ -26,46 +27,47 @@ function TabFiltrStatus({popoverWidth = '206px', mode = 'ipr'} : TProps): JSX.El
   const [selected, setSelected] = useState<StatusList | undefined>(undefined);
 
   return (
-    <SelectDesktop
-      options={options}
-      placeholder='Выберите статус'
-      label='Статус ИПР'
-      multiple={false}
-      block={true}
-      size='xl'
-      optionsListClassName={styles.popover}
-      Arrow={() => <FilterDropDown size={DimensionsListIcons.l} />}
-      Option={({
-        option,
-        selected,
-        innerProps
-      }) => {
-        if (mode === 'task' && option.key === '3') {
-          return null
-        } else {
-          return (
-            <div style={{width: popoverWidth}}>
-              <Radio
-                size='m'
-                checked={selected}
-                label={option.content}
-                block={true}
-                align='center'
-                // @ts-ignore
-                labelProps={innerProps}
-                circleClassName={styles.circle}
-              />
-              <Gap size='l'></Gap>
-            </div>)
-        }
-      }}
-      onChange={(payload) => {
-        // SelectDesktop прокидывает сюда пропс payload, внутри которого хранятся данные о выборе
-        const key = payload.selected?.key;
-        const value = options.filter(option => option.key === key)[0].content.props.children as StatusListRU;
-        setSelected(translateStatus(value, 'ru-en') as StatusList | undefined);
-      }}
-    />
+    <div style={{width: width}}>
+      <SelectDesktop
+        options={options}
+        placeholder='Выберите статус'
+        label={label}
+        multiple={false}
+        block={true}
+        size='xl'
+        optionsListClassName={styles.popover}
+        Arrow={() => <FilterDropDown size={DimensionsListIcons.l} />}
+        Option={({
+          option,
+          selected,
+          innerProps
+        }) => {
+          if (mode === 'task' && option.key === '3') {
+            return null
+          } else {
+            return (
+              <div style={{width: `${(Number(width) - 12)}`}}>
+                <Radio
+                  size='m'
+                  checked={selected}
+                  label={option.content}
+                  block={true}
+                  align='center'
+                  // @ts-ignore
+                  labelProps={innerProps}
+                />
+                <Gap size='l'></Gap>
+              </div>)
+          }
+        }}
+        onChange={(payload) => {
+          // SelectDesktop прокидывает сюда пропс payload, внутри которого хранятся данные о выборе
+          const key = payload.selected?.key;
+          const value = options.filter(option => option.key === key)[0].content.props.children as StatusListRU;
+          setSelected(translateStatus(value, 'ru-en') as StatusList | undefined);
+        }}
+      />
+    </div>
   )
 }
 

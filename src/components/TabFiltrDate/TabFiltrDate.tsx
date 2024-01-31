@@ -100,6 +100,7 @@ function TabFiltrDate({ calendarWidth = 340 }: { calendarWidth?: number }) {
         multiple={false}
         block={true}
         size='xl'
+        fieldClassName={styles.field}
         valueRenderer={() => {
           if (!mySelected) return null;
           return <div className='text_color_main text_type_small'>{mySelected.front}</div>;
@@ -116,6 +117,7 @@ function TabFiltrDate({ calendarWidth = 340 }: { calendarWidth?: number }) {
                   onChange={updatePeriod}
                   selectorView='month-only'
                   showCurrentYearSelector={true}
+                  contentClassName={styles.calendarDay}
                 />
               </div>
             </div>

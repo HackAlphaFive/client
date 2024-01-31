@@ -1,0 +1,11 @@
+.field {
+  background-color: var(--color-cell);
+}
+
+.calendarDay .calendar__dayContent_l6ekk {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  color: blue;
+}
