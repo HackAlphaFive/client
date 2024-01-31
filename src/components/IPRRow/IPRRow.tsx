@@ -4,6 +4,7 @@ import { ReactComponent as Chevron } from '../../assets/Chevron.svg';
 import { ReactComponent as Add } from '../../assets/Add.svg';
 import { ReactComponent as Calendar } from '../../assets/Calendar.svg';
 import styles from './IPRRow.module.css';
+import { formatDate } from '../../utils/utils';
 
 type IPRRowProps = {
   isLeader: boolean,
@@ -22,12 +23,6 @@ type IPRRowProps = {
 };
 
 const IPRRow: React.FC<IPRRowProps> = ({ isLeader, tab, ipr }) => {
-  // Функция для форматирования даты
-  const formatDate = (isoString: string) => {
-    const [yyyy, mm, dd] = isoString.split('-');
-    return `${dd}.${mm}.${yyyy}`;
-  };
-
   // Содержимое для вкладки "ИПР сотрудников"
   const renderEmployeeIPR = () => (
     <>

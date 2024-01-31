@@ -1,4 +1,7 @@
-export const IPRExample = {
+import { StatusList } from "../types";
+import { getUniqId } from "../utils";
+
+export const MockIPR = {
   id: 10,
   title: "Качаем Soft skills",
   employee: {
@@ -14,7 +17,7 @@ export const IPRExample = {
   end_date: "2024-01-29"
 }
 
-export const noIPRExample = {
+export const MockNoIPR = {
   id: 10,
   employee: {
     fullName: "Иванов Иван Иванович",

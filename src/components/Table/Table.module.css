@@ -1,0 +1,7 @@
+.header {
+  display: grid;
+  grid-template-rows: 72px;
+  grid-auto-rows: 72px;
+
+  background-color: var(--color-cell);
+}

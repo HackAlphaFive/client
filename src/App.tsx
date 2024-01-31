@@ -6,6 +6,7 @@ import NotFound404Page from './pages/NotFound404Page/NotFound404Page';
 import IPRPage from './pages/IPRPage/IPRPage';
 import styles from './App.module.css';
 import { NAME_FOR_404 } from './utils/constants';
+import { getToken } from './utils/api/api';
 
 function App(): JSX.Element {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function App(): JSX.Element {
   // т.к. по ум. сервер всё равно дописывает './client' (несмотря на условное определение BASENAME в index.tsc)
   useEffect(() => {
     if (process.env.NODE_ENV === 'development' && location.pathname === '/client') navigate('/');
+    getToken();
   }, []);
 
   return (

@@ -23,10 +23,11 @@ type TProps = {
   taskText: string;
   date?: string;
   status?: string;
-  uniqueId: string;
+  uniqueId: string | number;
+  classNameLine?: string;
 };
 
-const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
+const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId, classNameLine }) => {
   const jobTitle: string = "director";
   //стейт для выбора статуса
   const [value, setValue] = useState(status ? status : StatusListRU.NoStatus);
@@ -219,7 +220,7 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId }) => {
   return (
     <>
       <div
-        className={styles.taskLine}
+        className={`${styles.taskLine} ${classNameLine}`}
         ref={(e: HTMLDivElement) =>
           handleUnique<HTMLDivElement>(e, setElementTask)
         }

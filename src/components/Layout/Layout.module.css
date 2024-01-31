@@ -1,7 +1,8 @@
 .layout {
   display: grid;
   column-gap: 24px;
-  grid-template-columns: 193px 1fr;
+  /* custom-scroll шириной 6px → 1063 - 6 = 1057 */
+  grid-template-columns: 193px 1057px;
   grid-template-rows: auto 1fr auto; /* Высота шапки, содержимого и футера */
   height: 100vh; /* Полная высота вьюпорта */
   width: 100%;
@@ -18,7 +19,7 @@
 }
 
 .main{
-  max-width: 1063px;
+  max-width: 1057px;
   grid-column: 2; /* Основной контент занимает вторую колонку */
   grid-row: 2; /* Основной контент начинается после шапки */
 }

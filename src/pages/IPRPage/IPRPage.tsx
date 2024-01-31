@@ -6,9 +6,9 @@ import { ButtonDesktop } from '@alfalab/core-components/button/desktop';
 import { ReactComponent as Add } from '../../assets/Add.svg';
 import UserTab from '../../components/UserTab/UserTab';
 import photoIMG from '../../images/Avatar.png';
-import IPRRow from '../../components/IPRRow/IPRRow';
-import { IPRExample, noIPRExample } from '../../utils/mock/mock';
-import TaskTable from '../../components/TaskTable/TaskTable';
+import TableTask from '../../components/TableTask/TableTask';
+import TableIPRForSubord from '../../components/TableIPRForSubord/TableIPRForSubord';
+import TableMyIPR from '../../components/TableMyIPR/TableMyIPR';
 
 function IPRPage() {
   // TODO
@@ -73,9 +73,7 @@ function IPRPage() {
           </ButtonDesktop>
           <Gap size='xl' />
 
-          <div>Список ипр РАБОТНИКОВ</div>
-          <IPRRow isLeader={isSupervisor} tab='employeeIPR' ipr={IPRExample}/>
-          <IPRRow isLeader={isSupervisor} tab='employeeIPR' ipr={noIPRExample}/>
+          <TableIPRForSubord />
         </>
       )}
 
@@ -88,9 +86,8 @@ function IPRPage() {
             position={user.position}
           />
           <Gap size='4xl' />
-          <div>Список моих ипр будет тут</div>
-          <IPRRow isLeader={false} tab='myIPR' ipr={IPRExample}/>
-          <TaskTable />
+
+          <TableMyIPR />
         </>
       )}
     </>

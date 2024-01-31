@@ -1,0 +1,5 @@
+.titleWrapper {
+  padding: var(--gap-m);
+  display: flex;
+  align-items: center;
+}
