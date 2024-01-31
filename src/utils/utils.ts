@@ -1,8 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
 import { StatusList, StatusListRU } from './types';
 
-// Для генерации уникальной айди используем нашу функцию, а не прямой вызов uuidv4
-export const getUniqId = () => uuidv4();
+// Для генерации уникальной айди используем нашу функцию, а не прямой вызов uuidv4 или другого метода
+export const getUniqId = () => Date.now() + Math.random();
 
 
 type TErrorHandler = (text: string, error?: unknown) => void;
@@ -54,4 +53,15 @@ export const translateStatus = (status: StatusList | StatusListRU, mode: 'ru-en'
     }
     return result;
   }
+};
+
+/**
+ * Функция для форматирования даты
+ * @param isoString дата в формате "2023-10-17"
+ * @returns "17.10.2023"
+ * @
+ *  */
+export const formatDate = (isoString: string) => {
+  const [yyyy, mm, dd] = isoString.split('-');
+  return `${dd}.${mm}.${yyyy}`;
 };

@@ -1,46 +1,97 @@
-import React from 'react';
-import { Outlet } from 'react-router';
-import IPRRow from '../../components/IPRRow/IPRRow';
-
-const IPRExample = {
-  "id": 10,
-      "title": "Качаем Soft skills",
-      "employee": {
-        "fullName": "Иванов Иван Иванович",
-        "position": "Ведущий специалист по тестированию",
-        "avatar": "https://chillywilly.club/uploads/posts/2023-03/thumbs/1678626035_chillywilly-club-p-portret-merlin-monro-pop-art-art-krasivo-d-62.jpg"
-      },
-      "author": "Иванов Иван Иванович",
-      "description": "Вот список всех книг, которые ты должен прочесть до пятницы...",
-      "status": "Failed",
-      "created_date": "2024-01-29T03:31:55.675Z",
-      "start_date": "2024-01-29",
-      "end_date": "2024-01-29"
-}
-
-const noIPRExample = {
-  "id": 10,
-      "employee": {
-        "fullName": "Иванов Иван Иванович",
-        "position": "Ведущий специалист по тестированию",
-        "avatar": "https://chillywilly.club/uploads/posts/2023-03/thumbs/1678626035_chillywilly-club-p-portret-merlin-monro-pop-art-art-krasivo-d-62.jpg"
-      },
-}
+import React, { useEffect, useState } from 'react';
+import { TabsDesktop, Tab } from '@alfalab/core-components/tabs/desktop';
+import { Gap } from '@alfalab/core-components/gap';
+import { useSelector } from '../../services/hooks';
+import { ButtonDesktop } from '@alfalab/core-components/button/desktop';
+import { ReactComponent as Add } from '../../assets/Add.svg';
+import UserTab from '../../components/UserTab/UserTab';
+import photoIMG from '../../images/Avatar.png';
+import TableTask from '../../components/TableTask/TableTask';
+import TableIPRForSubord from '../../components/TableIPRForSubord/TableIPRForSubord';
+import TableMyIPR from '../../components/TableMyIPR/TableMyIPR';
 
 function IPRPage() {
+  // TODO
+  const user = {
+    photo: photoIMG,
+    username: 'Раисовна Раиса Балахмутовна',
+    position: 'Lead prdocut giga-girl',
+  }
+
+  // TODO реальный useSelector
+  const isSupervisor = useSelector(() => true);
+
+  const TABS = [
+    { title: 'ИПР сотрудников', id: 'subordinates' },
+    { title: 'Мой ИПР', id: 'me' },
+  ];
+  const EMPLOYEE_TABS = [
+    { title: 'Мой ИПР', id: 'me' },
+  ];
+  const [tabs, setTabs] = useState(TABS);
+
+  const [selectedId, setSelectedId] = useState<string | number>(tabs[0].id);
+
+  useEffect(() => {
+    if (!isSupervisor) {
+      setTabs(EMPLOYEE_TABS);
+      setSelectedId(EMPLOYEE_TABS[0].id);
+    } else {
+      setTabs(TABS);
+      setSelectedId(TABS[0].id);
+    }
+  }, [isSupervisor]);
+
+  const handleChange = (event: React.MouseEvent<Element, MouseEvent>, { selectedId }: { selectedId: string | number }) => {
+    setSelectedId(selectedId);
+  };
+
   return (
-    <div>
-      {/* Для руководителя на вкладке "ИПР сотрудников" */}
-    <IPRRow isLeader={true} tab="employeeIPR" ipr={IPRExample} />
-      {/* Если сотрудник без ИПР */}
-    <IPRRow isLeader={true} tab="employeeIPR" ipr={noIPRExample} />
-      {/* Для руководителя на вкладке "Мой ИПР" */}
-    <IPRRow isLeader={true} tab="myIPR" ipr={IPRExample} />
-      {/* Для сотрудника (только вкладка "Мой ИПР") */}
-    <IPRRow isLeader={false} tab="myIPR" ipr={IPRExample} />
-      <Outlet />
-    </div>
-  )
+    <>
+      <h1 className='text text_type_heading1'>Индивидиуальный план развития (ИПР)</h1>
+      <Gap size='4xl' />
+      <TabsDesktop
+        view='primary'
+        size='xl'
+        selectedId={selectedId}
+        onChange={handleChange}
+        scrollable={false}
+      >
+        {tabs.map((item) => (
+          <Tab title={item.title} id={item.id} key={item.id} />
+        ))}
+      </TabsDesktop>
+
+      {selectedId === 'subordinates' && (
+        <>
+          <Gap size='2xl' />
+          <ButtonDesktop
+            view='accent'
+            leftAddons={<Add />}
+          >
+            Создать новый ИПР
+          </ButtonDesktop>
+          <Gap size='xl' />
+
+          <TableIPRForSubord />
+        </>
+      )}
+
+      {selectedId === 'me' && (
+        <>
+          <Gap size='3xl' />
+          <UserTab
+            avatar={user.photo}
+            username={user.username}
+            position={user.position}
+          />
+          <Gap size='4xl' />
+
+          <TableMyIPR />
+        </>
+      )}
+    </>
+  );
 }
 
 export default IPRPage;

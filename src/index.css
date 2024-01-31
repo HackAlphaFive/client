@@ -1,9 +1,11 @@
-:root {
+:root:root {
   --color-white: #fff;
   --color-success: #17D055;
   --color-failure: #F14539;
   --color-tooltip: #BABBC2;
   --color-tooltip-dark: #797A7E;
+  --color-cell: #F3F4F6;
+  --form-control-bg-color: #F3F4F6;
 }
 
 body {
@@ -11,6 +13,9 @@ body {
   width: 100%;
   margin: 0;
   padding: 0;
+  /* вертиклаьный скролл включаем всегда, чтобы не было скачков контента, когда ширина экрана > 1280px */
+  overflow-y: scroll;
+  overflow-x: auto;
 }
 
 .elem_centered {
@@ -38,6 +43,10 @@ body {
 
 .text_color_tooltip {
   color: var(--Main-colors-Tooltip-text, var(--color-tooltip));
+}
+
+.text_color_tooltip-dark {
+  color: var(--color-tooltip-dark);
 }
 
 .text_type_heading1 {
@@ -93,4 +102,14 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-tooltip);
+  border-radius: 3px;
 }
