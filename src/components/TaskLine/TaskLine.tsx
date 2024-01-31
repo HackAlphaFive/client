@@ -21,6 +21,7 @@ import { StatusListRU } from "../../utils/types";
 import TaskForm from "../TaskForm/TaskForm";
 
 type TProps = {
+  descriptionText: string;
   taskText: string;
   date?: string;
   status?: string;
@@ -28,10 +29,19 @@ type TProps = {
   classNameLine?: string;
 };
 
-const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId, classNameLine }) => {
-  const jobTitle: string = "director";
+const TaskLine: FC<TProps> = ({
+  descriptionText,
+  taskText,
+  date,
+  status,
+  uniqueId,
+  classNameLine,
+}) => {
+  const jobTitle: string = "directr";
   //стейт для выбора статуса
-  const [valueStatus, setValueStatus] = useState(status ? status : StatusListRU.NoStatus);
+  const [valueStatus, setValueStatus] = useState(
+    status ? status : StatusListRU.NoStatus
+  );
   //стейт для открытия и закрытия поповера с удалением/редактированием
   const [isOpenEdit, setOpenEdit] = useState(false);
 
@@ -66,10 +76,10 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId, classNameLine 
   const [to, setTo] = useState<number>();
 
   //Стей для даты старта, отправляемой не бэк
-  const [startDate, setStart] = useState<string>('');
+  const [startDate, setStart] = useState<string>("");
 
   //Стей для даты окончания, отправляемой не бэк
-  const [endDate, setEnd] = useState<string>('');
+  const [endDate, setEnd] = useState<string>("");
 
   //Стейт для редактирования
   const [editMode, setEditMode] = useState(false);
@@ -121,25 +131,25 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId, classNameLine 
         setOpenStatus
       );
     };
-    // const taskCallback = (e: MouseEvent) => {
-    //   closePopover(
-    //     e,
-    //     uniqueId + "taskPopover",
-    //     uniqueId + "taskButton",
-    //     setOpenTask
-    //   );
-    // };
+    const taskCallback = (e: MouseEvent) => {
+      closePopover(
+        e,
+        uniqueId + "taskPopover",
+        uniqueId + "taskButton",
+        setOpenTask
+      );
+    };
 
     isOpenEdit && document.addEventListener("click", editCallback);
     isOpenCalendar && document.addEventListener("click", calendarCallback);
     isOpenStatus && document.addEventListener("click", statusCallback);
-    // isOpenTask && document.addEventListener("click", taskCallback);
+    isOpenTask && document.addEventListener("click", taskCallback);
 
     return () => {
       document.removeEventListener("click", editCallback);
       document.removeEventListener("click", calendarCallback);
       document.removeEventListener("click", statusCallback);
-      // document.removeEventListener("click", taskCallback);
+      document.removeEventListener("click", taskCallback);
     };
   }, [isOpenCalendar, isOpenEdit, isOpenStatus, isOpenTask]);
 
@@ -223,7 +233,6 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId, classNameLine 
   const handleEdit = () => {
     setEditMode(true);
     setOpenEdit(false);
-    setOpenTask(true);
   };
 
   return (
@@ -395,11 +404,20 @@ const TaskLine: FC<TProps> = ({ taskText, date, status, uniqueId, classNameLine 
         anchorElement={elemTask}
         useAnchorWidth={true}
         position="bottom"
+        popperClassName={styles.pp}
         preventFlip={true}
-        zIndex={40}
       >
         <div id={uniqueId + "taskPopover"} className={styles.popoverTask}>
-          <TaskForm editMode={editMode} jobtitle={jobTitle} startDate={startDate} status={valueStatus} endDate={endDate} setEditMode={setEditMode}/>
+          <TaskForm
+            textValue={taskText}
+            descriptionValue={descriptionText}
+            editMode={editMode}
+            jobtitle={jobTitle}
+            startDate={startDate}
+            status={valueStatus}
+            endDate={endDate}
+            setEditMode={setEditMode}
+          />
           <Сomments />
         </div>
       </Popover>

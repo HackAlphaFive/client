@@ -53,7 +53,7 @@ const Header: FC = () => {
   return (
     <header className={styles.header}>
       <nav className={styles.navigation}>
-        <Link underline={false} href="https://alfabank.ru/">
+        <Link underline={false} href="https://alfabank.ru/" className={styles.link}>
           <img src={logo} alt='Логотип "Альфа-Пипл"' className={styles.logo} />
         </Link>
         <Link underline={false} href="https://alfabank.ru/" view="primary">

@@ -5,6 +5,8 @@ import { Textarea } from "@alfalab/core-components/textarea";
 import { Button } from "@alfalab/core-components/button";
 import { PlusMediumMIcon } from "@alfalab/icons-glyph/PlusMediumMIcon";
 type TProps = {
+  textValue:string;
+  descriptionValue:string;
   editMode: boolean;
   jobtitle: string;
   startDate: string;
@@ -12,9 +14,9 @@ type TProps = {
   status: string
   setEditMode:React.Dispatch<React.SetStateAction<boolean>>
 };
-const TaskForm: FC<TProps> = ({ editMode, jobtitle, startDate, endDate, status, setEditMode }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [textareaValue, setTextareaValue] = useState("");
+const TaskForm: FC<TProps> = ({ textValue, descriptionValue, editMode, jobtitle, startDate, endDate, status, setEditMode }) => {
+  const [inputValue, setInputValue] = useState(textValue);
+  const [textareaValue, setTextareaValue] = useState(descriptionValue);
 
   const handleChange = (
     e:
@@ -37,6 +39,8 @@ const handleSaveButton  = () => {
   setEditMode(false)
 }
 const handleCancelButton = () => {
+  setInputValue(textValue)
+  setTextareaValue(descriptionValue)
   setEditMode(false)
 }
 
@@ -49,7 +53,7 @@ const handleCancelButton = () => {
         block={true}
         hint="Введите название задачи"
         error={inputValue.length < 5 ? "Название задачи должно быть не короче 2 симв." : false}
-        value={inputValue}
+        value={inputValue && inputValue}
         disabled={jobtitle === "director" ? !editMode : true}
       />
       <p
@@ -63,8 +67,8 @@ const handleCancelButton = () => {
         placeholder="Введите текст"
         textareaClassName={styles.textareaForm}
         block={true}
-        minRows={10}
-        maxHeight={248}
+        minRows={1}
+        maxRows={11}
         maxLength={480}
         showCounter={true}
         error={textareaValue.length > 480}

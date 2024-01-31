@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Сomments.module.css";
 import { Input } from "@alfalab/core-components/input";
 import { Circle } from "@alfalab/core-components/icon-view/circle";
@@ -13,7 +13,7 @@ const Сomments: FC = () => {
     avatar: avatar,
     date: "2 недели назад",
   };
-
+const [ulHeight, setUlHeight] = useState<number>(10)
   const [value, setValue] = useState<string>("");
   const [comm, setComment] = useState<
     Array<{
@@ -23,14 +23,18 @@ const Сomments: FC = () => {
       date: string;
     }>
   >([]);
-  console.log(value?.length === 0);
   useEffect(() => {
     document.addEventListener("keypress", sendOnEnter);
 
     return () => document.removeEventListener("keypress", sendOnEnter);
   });
 
-  //asdasd
+  // useEffect(() => {
+  //   const height = refComponent.current.getBoundingClientRect().height;
+
+  //   console.log(height, "height");
+  // }, [refComponent]);
+  console.log(ulHeight)
   const sendOnEnter = (e: KeyboardEvent) => {
     if (e.code === "Enter" && (value?.length as number) > 0) {
       handleInput();
@@ -56,6 +60,10 @@ const Сomments: FC = () => {
     setValue(value);
   };
 
+  const handleUlElement = (e:HTMLUListElement) => {
+    setUlHeight(e?.clientHeight)
+  }
+
   //Функция переворачивает очередность массива и перебирает его, создавая элементы комментарий
   const createComments = useMemo(() => {
     return comm
@@ -66,7 +74,7 @@ const Сomments: FC = () => {
   return (
     <div className={styles.commentsContainer}>
       <p className={styles.text}>Комментарии:</p>
-      <ul className={styles.comments}>{createComments}</ul>
+      <ul ref={handleUlElement} className={`custom-scroll ${ulHeight >= 600 ? styles.commentsScroll : styles.comments}`} >{createComments}</ul>
       <div className={styles.bottom}>
         <Circle imageUrl={commentData.avatar} size={32} />
         <Input
