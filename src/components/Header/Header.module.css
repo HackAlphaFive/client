@@ -51,6 +51,7 @@
 .popoverItem{
   padding: 5px;
   border-bottom: 2px solid white;
+  border-radius: 10px;
   transition: border-bottom 0.3s ease-in-out;
 }
 .popoverItem:nth-of-type(1){
@@ -60,11 +61,20 @@
   cursor: pointer;
   border-bottom: 2px solid #353539;
 }
+.popoverItem:active{
+  border-bottom: 2px solid var(--color-success);
+}
+
+.popoverItemChecked {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
 .popoverMain{
   margin: 5px;
 }
 .popoverHeader {
-  color: #353539;
+  color: var(--Main-colors-Headline-text);
   margin: 0;
   font-family: Roboto;
   font-size: 16px;
@@ -79,7 +89,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
-  color: #babbc2;
+  color: #1f2022;
 }
 .tooltipText {
   width: 150px;

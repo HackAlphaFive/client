@@ -9,17 +9,11 @@ import photoIMG from '../../images/Avatar.png';
 import TableTask from '../../components/TableTask/TableTask';
 import TableIPRForSubord from '../../components/TableIPRForSubord/TableIPRForSubord';
 import TableMyIPR from '../../components/TableMyIPR/TableMyIPR';
+import { getUserRole, getUserSimplified } from '../../services/selectors/authSelector';
 
 function IPRPage() {
-  // TODO
-  const user = {
-    photo: photoIMG,
-    username: 'Раисовна Раиса Балахмутовна',
-    position: 'Lead prdocut giga-girl',
-  }
-
-  // TODO реальный useSelector
-  const isSupervisor = useSelector(() => true);
+  const user = useSelector(getUserSimplified);
+  const isSupervisor = useSelector(getUserRole);
 
   const TABS = [
     { title: 'ИПР сотрудников', id: 'subordinates' },
@@ -81,9 +75,9 @@ function IPRPage() {
         <>
           <Gap size='3xl' />
           <UserTab
-            avatar={user.photo}
-            username={user.username}
-            position={user.position}
+            avatar={user.photo!}
+            username={user.fullname || 'Не найдено'}
+            position={user.position || 'Не найдено'}
           />
           <Gap size='4xl' />
 

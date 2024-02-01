@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { Link } from '@alfalab/core-components/link';
@@ -69,4 +69,4 @@ const Sidebar = ({ items }: SidebarProps) => {
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);

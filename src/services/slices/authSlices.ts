@@ -29,8 +29,17 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<TUser | null>) => {
       state.user = action.payload;
     },
-    setAnotherUsers: (state, action: PayloadAction<TUser>) => {
-      state.anotherUsers = [ ...state.anotherUsers, action.payload];
+    // редьюсер для сохранения других возможных пользователей (в рамках MVP)
+    setAnotherUsers: (state, action: PayloadAction<TUser | TUser[]>) => {
+      // если payload является массивом, то
+      if (Array.isArray(action.payload)) {
+        state.anotherUsers = [ ...state.anotherUsers, ...action.payload ]
+      } else { // иначе в функцию передан одиночный юзер
+        state.anotherUsers = [ ...state.anotherUsers, action.payload ];
+      }
+    },
+    clearAnotherUsers: (state) => {
+      state.anotherUsers = authInitialState.anotherUsers;
     },
 
     setError: (state, action: PayloadAction<unknown>) => {
@@ -54,7 +63,7 @@ const authSlice = createSlice({
       state.authSuccess = action.payload;
     },
   },
-  extraReducers: builder => {
+  /*extraReducers: builder => {
     builder.addCase(getAnotherUser.pending, (state) => {
       state.error = '';
       state.userSuccess = null;
@@ -71,12 +80,13 @@ const authSlice = createSlice({
       state.userPending = false;
       state.error = action.payload;
     })
-  }
+  }*/
 });
 
 export const {
   setUser,
   setAnotherUsers,
+  clearAnotherUsers,
   setError,
   clearError,
   setUserPending,

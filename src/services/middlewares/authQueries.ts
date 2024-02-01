@@ -1,13 +1,25 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { config, handleResponse } from "../../utils/api/api";
-import { TResponseGetSomeUser, TResponseLogin, TResponseUsersMe } from "../../utils/api/types";
+import { TResponseGetSomeUser, TResponseLogin, TResponseUsersMe, TUser } from "../../utils/api/types";
 import { handleError } from "../../utils/utils";
-import { clearError, setAnotherUsers, setAuthPending, setAuthSuccess, setUser, setUserPending, setUserSuccess } from "../slices/authSlices";
+import { clearAnotherUsers, clearError, setAnotherUsers, setAuthPending, setAuthSuccess, setUser, setUserPending, setUserSuccess } from "../slices/authSlices";
 import { AppDispatch } from "../types";
+import { USERS } from "../../utils/constants";
 
+/**
+ * Очищает: стейт списка пользователей на выбор,
+ * текущего юзера, токены.
+ * Получает с сервера новые токены
+ */
 export function login(username: string, password: string, signal?: AbortSignal) {
   return (dispatch: AppDispatch) => {
+
     dispatch(setAuthPending(true));
+    dispatch(clearAnotherUsers());
+    dispatch(setUser(null));
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('accessToken');
+
     return fetch(
       `${config.baseUrl}/auth/`,
       {
@@ -35,35 +47,7 @@ export function login(username: string, password: string, signal?: AbortSignal) 
   }
 }
 
-// вызывается внутри checkUserAuth
-export function getUser(signal?: AbortSignal) {
-  return (dispatch: AppDispatch) => {
-    dispatch(setUserPending(true));
-    return fetch(
-      `${config.baseUrl}/users/me/`,
-      {
-        signal,
-        method: 'GET',
-        headers: {
-        // 'Content-Type': 'application/json', - так ругается
-        ...config.headers, // а так нет
-        authorization: localStorage.getItem('accessToken')!,
-        }
-      }
-    )
-      .then(res => {
-        return handleResponse<TResponseUsersMe>(res);
-      })
-      .then(data => {
-        dispatch(clearError());
-        dispatch(setUser({...data, isSuperior: data.subordinates.length > 0 ? true : false }));
-        dispatch(setUserSuccess(true));
-      });
-      // нет catch, т.к. он есть в checkUserAuth
-  };
-}
-
-export const getAnotherUser = createAsyncThunk(
+/*export const getAnotherUser = createAsyncThunk(
   'auth/getAnotherUser',
   (payload: {id: number; signal?: AbortSignal}) => {
     console.log('запрос');
@@ -80,9 +64,71 @@ export const getAnotherUser = createAsyncThunk(
     )
       .then(handleResponse<TResponseGetSomeUser>);
   }
-);
+);*/
 
-// вызывается при монтировании App
+export const getAnotherUser = (id: number, signal?: AbortSignal) => {
+  return fetch(`${config.baseUrl}/users/${id}/`, {
+    signal: signal,
+    method: 'GET',
+    headers: {
+      ...config.headers,
+      authorization: localStorage.getItem('accessToken')!,
+    }
+  }
+  )
+    .then(handleResponse<TResponseGetSomeUser>);
+};
+
+// вызывается внутри checkUserAuth
+export function getUser(signal?: AbortSignal) {
+  return (dispatch: AppDispatch) => {
+    dispatch(setUserPending(true));
+    return fetch(
+      `${config.baseUrl}/users/me/`,
+      {
+        signal,
+        method: 'GET',
+        headers: {
+        // 'Content-Type': 'application/json', // так ругается
+        ...config.headers, // а так нет
+        authorization: localStorage.getItem('accessToken')!,
+        }
+      }
+    )
+      .then(res => {
+        return handleResponse<TResponseUsersMe>(res);
+      })
+      .then(data => {
+        dispatch(clearError());
+        // записали данные о текущем пользователе
+        dispatch(setUser({ ...data, isSuperior: data.subordinates.length > 0 ? true : false }));
+        dispatch(setUserSuccess(true));
+      });
+      // нет catch, т.к. он есть в checkUserAuth
+  };
+}
+
+export function setAnotherUsersInState (currentUser: TUser) {
+  return (dispatch: AppDispatch) => {
+    const idsArray = USERS.map(user => user.id);
+    const idsForSearching = idsArray.filter(id => currentUser.id !== id);
+
+    dispatch(setAnotherUsers(currentUser));
+
+    return Promise.all([getAnotherUser(idsForSearching[0]), getAnotherUser(idsForSearching[1]), getAnotherUser(idsForSearching[2])])
+      .then((result) => {
+        const resultWithStatus = result.map(user => ({...user, isSuperior: user.subordinates.length > 0 ? true : false }))
+        dispatch(setAnotherUsers(resultWithStatus));
+      })
+      .catch(handleError)
+  }
+}
+
+//
+/**
+ * Вызывается при монтировании App. Делает запрос за юзером по текущему токену
+ * и сохраняет его в стейт. Может очищать стейт юзера!
+ */
 export function checkUserAuth(signal?: AbortSignal) {
   return (dispatch: AppDispatch) => {
     dispatch(setAuthPending(true));
@@ -96,6 +142,7 @@ export function checkUserAuth(signal?: AbortSignal) {
           handleError('Ошибка при получении данных пользователя: ', err);
         })
         .finally(() => {
+          console.log('я в файнали');
           dispatch(setAuthPending(false));
           dispatch(setUserPending(false));
         });

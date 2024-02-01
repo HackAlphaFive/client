@@ -1,5 +1,5 @@
 export const config = {
-  baseUrl: 'http://80.78.242.89/api/v1',
+  baseUrl: 'https://alfahackathon.hopto.org/api/v1',
   headers: {
     "Content-Type": "application/json;charset=utf-8",
   }
@@ -11,16 +11,4 @@ export async function handleResponse<T>(response: Response) {
   const data: Promise<T> = await response.json();
   if (response.ok) return data;
   return Promise.reject(data);
-}
-
-
-export const getToken = () => {
-  /*return fetch(`${config.baseUrl}/auth/`, {
-    method: 'POST',
-    headers: config.headers,
-    body: JSON.stringify({
-      username: 'superior',
-      password: 'superhardpassword1'
-    }),
-  })*/
 }

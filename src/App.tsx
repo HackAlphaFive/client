@@ -5,15 +5,30 @@ import HomePage from './pages/HomePage/HomePage';
 import NotFound404Page from './pages/NotFound404Page/NotFound404Page';
 import IPRPage from './pages/IPRPage/IPRPage';
 import styles from './App.module.css';
-import { NAME_FOR_404, USER_SUPERIOR } from './utils/constants';
-import { useDispatch } from './services/hooks';
-import { checkUserAuth, getAnotherUser, login } from './services/middlewares/authQueries';
+import { NAME_FOR_404, USER_SUBORNIDATE_1, USER_SUBORNIDATE_5, USER_SUBORNIDATE_7, USER_SUPERIOR } from './utils/constants';
+import { useDispatch, useSelector } from './services/hooks';
+import { checkUserAuth, getAnotherUser, login, setAnotherUsersInState } from './services/middlewares/authQueries';
+import { getAuthPending, getAuthSuccess, getUserFromState, getUserPending, getUserSuccess } from './services/selectors/authSelector';
+import { config } from './utils/api/api';
+import { handleError } from './utils/utils';
 
 function App(): JSX.Element {
-  console.log('рендер всего приложения');
+  console.log('выполнение App');
+
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+
+  const authPending = useSelector(getAuthPending);
+  /**
+   * успешно ли получение токена
+   */
+  const authSuccess = useSelector(getAuthSuccess);
+
+  const userPending = useSelector(getUserPending);
+  const userSuccess = useSelector(getUserSuccess);
+  const user = useSelector(getUserFromState);
+
 
   useEffect(() => {
     // Для локального сервера при старте приложения необходимо перенаправлять на маршрут '/',
@@ -22,15 +37,42 @@ function App(): JSX.Element {
 
     const controller = new AbortController();
     dispatch(login(USER_SUPERIOR.username, USER_SUPERIOR.password, controller.signal));
-    dispatch(checkUserAuth(controller.signal));
-
-    // Получаем несколько подчиненных для возможности переключения аккаунтов
-    dispatch(getAnotherUser({id: 2, signal: controller.signal})); // USER_SUBORNIDATE_1
-    dispatch(getAnotherUser({id: 3, signal: controller.signal})); // USER_SUBORNIDATE_2
-    dispatch(getAnotherUser({id: 4, signal: controller.signal})); // USER_SUBORNIDATE_3
 
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    if (!authPending && authSuccess) dispatch(checkUserAuth());
+
+    return () => controller.abort();
+  }, [authSuccess]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    if (user) dispatch(setAnotherUsersInState(user));
+
+    return () => controller.abort();
+  }, [user]);
+
+  /*useEffect(() => {
+    .then(() => {
+      fetch(`${config.baseUrl}/iprs/subordinates/`, {
+        signal: controller.signal,
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+
+        },
+        body: JSON.stringify({
+          title: 'Развить себя всецело. Да',
+          employee: 2,
+          description: 'Описание? Не используется ведь в ИПР',
+        }),
+      });
+    })
+  }, []);*/
 
   return (
     <div className={styles.app}>

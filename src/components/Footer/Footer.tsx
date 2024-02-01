@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { Link } from '@alfalab/core-components/link';
 
@@ -32,4 +32,4 @@ const Footer: React.FC<FooterProps> = ({ items }) => {
   );
 };
 
-export default Footer;
+export default memo(Footer);
