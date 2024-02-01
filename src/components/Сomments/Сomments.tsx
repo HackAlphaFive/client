@@ -1,9 +1,16 @@
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styles from "./Сomments.module.css";
 import { Input } from "@alfalab/core-components/input";
 import { Circle } from "@alfalab/core-components/icon-view/circle";
 import iconSubmit from "../../images/comments-button.svg";
-import iconSubmitDisabled from '../../images/comments-button-disabled.svg'
+import iconSubmitDisabled from "../../images/comments-button-disabled.svg";
 import avatar from "../../images/Avatar.png";
 import Comment from "../Comment/Comment";
 
@@ -13,7 +20,9 @@ const Сomments: FC = () => {
     avatar: avatar,
     date: "2 недели назад",
   };
-const [ulHeight, setUlHeight] = useState<number>(10)
+  const [ulElement, setUlElement] = useState<HTMLUListElement>();
+  const [ulHeight, setUlHeight] = useState<number>(40);
+  const [liHeight, setLiHeight] = useState<number>(64);
   const [value, setValue] = useState<string>("");
   const [comm, setComment] = useState<
     Array<{
@@ -29,12 +38,6 @@ const [ulHeight, setUlHeight] = useState<number>(10)
     return () => document.removeEventListener("keypress", sendOnEnter);
   });
 
-  // useEffect(() => {
-  //   const height = refComponent.current.getBoundingClientRect().height;
-
-  //   console.log(height, "height");
-  // }, [refComponent]);
-  console.log(ulHeight)
   const sendOnEnter = (e: KeyboardEvent) => {
     if (e.code === "Enter" && (value?.length as number) > 0) {
       handleInput();
@@ -53,6 +56,17 @@ const [ulHeight, setUlHeight] = useState<number>(10)
     arr.push(comment);
     setComment(arr);
     setValue("");
+    handelScroll();
+  };
+  const handelScroll = () => {
+    setTimeout(
+      () =>
+        ulElement?.scrollTo({
+          top: ulElement?.scrollHeight,
+          behavior: "smooth",
+        }),
+      10
+    );
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,21 +74,35 @@ const [ulHeight, setUlHeight] = useState<number>(10)
     setValue(value);
   };
 
-  const handleUlElement = (e:HTMLUListElement) => {
-    setUlHeight(e?.clientHeight)
-  }
+  const handleUlElement = (e: HTMLUListElement) => {
+    setUlHeight(e?.clientHeight);
+    setUlElement(e);
+  };
+
+  const handleLiElement = (e: HTMLLIElement) => {
+    setLiHeight(e?.clientHeight);
+  };
 
   //Функция переворачивает очередность массива и перебирает его, создавая элементы комментарий
   const createComments = useMemo(() => {
     return comm
       .reverse()
-      .map((item, index) => <Comment key={index} comment={item} />);
+      .map((item, index) => (
+        <Comment key={index} liHeight={handleLiElement} comment={item} />
+      ));
   }, [comm]);
 
   return (
     <div className={styles.commentsContainer}>
       <p className={styles.text}>Комментарии:</p>
-      <ul ref={handleUlElement} className={`custom-scroll ${ulHeight >= 600 ? styles.commentsScroll : styles.comments}`} >{createComments}</ul>
+      <ul
+        ref={handleUlElement}
+        className={`custom-scroll ${
+          ulHeight >= 600 ? styles.commentsScroll : styles.comments
+        }`}
+      >
+        {createComments}
+      </ul>
       <div className={styles.bottom}>
         <Circle imageUrl={commentData.avatar} size={32} />
         <Input
@@ -94,7 +122,11 @@ const [ulHeight, setUlHeight] = useState<number>(10)
           onClick={handleInput}
           disabled={value?.length === 0}
         >
-          <img className={styles.sendIcon} src={value?.length === 0 ? iconSubmitDisabled : iconSubmit} alt="Иконка отправки комментария" />
+          <img
+            className={styles.sendIcon}
+            src={value?.length === 0 ? iconSubmitDisabled : iconSubmit}
+            alt="Иконка отправки комментария"
+          />
         </button>
       </div>
     </div>

@@ -5,18 +5,28 @@ import { Textarea } from "@alfalab/core-components/textarea";
 import { Button } from "@alfalab/core-components/button";
 import { PlusMediumMIcon } from "@alfalab/icons-glyph/PlusMediumMIcon";
 type TProps = {
-  textValue:string;
-  descriptionValue:string;
+  textValue: string;
+  descriptionValue: string;
   editMode: boolean;
   jobtitle: string;
   startDate: string;
   endDate: string;
-  status: string
-  setEditMode:React.Dispatch<React.SetStateAction<boolean>>
+  status: string;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const TaskForm: FC<TProps> = ({ textValue, descriptionValue, editMode, jobtitle, startDate, endDate, status, setEditMode }) => {
+const TaskForm: FC<TProps> = ({
+  textValue,
+  descriptionValue,
+  editMode,
+  jobtitle,
+  startDate,
+  endDate,
+  status,
+  setEditMode,
+}) => {
   const [inputValue, setInputValue] = useState(textValue);
   const [textareaValue, setTextareaValue] = useState(descriptionValue);
+  const [isFocus, setFocus] = useState(false);
 
   const handleChange = (
     e:
@@ -28,33 +38,43 @@ const TaskForm: FC<TProps> = ({ textValue, descriptionValue, editMode, jobtitle,
     state(value);
   };
 
-const handleSaveButton  = () => {
-  const task = {
-    title: inputValue,
-    description: textareaValue,
-    status: status,
-    start_date: startDate,
-    end_date: endDate,
-  }
-  setEditMode(false)
-}
-const handleCancelButton = () => {
-  setInputValue(textValue)
-  setTextareaValue(descriptionValue)
-  setEditMode(false)
-}
+  const handleSaveButton = () => {
+    const task = {
+      title: inputValue,
+      description: textareaValue,
+      status: status,
+      start_date: startDate,
+      end_date: endDate,
+    };
+    setEditMode(false);
+    setFocus(false)
+  };
+  const handleCancelButton = () => {
+    setInputValue(textValue);
+    setTextareaValue(descriptionValue);
+    setEditMode(false);
+    setFocus(false)
+  };
 
   return (
-    <div className={styles.taskForm} >
+    <div className={styles.taskForm}>
       <Input
         name="taskName"
-        onChange={(e) => handleChange(e, setInputValue)}
+        onClick={() => setFocus(true)}
+        onChange={(e) => {
+          handleChange(e, setInputValue);
+        }}
         placeholder="Введите текст"
         block={true}
-        hint="Введите название задачи"
-        error={inputValue.length < 5 ? "Название задачи должно быть не короче 2 симв." : false}
+        hint={inputValue.length === 0 || isFocus ? "Введите название задачи" : ""}
+        error={
+          inputValue.length < 5
+            ? "Название задачи должно быть не короче 5 симв."
+            : inputValue.length > 25 ? "Название задачи должно быть не длинее 25 симв." : false
+        }
         value={inputValue && inputValue}
         disabled={jobtitle === "director" ? !editMode : true}
+        fieldClassName={inputValue.length === 0 || isFocus ? "" : styles.fieldInput}
       />
       <p
         className={`text_color_main text_type_middle ${styles.textDescription}`}
@@ -90,8 +110,16 @@ const handleCancelButton = () => {
             view="primary"
             className={styles.taskButton}
             leftAddons={<PlusMediumMIcon fill="white" />}
-            disabled={inputValue.length > 5 && textareaValue.length <= 480 ? false : true}
-            onClick={inputValue.length > 5 && textareaValue.length <= 480 ? handleSaveButton : undefined}
+            disabled={
+              inputValue.length > 5 && textareaValue.length <= 480
+                ? false
+                : true
+            }
+            onClick={
+              inputValue.length > 5 && textareaValue.length <= 480
+                ? handleSaveButton
+                : undefined
+            }
           >
             Сохранить
           </Button>

@@ -37,7 +37,7 @@ const TaskLine: FC<TProps> = ({
   uniqueId,
   classNameLine,
 }) => {
-  const jobTitle: string = "directr";
+  const jobTitle: string = "director";
   //стейт для выбора статуса
   const [valueStatus, setValueStatus] = useState(
     status ? status : StatusListRU.NoStatus
@@ -88,6 +88,18 @@ const TaskLine: FC<TProps> = ({
     if (!isOpenCalendar && !isOpenEdit && !isOpenStatus && !isOpenTask) {
       return;
     }
+
+    //Массив всех id
+    const arrOfId = [
+      uniqueId + "editPopover",
+      uniqueId + "calendarPopover",
+      uniqueId + "statusPopover",
+      uniqueId + "taskPopover",
+      uniqueId + "editButton",
+      uniqueId + "calendarButton",
+      uniqueId + "statusButton",
+      uniqueId + "taskButton",
+    ];
     //Функция закрытия поповеров при клике вне
     const closePopover = (
       e: MouseEvent,
@@ -103,7 +115,26 @@ const TaskLine: FC<TProps> = ({
           e.composedPath().includes(button)
         )
       ) {
-        state(false);
+        if (isOpenTask) {
+          return;
+        } else {
+          state(false);
+        }
+      }
+    };
+
+    //Функция закрытия задачи при клике вне, но если открывать выпадашки, то задача не будет закрываться
+    const closeTask = (e: MouseEvent, allId: string[]) => {
+      const arrElements = allId.map((id) =>
+        e.composedPath().includes(document.getElementById(id)!)
+      );
+      const findTrue = arrElements.find((item) => item === true);
+      if (!findTrue) {
+        setOpenTask(false);
+        window.scrollTo({
+          top: 198,
+          behavior: "smooth",
+        });
       }
     };
     //Ниже функции колбэки, чтобы снимать слушатель
@@ -132,12 +163,7 @@ const TaskLine: FC<TProps> = ({
       );
     };
     const taskCallback = (e: MouseEvent) => {
-      closePopover(
-        e,
-        uniqueId + "taskPopover",
-        uniqueId + "taskButton",
-        setOpenTask
-      );
+      closeTask(e, arrOfId);
     };
 
     isOpenEdit && document.addEventListener("click", editCallback);
@@ -190,6 +216,7 @@ const TaskLine: FC<TProps> = ({
       if (from > to) {
         setStart(getDateString(selectedToDate, "-"));
         setEnd(getDateString(selectedFromDate, "-"));
+        setOpenCalendar(false);
         return `${getDateString(selectedToDate, "")} - ${getDateString(
           selectedFromDate,
           ""
@@ -197,6 +224,7 @@ const TaskLine: FC<TProps> = ({
       } else {
         setStart(getDateString(selectedFromDate, "-"));
         setEnd(getDateString(selectedToDate, "-"));
+        setOpenCalendar(false);
         return `${getDateString(selectedFromDate, "")} - ${getDateString(
           selectedToDate,
           ""
@@ -215,8 +243,16 @@ const TaskLine: FC<TProps> = ({
 
   //Функция открытия/закрытия попофера по клику на иконку
   const openPopoverUnique = useCallback(
-    (state: Dispatch<SetStateAction<boolean>>) => {
-      state((isOpen) => !isOpen);
+    (state: Dispatch<SetStateAction<boolean>>, task = false) => {
+      if (task) {
+        state((isOpen) => !isOpen);
+        window.scrollTo({
+          top: 198,
+          behavior: "smooth",
+        });
+      } else {
+        state((isOpen) => !isOpen);
+      }
     },
     []
   );
@@ -233,6 +269,7 @@ const TaskLine: FC<TProps> = ({
   const handleEdit = () => {
     setEditMode(true);
     setOpenEdit(false);
+    setOpenTask(true);
   };
 
   return (
@@ -245,11 +282,13 @@ const TaskLine: FC<TProps> = ({
       >
         <div
           id={uniqueId + "taskButton"}
-          onClick={() => openPopoverUnique(setOpenTask)}
+          onClick={() => openPopoverUnique(setOpenTask, true)}
           className={styles.taskName}
         >
-          <ChevronDownMIcon className={styles.taskButton} />
-          <p className={styles.taskText}>{taskText}</p>
+          <a href={"#" + uniqueId + "taskPopover"} className={styles.anchor}>
+            <ChevronDownMIcon className={styles.taskButton} />
+            <p className={styles.taskText}>{taskText}</p>
+          </a>
         </div>
         <div
           id={uniqueId + "calendarButton"}
@@ -355,7 +394,7 @@ const TaskLine: FC<TProps> = ({
         >
           <ul id={uniqueId + "editPopover"} className={styles.popoverList}>
             <li className={styles.popoverItem} onClick={handleEdit}>
-              Редактировать
+              <a href={"#" + uniqueId + "taskPopover"} className={styles.blackText}>Редактировать</a>
             </li>
             <li className={styles.popoverItem}>Удалить</li>
           </ul>
@@ -404,8 +443,9 @@ const TaskLine: FC<TProps> = ({
         anchorElement={elemTask}
         useAnchorWidth={true}
         position="bottom"
-        popperClassName={styles.pp}
+        zIndex={10}
         preventFlip={true}
+        transition={{ timeout: 500 }}
       >
         <div id={uniqueId + "taskPopover"} className={styles.popoverTask}>
           <TaskForm
