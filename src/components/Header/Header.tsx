@@ -15,7 +15,6 @@ import { Tooltip } from "@alfalab/core-components/tooltip";
 
 const Header: FC = () => {
   const [isOpen, setisOpen] = useState(false);
-  const [isClose, setisClose] = useState<undefined | boolean>();
   const [elem, setElement] = useState<null | HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,9 +42,6 @@ const Header: FC = () => {
     };
   }, []);
 
-  const closeTooltip = () => {
-    setisClose(false);
-  };
   //Функция открытия выпающего
   const openPopover = () => {
     setisOpen((isOpen) => !isOpen);
@@ -57,7 +53,7 @@ const Header: FC = () => {
   return (
     <header className={styles.header}>
       <nav className={styles.navigation}>
-        <Link underline={false} href="https://alfabank.ru/">
+        <Link underline={false} href="https://alfabank.ru/" className={styles.link}>
           <img src={logo} alt='Логотип "Альфа-Пипл"' className={styles.logo} />
         </Link>
         <Link underline={false} href="https://alfabank.ru/" view="primary">
@@ -91,8 +87,6 @@ const Header: FC = () => {
             position="left"
             fallbackPlacements={["bottom"]}
             trigger="hover"
-            onClose={closeTooltip}
-            open={isClose}
             anchor={elem}
             offset={[2, -12]}
             zIndex={51}

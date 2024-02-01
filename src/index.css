@@ -113,3 +113,8 @@ body {
   background: var(--color-tooltip);
   border-radius: 3px;
 }
+
+/* Класс для плавного скролла */
+* {
+  scroll-behavior: smooth;
+}
