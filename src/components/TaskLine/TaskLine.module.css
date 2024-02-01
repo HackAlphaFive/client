@@ -3,10 +3,6 @@
   align-items: center;
 }
 .taskName {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-  gap: 12px;
   transition: transform 0.3s ease-in-out;
 }
 .taskName:hover {
@@ -15,7 +11,7 @@
 }
 .taskText {
   margin: 0;
-  width: 551px;
+  width: 547px;
   font-family: Roboto;
   font-size: 16px;
   font-style: normal;
@@ -112,6 +108,10 @@
   color: #353539;
   transition: transform 0.3s ease-in-out;
 }
+.blackText{
+  color: #353539;
+  text-decoration: none;
+}
 .popoverItem:hover {
   cursor: pointer;
   transform: scale(1.1, 1.1);
@@ -168,4 +168,13 @@
 .taskIcon:hover {
   cursor: pointer;
   transform: scale(1.2, 1.2);
+}
+.anchor{
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+  display: flex;
+  color: #353539;
+  text-decoration: none;
 }
