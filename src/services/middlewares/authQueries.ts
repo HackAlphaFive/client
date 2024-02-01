@@ -7,8 +7,7 @@ import { AppDispatch } from "../types";
 import { USERS } from "../../utils/constants";
 
 /**
- * Очищает: стейт списка пользователей на выбор,
- * текущего юзера, токены.
+ * Очищает: стейт списка пользователей на выбор, текущего юзера, токены.
  * Получает с сервера новые токены
  */
 export function login(username: string, password: string, signal?: AbortSignal) {
@@ -66,6 +65,10 @@ export function login(username: string, password: string, signal?: AbortSignal) 
   }
 );*/
 
+/**
+ * @param id искомого пользователя
+ * @description need accessToken
+ */
 export const getAnotherUser = (id: number, signal?: AbortSignal) => {
   return fetch(`${config.baseUrl}/users/${id}/`, {
     signal: signal,
@@ -108,6 +111,10 @@ export function getUser(signal?: AbortSignal) {
   };
 }
 
+/**
+ * @param currentUser текущий юзер, для которого получен токен и данные аккаунта
+ * @description Ф-ия заполняет стейт вариантами юзеров, на которых можно свичнуться
+ */
 export function setAnotherUsersInState (currentUser: TUser) {
   return (dispatch: AppDispatch) => {
     const idsArray = USERS.map(user => user.id);
@@ -130,6 +137,7 @@ export function setAnotherUsersInState (currentUser: TUser) {
  * и сохраняет его в стейт. Может очищать стейт юзера!
  */
 export function checkUserAuth(signal?: AbortSignal) {
+  console.log('вызван checkUserAuth');
   return (dispatch: AppDispatch) => {
     dispatch(setAuthPending(true));
     const myToken = localStorage.getItem('accessToken');

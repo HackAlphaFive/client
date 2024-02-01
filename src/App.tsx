@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage/HomePage';
@@ -7,10 +7,8 @@ import IPRPage from './pages/IPRPage/IPRPage';
 import styles from './App.module.css';
 import { NAME_FOR_404, USER_SUBORNIDATE_1, USER_SUBORNIDATE_5, USER_SUBORNIDATE_7, USER_SUPERIOR } from './utils/constants';
 import { useDispatch, useSelector } from './services/hooks';
-import { checkUserAuth, getAnotherUser, login, setAnotherUsersInState } from './services/middlewares/authQueries';
+import { checkUserAuth, login, setAnotherUsersInState } from './services/middlewares/authQueries';
 import { getAuthPending, getAuthSuccess, getUserFromState, getUserPending, getUserSuccess } from './services/selectors/authSelector';
-import { config } from './utils/api/api';
-import { handleError } from './utils/utils';
 
 function App(): JSX.Element {
   console.log('выполнение App');
@@ -36,48 +34,52 @@ function App(): JSX.Element {
     if (process.env.NODE_ENV === 'development' && location.pathname === '/client') navigate('/');
 
     const controller = new AbortController();
-    dispatch(login(USER_SUPERIOR.username, USER_SUPERIOR.password, controller.signal));
+    dispatch(login(USER_SUBORNIDATE_1.username, USER_SUBORNIDATE_1.password, controller.signal));
 
     return () => controller.abort();
   }, []);
 
   useEffect(() => {
-    const controller = new AbortController();
-    if (!authPending && authSuccess) dispatch(checkUserAuth());
-
-    return () => controller.abort();
+    if (authSuccess) dispatch(checkUserAuth());
   }, [authSuccess]);
 
   useEffect(() => {
-    const controller = new AbortController();
     if (user) dispatch(setAnotherUsersInState(user));
-
-    return () => controller.abort();
   }, [user]);
 
-  /*useEffect(() => {
-    .then(() => {
-      fetch(`${config.baseUrl}/iprs/subordinates/`, {
-        signal: controller.signal,
-        method: 'POST',
+  useEffect(() => {
+    if (user) {
+      /*fetch(`${config.baseUrl}/iprs/3/tasks/1/`, {
+        method: 'PATCH',
         headers: {
           "Content-Type": "application/json;charset=utf-8",
           authorization: localStorage.getItem('accessToken')!,
 
         },
         body: JSON.stringify({
-          title: 'Развить себя всецело. Да',
-          employee: 2,
-          description: 'Описание? Не используется ведь в ИПР',
+          title: 'Купить слона!!!!',
+          description: 'пять слов для строгого сервера',
+          status: 'in_progress',
+          // start_date: '2024-05-10',
+          // end_date: '2024-06-07',
         }),
-      });
-    })
-  }, []);*/
+      });*/
+      /*fetch(`${config.baseUrl}/tasks/1/comments/`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+        },
+        body: JSON.stringify({
+          text: 'Давайте устроим митап. Мы не обсудили критерии закупки. Размер ушей, стойкость запаха и тдтп',
+        }),
+      });*/
+    }
+  }, [user]);
 
   return (
     <div className={styles.app}>
       <Routes>
-
         <Route path='/' element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path='ipr' element={<IPRPage />} />
