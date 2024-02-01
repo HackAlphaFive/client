@@ -83,7 +83,7 @@ const TableTask: FC<TProps> = ({ children, data }): JSX.Element => {
         <p className='text text_type_middle text_color_tooltip-dark'>Список задач</p>
       </div>
       <TabFiltrDate calendarWidth={290}/>
-      <TabFiltrStatus width='166px' label='Статус задачи'/>
+      <TabFiltrStatus width='188px' label='Статус задачи'/>
       {MockTasks && MockTasks.map(task => {
         const start = formatDate(task.start_date);
         const end = formatDate(task.end_date);

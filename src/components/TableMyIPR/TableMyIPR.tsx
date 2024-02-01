@@ -14,7 +14,7 @@ function TableMyIPR() {
         <p className='text text_type_middle text_color_tooltip-dark'>Название</p>
       </div>
       <TabFiltrDate calendarWidth={290}/>
-      <TabFiltrStatus width='198px' />
+      <TabFiltrStatus width='188px' />
     </Table>
   )
 }

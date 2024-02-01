@@ -13,7 +13,7 @@ function TableIPRForSubord() {
       <div className={`${styles.titleWrapper} `}>
         <p className='text text_type_middle text_color_tooltip-dark'>Название</p>
       </div>
-      <TabFiltrStatus width='166px' />
+      <TabFiltrStatus width='188px' />
     </Table>
   )
 }
