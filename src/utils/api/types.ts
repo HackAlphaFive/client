@@ -38,29 +38,24 @@ export type TResponseLogin = {
 
 /* =============== IPRs =============== */
 
-// todo check - проверка не была осуществлена (через реальный запрос на сервер и изучение ответа в devtools)
-export type TEmployee = {
-  /**
-   * ФИО целиком
-   */
-  fullName: string;
-  position: string;
-};
+// Если написано "todo check" – проверка не была осуществлена (через реальный запрос на сервер и изучение ответа в devtools)
 
-// todo check
 export type T_IPR = {
   id: number;
   title: string;
-  employee: TEmployee;
   /**
-   * ФИО создателя ИПР
+   * Имя Фамилия
+   */
+  employee: string;
+  /**
+   * Имя Фамилия ← создателя ИПР
    */
   author: string;
   description: string;
   status: StatusList;
   created_date: string;
-  start_date: string;
-  end_date: string;
+  start_date: string | null;
+  end_date: string | null;
 };
 
 export type TResponseIPRsMy = {
@@ -73,7 +68,7 @@ export type TResponseIPRsMy = {
    */
   next: null | number;
   /**
-   * номер предыдущей страницы, относительно.......
+   * номер предыдущей страницы, относительно переданной в данном ответе
    */
   previous: null | number;
   /**
@@ -84,7 +79,10 @@ export type TResponseIPRsMy = {
 
 export type TResponseIPRsForSubord = TResponseIPRsMy;
 
-// todo check
+/**
+ * POST /iprs/subordinates/
+ * @description need accessToken
+ */
 export type TBodyRequestCreateIPR = {
   /**
    * название ИПР
@@ -95,63 +93,105 @@ export type TBodyRequestCreateIPR = {
    */
   employee: number;
   /**
-   * описание ИПР. Не используется у нас?
+   * описание ИПР. Должно быть заполнено не пустой строкой
+   * @description не используется
    */
   description: string;
 };
 
-// todo check
 export type TResponseCreateIPR = T_IPR;
 
-// todo check
+/**
+ * @description GET /iprs/subordinates/{id}/
+ * @description need accessToken
+ */
 export type TResponseGetIPRById = T_IPR;
 
-// todo check
+/**
+ * PATCH /iprs/subordinates/{id}/
+ * @description need accessToken руководителя
+ */
 export type TBodyRequestChangeIPR = {
   title?: string;
   description?: string;
-  status?: StatusList;
-  start_date?: string; // нельзя это менять в ипр со стороны клиента
-  end_date?: string; // нельзя это менять в ипр со стороны клиента
+  /**
+   * можно передать на бэк все статусы, но ограничим это хотя бы со стороны фронта
+   */
+  status?: Exclude<StatusList, StatusList.InProgress | StatusList.NoStatus>;
 };
 
-// todo check
 export type TResponseChangeIPR = T_IPR;
 
-// todo check
-export type TResponseDeleteIPR = {
-  success: boolean;
-};
+/**
+ * DELETE /iprs/subordinates/{id}/
+ * @description need accessToken
+ * @description При успехе → 204 Statuse Code
+ */
+export type TResponseDeleteIPR = {};
 
 
 
 /* =============== tasks =============== */
 
-// todo check
+/**
+ * все даты в YYYY-MM-DD
+ */
 export type TTask = {
+  /**
+   * id данной задачи
+   */
   id: number;
   title: string;
   description: string;
   status: StatusList;
   /**
-   * Название ИПР, к которому принадлежит задача
+   * username автора (его логин)
    */
-  ipr: string;
-  comments: Array<TComment>;
+  author: string;
+  /**
+   * id ИПР, к которому принадлежит задача
+   */
+  ipr: number;
   created_date: string;
   start_date: string;
   end_date: string;
 };
 
-// todo check
 /**
  * @description GET /iprs/{id}/tasks/
+ * @description need accessToken
+ * @description получение задач к конкретной ИПР
  */
-export type TResponseGetTasks = Array<Omit<TTask, 'comments'>>;
+export type TResponseGetTasks = {
+  /**
+   * число страниц, на которых помещаются задачи, попадающие под критерии фильтрации.
+   * По 5 штук на страницу. Хотя на фронте задачи не пагинириуются, а скролятся.
+   * Потому НЕ передаём page в query
+   */
+  count: number;
+  /**
+   * номер следующей страницы, относительно переданной в данном ответе
+   */
+  next: null | number;
+  /**
+   * номер предыдущей страницы, относительно переданной в данном ответе
+   */
+  previous: null | number;
+  /**
+   * массив объектов задач. Может быть пустой
+   */
+  results: Array<Omit<TTask, 'ipr'> & {
+    /**
+     * название ИПР
+     */
+    ipr: string // да, почему-то тут даётся название, а где-то айдишка
+  }>;
+};
 
-// todo check
 /**
- * @description POST /tasks/
+ * @description POST /iprs/{ipr_id}/tasks/
+ * @description need accessToken
+ * @description все ключи обязательны
  */
 export type TBodyRequestCreateTask = {
   title: string;
@@ -161,40 +201,59 @@ export type TBodyRequestCreateTask = {
   /**
    * id ИПР, к которому относится создаваемая задача
    */
-  ipr: number;
+  ipr: number; // id передаётся ещё и в path. Зачем?
 };
 
-// todo check
-export type TResponseCreateTask = TTask; // Зачем тут в ответе полная задача, с комментами ещё..?
+export type TResponseCreateTask = TTask;
 
-// todo check
-export type TBodyRequestChangeTask = {
+/**
+ * @description PATCH /iprs/{ipr_id}/tasks/{task_id}/
+ * @description need accessToken (рукль или подчинённый)
+ * @description все даты YYYY-MM-DD
+ */
+export type TBodyRequestChangeTaskSuperior = {
   title?: string;
   description?: string;
-  status?: StatusList;
+  status?: Exclude<StatusList, StatusList.InProgress | StatusList.NoStatus | StatusList.Done>;
   start_date?: string;
   end_date?: string;
 };
+export type TBodyRequestChangeTaskEmployee = {
+  status: Exclude<StatusList, StatusList.Failed | StatusList.NoStatus | StatusList.Canceled>;
+};
 
-// todo check
 export type TResponseChangeTask = {
+  /**
+   * id данной задачи
+   */
+  id: number;
   title: string;
   description: string;
   status: StatusList;
+  /**
+   * username (логин)
+   */
+  author: string;
   start_date: string;
   end_date: string;
+  created_date: string;
 };
 
-/* =============== comment =============== */
+/* =============== comments =============== */
 
-// todo check
 export type TComment = {
+  /**
+   * id данного коммента
+   */
   id: number;
+  /**
+   * date-time
+   */
   created_date: string;
   /**
-   * id автора комментария
+   * username (логин)
    */
-  author: number;
+  author: string;
   /**
    * id задачи, к которой принадлежит комментарий
    */
@@ -202,10 +261,27 @@ export type TComment = {
   text: string;
 };
 
-// todo check
-export type TResponseGetComments = Array<TComment>;
+/**
+ * @description GET /tasks/{id}/comments/
+ * @description without accessToken
+ */
+export type TResponseGetComments = {
+  /**
+   * число комментариев. Видимо возможна фильтрация?
+   */
+  count: number;
+  /**
+   * пагинация
+   */
+  next: null | number;
+  previous: null | number;
+  results: Array<TComment>;
+};
 
-// todo check
-export type TBodyRequestCreateComment = Omit<TComment, 'id' | 'created_date'>;
-// todo check
+/**
+ * @description POST /tasks/{id}/comments/
+ * @description need accessToken
+ */
+export type TBodyRequestCreateComment = { text: string };
+
 export type TResponseCreateComment = TComment;

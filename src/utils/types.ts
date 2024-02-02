@@ -14,8 +14,6 @@ export enum StatusListRU {
   Canceled = 'Отменено',
 }
 
-export type StatusListTask = Exclude<StatusList, StatusList.NoStatus>;
-
 export enum DimensionsListIcons {
   xs = 12,
   s = 16,
