@@ -1,9 +1,11 @@
 import { store } from './store';
 import { combineReducers } from 'redux';
-import authReducer from './slices/authSlices';
+import authReducer from './slices/authSlice';
+import IPRsReducer from './slices/IPRsSlice';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
+  iprs: IPRsReducer,
 });
 
 /**

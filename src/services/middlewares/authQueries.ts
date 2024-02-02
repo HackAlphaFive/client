@@ -1,8 +1,7 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import { config, handleResponse } from "../../utils/api/api";
 import { TResponseGetSomeUser, TResponseLogin, TResponseUsersMe, TUser } from "../../utils/api/types";
 import { handleError } from "../../utils/utils";
-import { clearAnotherUsers, clearError, setAnotherUsers, setAuthPending, setAuthSuccess, setUser, setUserPending, setUserSuccess } from "../slices/authSlices";
+import { clearAnotherUsers, clearError, setAnotherUsers, setAuthPending, setAuthSuccess, setUser, setUserPending, setUserSuccess } from "../slices/authSlice";
 import { AppDispatch } from "../types";
 import { USERS } from "../../utils/constants";
 
@@ -45,25 +44,6 @@ export function login(username: string, password: string, signal?: AbortSignal) 
       });
   }
 }
-
-/*export const getAnotherUser = createAsyncThunk(
-  'auth/getAnotherUser',
-  (payload: {id: number; signal?: AbortSignal}) => {
-    console.log('запрос');
-    return fetch(
-      `${config.baseUrl}/users/${payload.id}/`,
-      {
-        signal: payload.signal,
-        method: 'GET',
-        headers: {
-        ...config.headers,
-        authorization: localStorage.getItem('accessToken')!,
-        }
-      }
-    )
-      .then(handleResponse<TResponseGetSomeUser>);
-  }
-);*/
 
 /**
  * @param id искомого пользователя

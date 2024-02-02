@@ -2,6 +2,13 @@ import { StatusList } from "../types";
 
 /* =============== auth & user =============== */
 
+export type TEmployee = {
+  fullName: string;
+  position: string;
+  photo: string;
+  id: number;
+};
+
 export type TUser = {
   id: number;
   /**
@@ -44,9 +51,9 @@ export type T_IPR = {
   id: number;
   title: string;
   /**
-   * Имя Фамилия
+   * Имя Фамилия ИЛИ ВОТ ТАК ↓ TODO
    */
-  employee: string;
+  employee: TEmployee;
   /**
    * Имя Фамилия ← создателя ИПР
    */

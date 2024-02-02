@@ -63,24 +63,6 @@ const authSlice = createSlice({
       state.authSuccess = action.payload;
     },
   },
-  /*extraReducers: builder => {
-    builder.addCase(getAnotherUser.pending, (state) => {
-      state.error = '';
-      state.userSuccess = null;
-      state.userPending = true;
-    })
-    builder.addCase(getAnotherUser.fulfilled, (state, action) => {
-      state.anotherUsers = [...state.anotherUsers, {...action.payload, isSuperior: action.payload.subordinates.length > 0 ? true : false}];
-      state.userSuccess = true;
-      state.userPending = false;
-      console.log('вызов завершен промис разрешен плюсово');
-    })
-    builder.addCase(getAnotherUser.rejected, (state, action) => {
-      state.userSuccess = false;
-      state.userPending = false;
-      state.error = action.payload;
-    })
-  }*/
 });
 
 export const {

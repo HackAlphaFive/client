@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TabsDesktop, Tab } from '@alfalab/core-components/tabs/desktop';
 import { Gap } from '@alfalab/core-components/gap';
-import { useSelector } from '../../services/hooks';
+import { useDispatch, useSelector } from '../../services/hooks';
 import { ButtonDesktop } from '@alfalab/core-components/button/desktop';
 import { ReactComponent as Add } from '../../assets/Add.svg';
 import UserTab from '../../components/UserTab/UserTab';
@@ -10,8 +10,12 @@ import TableTask from '../../components/TableTask/TableTask';
 import TableIPRForSubord from '../../components/TableIPRForSubord/TableIPRForSubord';
 import TableMyIPR from '../../components/TableMyIPR/TableMyIPR';
 import { getUserRole, getUserSimplified } from '../../services/selectors/authSelector';
+import { getMyIPRs } from '../../services/middlewares/IPRsQueries';
+import { getmyIPRsFromStore, getmyIPRsPending, getmyIPRsSuccess } from '../../services/selectors/IPRsSelector';
 
 function IPRPage() {
+  const dispatch = useDispatch();
+
   const user = useSelector(getUserSimplified);
   const isSupervisor = useSelector(getUserRole);
 
@@ -39,6 +43,14 @@ function IPRPage() {
   const handleChange = (event: React.MouseEvent<Element, MouseEvent>, { selectedId }: { selectedId: string | number }) => {
     setSelectedId(selectedId);
   };
+
+  const myIPRs = useSelector(getmyIPRsFromStore);
+  const myIPRsPending = useSelector(getmyIPRsPending);
+  const myIPRsSuccess = useSelector(getmyIPRsSuccess);
+
+  useEffect(() => {
+    if (selectedId === 'me') dispatch(getMyIPRs());
+  }, [selectedId]);
 
   return (
     <>
@@ -81,8 +93,7 @@ function IPRPage() {
           />
           <Gap size='4xl' />
 
-          <TableMyIPR />
-          <TableTask />
+          <TableMyIPR data={myIPRs.results} />
         </>
       )}
     </>
