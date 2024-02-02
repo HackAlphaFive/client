@@ -7,6 +7,7 @@ import IPRPage from './pages/IPRPage/IPRPage';
 import styles from './App.module.css';
 import { NAME_FOR_404 } from './utils/constants';
 import { getToken } from './utils/api/api';
+import FullIPR from './pages/FullIPR/FullIPR';
 
 function App(): JSX.Element {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function App(): JSX.Element {
         <Route path='/' element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path='ipr' element={<IPRPage />} />
-          <Route path='ipr/:id' element={<div>КАКОЙ-ТО КОНКРЕТНЫЙ ИПР</div>} />
+          <Route path='ipr/:id' element={<FullIPR/>} />
           <Route path='*' element={<Navigate to={`/${NAME_FOR_404}`} />} />
         </Route>
         <Route path={NAME_FOR_404} element={<NotFound404Page />} />
