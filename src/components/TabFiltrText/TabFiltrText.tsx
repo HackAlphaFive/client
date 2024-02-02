@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './TabFiltrText.module.css';
 import { InputAutocompleteDesktop } from '@alfalab/core-components/input-autocomplete/desktop';
 import UserTab from '../UserTab/UserTab';
@@ -8,7 +8,13 @@ import Magnifier from '../Icons/Magnifier/Magnifier';
 import { DimensionsListIcons } from '../../utils/types';
 import { Gap } from '@alfalab/core-components/gap';
 
-function TabFiltrText() {
+type TProps = {
+  needMagnifier?: boolean;
+  myLabel?: string;
+  myWidth?: string;
+};
+
+const TabFiltrText: FC<TProps> = ({ needMagnifier = true, myLabel = 'Поиск по ФИО', myWidth = '385px' }) => {
   type TOption = {
     key: string,
     content: JSX.Element,
@@ -217,13 +223,13 @@ function TabFiltrText() {
   };
 
   return (
-    <div className={styles.field}>
+    <div style={{ width: myWidth }}>
       <InputAutocompleteDesktop
         size='xl'
         selected={selected}
         block={true}
         options={getFilteredOptions()}
-        label='Поиск по ФИО'
+        label={myLabel}
         placeholder='Иванов Пётр Абрамович'
         onChange={handleChange}
         onInput={handleInput}
@@ -240,7 +246,7 @@ function TabFiltrText() {
         inputProps={{
           onClear: () => setValue(''),
           clear: true,
-          leftAddons: <Magnifier size={DimensionsListIcons.l} classNameWrapper={styles.magnifier} />
+          leftAddons: needMagnifier ? (<Magnifier size={DimensionsListIcons.l} classNameWrapper={styles.magnifier} />) : undefined,
         }}
         optionsListProps={{
           emptyPlaceholder: (

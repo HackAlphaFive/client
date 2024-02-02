@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage/HomePage';
 import NotFound404Page from './pages/NotFound404Page/NotFound404Page';
 import IPRPage from './pages/IPRPage/IPRPage';
 import styles from './App.module.css';
+import FullIPR from './pages/FullIPR/FullIPR';
 import { NAME_FOR_404, USER_SUBORNIDATE_1, USER_SUBORNIDATE_5, USER_SUBORNIDATE_7, USER_SUPERIOR } from './utils/constants';
 import { useDispatch, useSelector } from './services/hooks';
 import { checkUserAuth, login, setAnotherUsersInState } from './services/middlewares/authQueries';
@@ -152,9 +153,13 @@ function App(): JSX.Element {
         <Route path='/' element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path='ipr' element={<IPRPage />} />
-          <Route path='ipr/:id' element={<div>КАКОЙ-ТО КОНКРЕТНЫЙ ИПР</div>} />
+
+          <Route path='ipr/edit' element={<FullIPR />} />
+          <Route path='ipr/:id' element={<FullIPR />} />
+
           <Route path='*' element={<Navigate to={`/${NAME_FOR_404}`} />} />
         </Route>
+
         <Route path={NAME_FOR_404} element={<NotFound404Page />} />
       </Routes>
     </div>
