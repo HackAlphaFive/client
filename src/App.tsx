@@ -9,6 +9,7 @@ import { NAME_FOR_404, USER_SUBORNIDATE_1, USER_SUBORNIDATE_5, USER_SUBORNIDATE_
 import { useDispatch, useSelector } from './services/hooks';
 import { checkUserAuth, login, setAnotherUsersInState } from './services/middlewares/authQueries';
 import { getAuthPending, getAuthSuccess, getUserFromState, getUserPending, getUserSuccess } from './services/selectors/authSelector';
+import { config } from './utils/api/api';
 
 function App(): JSX.Element {
   console.log('выполнение App');
@@ -34,7 +35,8 @@ function App(): JSX.Element {
     if (process.env.NODE_ENV === 'development' && location.pathname === '/client') navigate('/');
 
     const controller = new AbortController();
-    dispatch(login(USER_SUBORNIDATE_1.username, USER_SUBORNIDATE_1.password, controller.signal));
+    dispatch(login(USER_SUPERIOR.username, USER_SUPERIOR.password, controller.signal));
+    // dispatch(login(USER_SUBORNIDATE_1.username, USER_SUBORNIDATE_1.password, controller.signal));
 
     return () => controller.abort();
   }, []);
@@ -49,7 +51,8 @@ function App(): JSX.Element {
 
   useEffect(() => {
     if (user) {
-      /*fetch(`${config.baseUrl}/iprs/3/tasks/1/`, {
+      // TASKS ------------------------------------------------------------------
+      /*fetch(`${config.baseUrl}/iprs/28/tasks/82/`, {
         method: 'PATCH',
         headers: {
           "Content-Type": "application/json;charset=utf-8",
@@ -57,21 +60,87 @@ function App(): JSX.Element {
 
         },
         body: JSON.stringify({
-          title: 'Купить слона!!!!',
-          description: 'пять слов для строгого сервера',
-          status: 'in_progress',
+          // title: 'Купить слона!!!!',
+          // description: 'пять слов для строгого сервера',
+          status: 'In progress',
           // start_date: '2024-05-10',
           // end_date: '2024-06-07',
         }),
       });*/
-      /*fetch(`${config.baseUrl}/tasks/1/comments/`, {
+      /*fetch(`${config.baseUrl}/iprs/28/tasks/`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+        },
+      });*/
+      /*fetch(`${config.baseUrl}/iprs/28/tasks/`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json;charset=utf-8",
           authorization: localStorage.getItem('accessToken')!,
         },
         body: JSON.stringify({
-          text: 'Давайте устроим митап. Мы не обсудили критерии закупки. Размер ушей, стойкость запаха и тдтп',
+          title: "title for task",
+          description: "descrip",
+          start_date: '2024-04-04',
+          end_date: '2024-04-04',
+          ipr: 1,
+        }),
+      });*/
+      // IPRS ------------------------------------------------------------------
+      /*fetch(`${config.baseUrl}/iprs/subordinates/`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+        },
+        body: JSON.stringify({
+          title: "title",
+          description: "descrip",
+          // start_date: '2024-04-04',
+          // end_date: '2024-04-04',
+          employee: 2,
+        }),
+      });*/
+      /*fetch(`${config.baseUrl}/iprs/subordinates/28/`, {
+        method: 'PATCH',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+        },
+        body: JSON.stringify({
+          // title: "title",
+          // description: "descrip",
+          // start_date: '2024-04-04',
+          // end_date: '2024-04-04',
+          // employee: 2,
+          status: 'No status',
+        }),
+      });*/
+      /*fetch(`${config.baseUrl}/iprs/my/`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+        },
+      });*/
+      // COMMENTS ------------------------------------------------------------------
+      /*fetch(`${config.baseUrl}/tasks/82/comments/`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+        },
+      });
+      fetch(`${config.baseUrl}/tasks/82/comments/`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+        },
+        body: JSON.stringify({
+          text: "text comment qwert",
         }),
       });*/
     }

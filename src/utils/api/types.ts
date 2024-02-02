@@ -109,12 +109,15 @@ export type TResponseGetIPRById = T_IPR;
 
 /**
  * PATCH /iprs/subordinates/{id}/
- * @description need accessToken
+ * @description need accessToken руководителя
  */
 export type TBodyRequestChangeIPR = {
   title?: string;
   description?: string;
-  status?: Exclude<StatusList, StatusList.InProgress>;
+  /**
+   * можно передать на бэк все статусы, но ограничим это хотя бы со стороны фронта
+   */
+  status?: Exclude<StatusList, StatusList.InProgress | StatusList.NoStatus>;
 };
 
 export type TResponseChangeIPR = T_IPR;
@@ -140,7 +143,7 @@ export type TTask = {
   id: number;
   title: string;
   description: string;
-  status: unknown; // todo статусы неодинаковые с ИПР
+  status: StatusList;
   /**
    * username автора (его логин)
    */
@@ -203,20 +206,22 @@ export type TBodyRequestCreateTask = {
 
 export type TResponseCreateTask = TTask;
 
-export type TBodyRequestChangeTask = {
+/**
+ * @description PATCH /iprs/{ipr_id}/tasks/{task_id}/
+ * @description need accessToken (рукль или подчинённый)
+ * @description все даты YYYY-MM-DD
+ */
+export type TBodyRequestChangeTaskSuperior = {
   title?: string;
   description?: string;
-  status?: unknown; // todo
+  status?: Exclude<StatusList, StatusList.InProgress | StatusList.NoStatus | StatusList.Done>;
   start_date?: string;
   end_date?: string;
 };
+export type TBodyRequestChangeTaskEmployee = {
+  status: Exclude<StatusList, StatusList.Failed | StatusList.NoStatus | StatusList.Canceled>;
+};
 
-/**
- * @description PATCH /iprs/{ipr_id}/tasks/{task_id}/
- * @description need accessToken
- * @description все даты YYYY-MM-DD
- * @description
- */
 export type TResponseChangeTask = {
   /**
    * id данной задачи
@@ -224,7 +229,7 @@ export type TResponseChangeTask = {
   id: number;
   title: string;
   description: string;
-  status: unknown; // todo
+  status: StatusList;
   /**
    * username (логин)
    */
@@ -254,10 +259,6 @@ export type TComment = {
    */
   task: number;
   text: string;
-  /**
-   * id комментария, на который отвечает данный комментарий. Функционал тредов
-   */
-  reply: null | number; // todo правильно понял?
 };
 
 /**
