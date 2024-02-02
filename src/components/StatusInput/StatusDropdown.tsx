@@ -3,17 +3,20 @@ import { ReactComponent as Chevron } from '../../assets/Chevron.svg';
 import {ReactComponent as CheckedIcon} from '../../assets/status-icons/checked.svg';
 import {ReactComponent as UncheckedIcon} from '../../assets/status-icons/unchecked.svg';
 import styles from './StatusDropdown.module.css';
+import { StatusList, StatusListRU } from '../../utils/types';
 
 const statuses = [
-  { label: 'Отсутствует', value: 'NoStatus' },
-  { label: 'Не выполнено', value: 'Failed' },
-  { label: 'В работе', value: 'InProgress' },
-  { label: 'Выполнен', value: 'Done' },
-  { label: 'Отменен', value: 'Canceled' }
+  // { label: StatusListRU.NoStatus, value: StatusList.NoStatus },
+  { label: StatusListRU.Failed, value: StatusList.Failed },
+  // { label: StatusListRU.InProgress, value: StatusList.InProgress },
+  { label: StatusListRU.Done, value: StatusList.Done },
+  { label: StatusListRU.Canceled, value: StatusList.Canceled }
 ];
 
+const defaultStatus = { label: StatusListRU.NoStatus, value: StatusList.NoStatus };
+
 const StatusDropdown = () => {
-  const [status, setStatus] = useState(statuses[0]);
+  const [status, setStatus] = useState(defaultStatus);
   const [shown, setShown] = useState(false);
   const statusRef = useRef<HTMLDivElement>(null);
 

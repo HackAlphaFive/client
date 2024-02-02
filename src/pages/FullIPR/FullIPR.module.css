@@ -18,7 +18,6 @@
   width: 636px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 
 .iprContainer {
@@ -63,4 +62,9 @@
   border-radius: 50%;
 }
 
+.buttonsWrapper {
+  display: grid;
+  grid-template-columns: 193px 193px;
+  column-gap: var(--gap-2xl);
+}
 

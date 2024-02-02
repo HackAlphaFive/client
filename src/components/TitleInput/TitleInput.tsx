@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import { ReactComponent as PenIcon } from '../../assets/input-icons/lucide_pen.svg';
 import { ReactComponent as ClearIcon } from '../../assets/input-icons/clear.svg';
 import styles from './TitleInput.module.css';
 
-type TitleInputProps = {
-  title: string;
+type TProps = {
+  title?: string;
 }
 
-const TitleInput = ({title}: TitleInputProps) => {
+const TitleInput: FC<TProps> = ({title}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(title);
   const [error, setError] = useState('');
@@ -49,7 +49,7 @@ const TitleInput = ({title}: TitleInputProps) => {
         type="text"
         className={`${styles.input} ${error ? styles.inputError : styles.inputSuccess}`}
         placeholder="Введите название ИПР"
-        value={inputValue}
+        value={inputValue ? inputValue : ''}
         onChange={handleChange}
         readOnly={!isEditing}
       />
