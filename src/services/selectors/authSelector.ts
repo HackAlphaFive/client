@@ -1,3 +1,4 @@
+import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../types";
 
 export const getUserSuccess = (state: RootState) => state.auth.userSuccess;
@@ -13,6 +14,15 @@ export const getUserSimplified = (state: RootState) => {
     id: state.auth.user?.id,
   }
 };
+
+/*
+const getFirstName = (state: RootState) => state.auth.user?.first_name;
+const getLastName = (state: RootState) => state.auth.user?.last_name;
+const getPatronymic = (state: RootState) => state.auth.user?.patronymic;
+const getUserPosition = (state: RootState) => state.auth.user?.position;
+const getUserPhoto = (state: RootState) => state.auth.user?.photo;
+const getUserId = (state: RootState) => state.auth.user?.id;
+*/
 
 export const getAnotherUsersFromState = (state: RootState) => state.auth.anotherUsers;
 

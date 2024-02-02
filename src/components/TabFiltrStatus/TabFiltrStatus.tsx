@@ -11,9 +11,10 @@ type TProps = {
   width?: string;
   mode?: 'ipr' | 'task';
   label?: string;
+  disabled?: boolean;
 }
 
-function TabFiltrStatus({width = '206px', mode = 'ipr', label = 'Статус ИПР'} : TProps): JSX.Element {
+function TabFiltrStatus({width = '206px', mode = 'ipr', label = 'Статус ИПР', disabled} : TProps): JSX.Element {
   const options = [
     // content рисуется в инпуте при выборе данного пункта
     { key: '0', content: <div className={`${styles.item} text_color_main text_type_middle`}>Все статусы</div> },
@@ -29,6 +30,7 @@ function TabFiltrStatus({width = '206px', mode = 'ipr', label = 'Статус И
   return (
     <div style={{width: width}}>
       <SelectDesktop
+        disabled={disabled}
         options={options}
         placeholder='Выберите статус'
         label={label}

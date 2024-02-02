@@ -7,6 +7,8 @@
   --color-tooltip-dark: #797A7E;
   --color-cell: #F3F4F6;
   --form-control-bg-color: #F3F4F6;
+  --color-button-hover: #29292C;
+  --color-input-hover: #DDDFE2;
 }
 
 body {

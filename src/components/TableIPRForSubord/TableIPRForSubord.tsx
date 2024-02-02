@@ -7,7 +7,7 @@ import TabFiltrText from '../TabFiltrText/TabFiltrText';
 function TableIPRForSubord() {
   return (
     <Table
-      gridParams='36.218% 42.897% 20.884%'
+      gridParamsColumns='36.218% 42.897% 20.884%'
     >
       <TabFiltrText />
       <div className={`${styles.titleWrapper} `}>

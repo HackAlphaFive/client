@@ -117,7 +117,6 @@ export function setAnotherUsersInState (currentUser: TUser) {
  * и сохраняет его в стейт. Может очищать стейт юзера!
  */
 export function checkUserAuth(signal?: AbortSignal) {
-  console.log('вызван checkUserAuth');
   return (dispatch: AppDispatch) => {
     dispatch(setAuthPending(true));
     const myToken = localStorage.getItem('accessToken');
@@ -130,7 +129,6 @@ export function checkUserAuth(signal?: AbortSignal) {
           handleError('Ошибка при получении данных пользователя: ', err);
         })
         .finally(() => {
-          console.log('я в файнали');
           dispatch(setAuthPending(false));
           dispatch(setUserPending(false));
         });

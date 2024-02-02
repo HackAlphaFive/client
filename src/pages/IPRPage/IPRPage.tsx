@@ -12,9 +12,11 @@ import TableMyIPR from '../../components/TableMyIPR/TableMyIPR';
 import { getUserRole, getUserSimplified } from '../../services/selectors/authSelector';
 import { getMyIPRs } from '../../services/middlewares/IPRsQueries';
 import { getmyIPRsFromStore, getmyIPRsPending, getmyIPRsSuccess } from '../../services/selectors/IPRsSelector';
+import { useNavigate } from 'react-router';
 
 function IPRPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const user = useSelector(getUserSimplified);
   const isSupervisor = useSelector(getUserRole);
@@ -74,6 +76,7 @@ function IPRPage() {
           <ButtonDesktop
             view='accent'
             leftAddons={<Add />}
+            onClick={() => navigate('./edit')}
           >
             Создать новый ИПР
           </ButtonDesktop>
