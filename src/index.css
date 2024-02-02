@@ -1,5 +1,6 @@
 :root:root {
   --color-white: #fff;
+  --color-accent: #EF3124;
   --color-success: #17D055;
   --color-failure: #F14539;
   --color-tooltip: #BABBC2;
@@ -112,4 +113,9 @@ body {
 .custom-scroll::-webkit-scrollbar-thumb {
   background: var(--color-tooltip);
   border-radius: 3px;
+}
+
+/* Класс для плавного скролла */
+* {
+  scroll-behavior: smooth;
 }

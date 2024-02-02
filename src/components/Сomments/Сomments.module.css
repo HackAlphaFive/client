@@ -53,8 +53,13 @@
 .comments {
   display: flex;
   flex-direction: column;
+  max-height: 600px;
   gap: 24px;
   list-style-type: none;
-  margin: 0;
-  padding: 0 0 40px 0;
+  padding: 0;
+  margin: 0 0 40px 0;
+}
+.commentsScroll {
+  composes: comments;
+  overflow-y: scroll;
 }

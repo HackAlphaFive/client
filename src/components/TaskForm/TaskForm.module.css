@@ -1,0 +1,24 @@
+.taskForm {
+  max-width: 501px;
+  padding-bottom: 32px;
+}
+.textDescription{
+padding: 32px 0 24px 0;
+margin: 0;
+}
+.buttons{
+  padding-top: 36px;
+  width: 331px;
+  display: flex;
+  gap: 16px;
+}
+.taskButton{
+  padding: 0 28px 0 28px;
+}
+.textareaForm{
+  max-height: 248px;
+  padding: 2px 11px;
+}
+.fieldInput{
+  margin-bottom: 24px;
+}

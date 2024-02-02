@@ -40,11 +40,11 @@ type TProps = {
 }
 
 const TableTask: FC<TProps> = ({ children, data }): JSX.Element => {
-  const task = {
-    text: "Как стать лидером: постановка целей и мотивация команды",
-    date: "13.10.2024–25.10.2024",
-    status: StatusListRU.InProgress,
-  };
+  // const task = {
+  //   text: "Как стать лидером: постановка целей и мотивация команды",
+  //   date: "13.10.2024–25.10.2024",
+  //   status: StatusListRU.InProgress,
+  // };
 
   /*return (
       <ul className={styles.tableList}>
@@ -83,12 +83,13 @@ const TableTask: FC<TProps> = ({ children, data }): JSX.Element => {
         <p className='text text_type_middle text_color_tooltip-dark'>Список задач</p>
       </div>
       <TabFiltrDate calendarWidth={290}/>
-      <TabFiltrStatus width='166px' label='Статус задачи'/>
+      <TabFiltrStatus width='188px' label='Статус задачи'/>
       {MockTasks && MockTasks.map(task => {
         const start = formatDate(task.start_date);
         const end = formatDate(task.end_date);
         return ( <TaskLine
                     classNameLine={styles.row}
+                    descriptionText={task.description}
                     taskText={task.title}
                     date={`${start}–${end}`}
                     status={translateStatus(task.status, 'en-ru')}
