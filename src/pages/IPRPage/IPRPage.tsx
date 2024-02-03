@@ -10,8 +10,8 @@ import TableTask from '../../components/TableTask/TableTask';
 import TableIPRForSubord from '../../components/TableIPRForSubord/TableIPRForSubord';
 import TableMyIPR from '../../components/TableMyIPR/TableMyIPR';
 import { getUserRole, getUserSimplified } from '../../services/selectors/authSelector';
-import { getMyIPRs } from '../../services/middlewares/IPRsQueries';
-import { getmyIPRsFromStore, getmyIPRsPending, getmyIPRsSuccess } from '../../services/selectors/IPRsSelector';
+import { getMyIPRs, getSubordIPRs } from '../../services/middlewares/IPRsQueries';
+import { getSubordIPRsFromStore, getSubordIPRsPending, getSubordIPRsSuccess, getmyIPRsFromStore, getmyIPRsPending, getmyIPRsSuccess } from '../../services/selectors/IPRsSelector';
 import { useNavigate } from 'react-router';
 
 function IPRPage() {
@@ -47,11 +47,15 @@ function IPRPage() {
   };
 
   const myIPRs = useSelector(getmyIPRsFromStore);
-  const myIPRsPending = useSelector(getmyIPRsPending);
-  const myIPRsSuccess = useSelector(getmyIPRsSuccess);
+  // const myIPRsPending = useSelector(getmyIPRsPending);
+  // const myIPRsSuccess = useSelector(getmyIPRsSuccess);
+  const subordIPRs = useSelector(getSubordIPRsFromStore);
+  // const subordIPRsPending = useSelector(getSubordIPRsPending);
+  // const subordIPRsSuccess = useSelector(getSubordIPRsSuccess);
 
   useEffect(() => {
     if (selectedId === 'me') dispatch(getMyIPRs());
+    if (selectedId === 'subordinates') dispatch(getSubordIPRs());
   }, [selectedId]);
 
   return (
@@ -82,7 +86,11 @@ function IPRPage() {
           </ButtonDesktop>
           <Gap size='xl' />
 
-          <TableIPRForSubord />
+          {subordIPRs.hunky.length > 0 ? (
+          <TableIPRForSubord data={subordIPRs} />
+          ) : (
+            <div>ЗАГРУЗКА</div>
+          )}
         </>
       )}
 

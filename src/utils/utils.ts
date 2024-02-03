@@ -3,6 +3,10 @@ import { StatusList, StatusListRU } from './types';
 // Для генерации уникальной айди используем нашу функцию, а не прямой вызов uuidv4 или другого метода
 export const getUniqId = () => Date.now() + Math.random();
 
+export function getUniqArray_number(numbers: Iterable<number>) {
+  return Array.from(new Set(numbers));
+}
+
 
 type TErrorHandler = (text: string, error?: unknown) => void;
 

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { TResponseIPRsForSubord, TResponseIPRsMy } from "../../utils/api/types";
-import { getMyIPRs } from "../middlewares/IPRsQueries";
+import { getMyIPRs, getSubordIPRs } from "../middlewares/IPRsQueries";
 
 type TIPRsInitialState = {
   error: unknown;
@@ -48,6 +48,22 @@ const IPRsSlice = createSlice({
       state.error = action;
       state.myIPRsSuccess = false;
       state.myIPRsPending = false;
+    })
+
+    builder.addCase(getSubordIPRs.pending, (state) => {
+      state.error = '';
+      state.subordIPRsSuccess = null;
+      state.subordIPRsPending = true;
+    })
+    builder.addCase(getSubordIPRs.fulfilled, (state, action) => {
+      state.subordIPRsSuccess = true;
+      state.subordIPRsPending = false;
+      state.subordIPRs = action.payload;
+    })
+    builder.addCase(getSubordIPRs.rejected, (state, action) => {
+      state.error = action;
+      state.subordIPRsSuccess = false;
+      state.subordIPRsPending = false;
     })
   }
 });

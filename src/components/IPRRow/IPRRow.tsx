@@ -15,7 +15,7 @@ type IPRRowProps = {
   /**
    * передавать, если нужно отрендерить строку для подчиненного без ИПР
    */
-  employee?: TUser;
+  employee?: Omit<TUser, 'isSuperior'>;
   extraClass?: string;
 };
 

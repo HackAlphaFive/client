@@ -23,8 +23,8 @@ function App(): JSX.Element {
    */
   const authSuccess = useSelector(getAuthSuccess);
 
-  const userPending = useSelector(getUserPending);
-  const userSuccess = useSelector(getUserSuccess);
+  // const userPending = useSelector(getUserPending);
+  // const userSuccess = useSelector(getUserSuccess);
   const user = useSelector(getUserFromState);
 
 
@@ -34,8 +34,8 @@ function App(): JSX.Element {
     if (process.env.NODE_ENV === 'development' && location.pathname === '/client') navigate('/');
 
     const controller = new AbortController();
-    // dispatch(login(USER_SUPERIOR.username, USER_SUPERIOR.password, controller.signal));
-    dispatch(login(USER_SUBORNIDATE_1.username, USER_SUBORNIDATE_1.password, controller.signal));
+    dispatch(login(USER_SUPERIOR.username, USER_SUPERIOR.password, controller.signal));
+    // dispatch(login(USER_SUBORNIDATE_1.username, USER_SUBORNIDATE_1.password, controller.signal));
 
     return () => controller.abort();
   }, []);

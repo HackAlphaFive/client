@@ -3,3 +3,9 @@
   display: flex;
   align-items: center;
 }
+
+.forRow {
+  grid-column: span 3;
+  display: grid;
+  grid-template-columns: 36.218% 42.897% 18% 1fr;
+}
