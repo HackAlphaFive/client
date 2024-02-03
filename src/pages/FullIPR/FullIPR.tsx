@@ -136,7 +136,7 @@ const FullIPR: FC = (): JSX.Element => {
           onClick={handleSave}
           view='accent'
           block={true}
-          disabled={!isValid}
+          disabled={!wasChanged || !isValid}
         >
           Сохранить ИПР
         </ButtonDesktop>
