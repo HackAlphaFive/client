@@ -35,7 +35,10 @@ const authSlice = createSlice({
       if (Array.isArray(action.payload)) {
         state.anotherUsers = [ ...state.anotherUsers, ...action.payload ]
       } else { // иначе в функцию передан одиночный юзер
-        state.anotherUsers = [ ...state.anotherUsers, action.payload ];
+        const userCurrent = action.payload; // TS не может сразу определить, что будет не массив. Записал в переменную
+        if (!state.anotherUsers.some(user => user.id === userCurrent.id)) {
+          state.anotherUsers = [ ...state.anotherUsers, action.payload ];
+        }
       }
     },
     clearAnotherUsers: (state) => {
@@ -63,24 +66,6 @@ const authSlice = createSlice({
       state.authSuccess = action.payload;
     },
   },
-  /*extraReducers: builder => {
-    builder.addCase(getAnotherUser.pending, (state) => {
-      state.error = '';
-      state.userSuccess = null;
-      state.userPending = true;
-    })
-    builder.addCase(getAnotherUser.fulfilled, (state, action) => {
-      state.anotherUsers = [...state.anotherUsers, {...action.payload, isSuperior: action.payload.subordinates.length > 0 ? true : false}];
-      state.userSuccess = true;
-      state.userPending = false;
-      console.log('вызов завершен промис разрешен плюсово');
-    })
-    builder.addCase(getAnotherUser.rejected, (state, action) => {
-      state.userSuccess = false;
-      state.userPending = false;
-      state.error = action.payload;
-    })
-  }*/
 });
 
 export const {

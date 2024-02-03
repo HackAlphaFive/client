@@ -3,6 +3,10 @@ import { StatusList, StatusListRU } from './types';
 // Для генерации уникальной айди используем нашу функцию, а не прямой вызов uuidv4 или другого метода
 export const getUniqId = () => Date.now() + Math.random();
 
+export function getUniqArray_number(numbers: Iterable<number>) {
+  return Array.from(new Set(numbers));
+}
+
 
 type TErrorHandler = (text: string, error?: unknown) => void;
 
@@ -13,7 +17,7 @@ export const handleError: TErrorHandler = (text, error = '') => {
 
 export const translateStatus = (status: StatusList | StatusListRU, mode: 'ru-en' | 'en-ru') => {
   if (mode === 'en-ru') {
-    let result;
+    let result: StatusListRU;
     switch (status) {
       case StatusList.NoStatus:
         result = StatusListRU.NoStatus;
@@ -31,9 +35,9 @@ export const translateStatus = (status: StatusList | StatusListRU, mode: 'ru-en'
         result = StatusListRU.Canceled;
         break;
     }
-    return result;
+    return result!;
   } else {
-    let result;
+    let result: StatusList;
     switch (status) {
       case StatusListRU.NoStatus:
         result = StatusList.NoStatus;
@@ -51,7 +55,7 @@ export const translateStatus = (status: StatusList | StatusListRU, mode: 'ru-en'
         result = StatusList.Canceled;
         break;
     }
-    return result;
+    return result!;
   }
 };
 
