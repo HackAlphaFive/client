@@ -47,9 +47,9 @@ const TitleInput: FC<TProps> = ({title}) => {
     <div className={styles.inputContainer}>
       <input
         type="text"
-        className={`${styles.input} ${error ? styles.inputError : styles.inputSuccess}`}
+        className={`${styles.input} ${error ? styles.inputError : (isEditing && !error && (inputValue ?? '').trim() !== '') ? styles.inputSuccess : ''}`}
         placeholder="Введите название ИПР"
-        value={inputValue ? inputValue : ''}
+        value={inputValue ?? ''}
         onChange={handleChange}
         readOnly={!isEditing}
       />
@@ -57,7 +57,7 @@ const TitleInput: FC<TProps> = ({title}) => {
       {inputValue && isEditing && (
         <ClearIcon className={styles.clearIcon} onClick={handleClearClick}/>
       )}
-      {inputValue && !isEditing && (
+      {!isEditing && (
         <PenIcon className={styles.penIcon} onClick={handleEditClick}/>
       )}
     </div>
