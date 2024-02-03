@@ -148,6 +148,13 @@ export type TResponseDeleteIPR = {};
 
 /* =============== tasks =============== */
 
+
+export type T_Task_query = {
+  // page?: number;
+  status?: StatusList;
+  start?: string;
+  end?: string;
+} | undefined;
 /**
  * все даты в YYYY-MM-DD
  */
