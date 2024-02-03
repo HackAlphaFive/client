@@ -1,0 +1,65 @@
+.modalBackdrop {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  background-color: rgba(121, 121, 121, 0.336);
+  z-index: 100;
+  backdrop-filter: blur(7px);
+}
+.modalAddon {
+  margin-left: auto;
+  transition: transform 0.3s ease-in-out;
+}
+.modalAddon:hover {
+  cursor: pointer;
+  transform: scale(1.1, 1.1);
+}
+.modal {
+  padding: 12px 32px 32px 32px;
+}
+.modalContainer{
+  width: 436px;
+  display: flex;
+  flex-direction: column;
+}
+.modalHeaderText {
+  margin: 0;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+  color: #0b1f35;
+}
+.modalMainText{
+  margin: 0;
+  max-width: 263px;
+}
+.exclamationIcon {
+  width: 29px;
+  height: 29px;
+  background-color: #FFFFFF;
+  border-radius: 2px;
+}
+.backgroundIcon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 54px;
+  height: 51px;
+  background-color: #F4963F;
+  border-radius: 20px;
+}
+.modalQuestion{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 24px;
+  padding-bottom: 59px;
+}
+.buttons{
+  display: flex;
+  gap: 16px;
+}

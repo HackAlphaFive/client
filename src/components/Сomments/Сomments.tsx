@@ -13,25 +13,27 @@ import iconSubmit from "../../images/comments-button.svg";
 import iconSubmitDisabled from "../../images/comments-button-disabled.svg";
 import avatar from "../../images/Avatar.png";
 import Comment from "../Comment/Comment";
+import { getUserSimplified } from "../../services/selectors/authSelector";
+import { useSelector } from "../../services/hooks";
+import { Textarea } from "@alfalab/core-components/textarea";
+import { Modal } from "@alfalab/core-components/modal";
 
 const Сomments: FC = () => {
-  const commentData = {
-    name: "Максим Благин",
-    avatar: avatar,
-    date: "2 недели назад",
-  };
   const [ulElement, setUlElement] = useState<HTMLUListElement>();
   const [ulHeight, setUlHeight] = useState<number>(40);
-  const [liHeight, setLiHeight] = useState<number>(64);
   const [value, setValue] = useState<string>("");
   const [comm, setComment] = useState<
     Array<{
+      id: number;
       name: string;
-      avatar: any;
+      avatar: string;
       text: string;
-      date: string;
+      date: Date;
     }>
   >([]);
+  const user = useSelector(getUserSimplified);
+  const commentDate = new Date();
+
   useEffect(() => {
     document.addEventListener("keypress", sendOnEnter);
 
@@ -39,18 +41,19 @@ const Сomments: FC = () => {
   });
 
   const sendOnEnter = (e: KeyboardEvent) => {
-    if (e.code === "Enter" && (value?.length as number) > 0) {
+    if (e.code === "Enter" && !e.shiftKey && (value?.length as number) > 0) {
+      e.preventDefault();
       handleInput();
     }
   };
   //Обработчик инпута ввода, который по клику на кнопку отправить, создает комментарий и помещает его в массив, после очищает инпут
   const handleInput = () => {
-    const inputComment = document.getElementById("comment") as HTMLInputElement;
     const comment = {
-      name: commentData.name,
-      avatar: commentData.avatar,
-      text: inputComment.value,
-      date: commentData.date,
+      id: user.id!,
+      name: user.fullname,
+      avatar: user?.photo!,
+      text: value,
+      date: commentDate,
     };
     const arr = [...comm];
     arr.push(comment);
@@ -69,8 +72,9 @@ const Сomments: FC = () => {
     );
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
+    console.log(value);
     setValue(value);
   };
 
@@ -79,17 +83,11 @@ const Сomments: FC = () => {
     setUlElement(e);
   };
 
-  const handleLiElement = (e: HTMLLIElement) => {
-    setLiHeight(e?.clientHeight);
-  };
-
   //Функция переворачивает очередность массива и перебирает его, создавая элементы комментарий
   const createComments = useMemo(() => {
     return comm
       .reverse()
-      .map((item, index) => (
-        <Comment key={index} liHeight={handleLiElement} comment={item} />
-      ));
+      .map((item, index) => <Comment key={index} comment={item} />);
   }, [comm]);
 
   return (
@@ -104,17 +102,16 @@ const Сomments: FC = () => {
         {createComments}
       </ul>
       <div className={styles.bottom}>
-        <Circle imageUrl={commentData.avatar} size={32} />
-        <Input
-          type="text"
-          size="m"
-          label="Введите комментарий"
+        <Circle imageUrl={user.photo} size={32} />
+        <Textarea
+          size="s"
+          name="comment"
+          onChange={(e) => handleChange(e)}
           value={value}
-          onChange={handleChange}
-          fieldClassName={styles.field}
-          inputClassName={styles.input}
-          labelClassName={styles.label}
-          id="comment"
+          maxRows={4}
+          placeholder="Введите комментарий"
+          textareaClassName={styles.field}
+          autoComplete="off"
         />
         <button
           className={styles.sendButton}

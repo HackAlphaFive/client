@@ -5,12 +5,21 @@
   align-items: center;
   gap: 12px;
 }
-.name {
+.boldName {
   margin: 0;
   font-family: Roboto;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
+  line-height: 24px;
+  color: #353539;
+}
+.name {
+  margin: 0;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
   line-height: 24px;
   color: #353539;
 }
@@ -24,6 +33,7 @@
   color: #797a7e;
 }
 .text {
+  word-wrap:break-word;
   padding-top: 8px;
   margin: 0;
   max-width: 501px;
