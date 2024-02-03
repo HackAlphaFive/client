@@ -98,7 +98,7 @@ const ConfirmModal: FC<TProps> = ({
             view="tertiary"
             onClick={() => {
               //При клике на кнопку "Выйти без сохранения" закроется задача, сработает функция обработчик, закроется модалка
-              template && formReady ? handleDeleteTask() : handleCancelTask();
+              template && formReady ? handleDeleteTask() : template? handleDeleteTask() : handleCancelTask();
             }}
           >
             {template && formReady

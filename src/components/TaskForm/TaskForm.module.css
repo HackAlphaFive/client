@@ -17,8 +17,8 @@
 }
 .saveButton {
   composes: taskButton;
-  width: max-content;
-  min-width: none;
+  /* width: max-content; */
+  min-width: max-content;
 }
 .textSaveButton{
   margin: 0;

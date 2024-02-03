@@ -248,7 +248,6 @@ const TaskLine: FC<TProps> = ({
     if (from && to) {
       const selectedFromDate = new Date(from);
       const selectedToDate = new Date(to);
-      // console.log(`${selectedFromDate}-${selectedToDate}`)
       if (from > to) {
         setDates({
           ...dates,
@@ -257,7 +256,6 @@ const TaskLine: FC<TProps> = ({
             end: getDateString(selectedFromDate, ""),
           },
         });
-        // console.log(getDateString(selectedToDate, ""))
         setOpenCalendar(false);
         setDateText(
           `${getDateString(selectedToDate, "")}-${getDateString(
@@ -273,7 +271,6 @@ const TaskLine: FC<TProps> = ({
             end: getDateString(selectedToDate, ""),
           },
         });
-        // console.log(getDateString(selectedFromDate, ""))
         setOpenCalendar(false);
         setDateText(
           `${getDateString(selectedFromDate, "")}-${getDateString(
@@ -284,7 +281,6 @@ const TaskLine: FC<TProps> = ({
       }
     }
   }, [from, to]);
-  console.log(dates.newDate);
   //Функция закрепления рефа за елементом
   const handleUnique = useCallback(
     <T,>(elem: T, state: Dispatch<SetStateAction<T | null>>) => {

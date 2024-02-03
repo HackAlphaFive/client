@@ -166,6 +166,7 @@ const TaskForm: FC<TProps> = ({
   };
 
   const handleDeleteButton = () => {
+    setEditMode(false);
     dispatch(setTemplateElement(null));
     dispatch(setTemplate(false));
   };

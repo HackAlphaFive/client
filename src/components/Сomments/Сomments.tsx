@@ -17,6 +17,7 @@ import { getUserSimplified } from "../../services/selectors/authSelector";
 import { useSelector } from "../../services/hooks";
 import { Textarea } from "@alfalab/core-components/textarea";
 import { Modal } from "@alfalab/core-components/modal";
+import { isTemplate } from "../../services/selectors/taskSelector";
 
 const Сomments: FC = () => {
   const [ulElement, setUlElement] = useState<HTMLUListElement>();
@@ -33,6 +34,7 @@ const Сomments: FC = () => {
   >([]);
   const user = useSelector(getUserSimplified);
   const commentDate = new Date();
+  const template = useSelector(isTemplate)
 
   useEffect(() => {
     document.addEventListener("keypress", sendOnEnter);
@@ -112,6 +114,7 @@ const Сomments: FC = () => {
           placeholder="Введите комментарий"
           textareaClassName={styles.field}
           autoComplete="off"
+          disabled={template}
         />
         <button
           className={styles.sendButton}
