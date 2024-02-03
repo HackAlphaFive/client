@@ -113,6 +113,13 @@ function App(): JSX.Element {
           employee: 2,
         }),
       });*/
+      /*fetch(`${config.baseUrl}/iprs/subordinates/22/`, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+        },
+      });*/
       /*fetch(`${config.baseUrl}/iprs/subordinates/28/`, {
         method: 'PATCH',
         headers: {
@@ -128,7 +135,7 @@ function App(): JSX.Element {
           status: 'No status',
         }),
       });*/
-      /*fetch(`${config.baseUrl}/iprs/my/`, {
+      /*fetch(`${config.baseUrl}/users/subordinates_without_ipr/`, {
         method: 'GET',
         headers: {
           "Content-Type": "application/json;charset=utf-8",

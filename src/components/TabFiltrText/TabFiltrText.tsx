@@ -12,9 +12,15 @@ type TProps = {
   needMagnifier?: boolean;
   myLabel?: string;
   myWidth?: string;
+  disabled?: boolean;
 };
 
-const TabFiltrText: FC<TProps> = ({ needMagnifier = true, myLabel = 'Поиск по ФИО', myWidth = '385px' }) => {
+const TabFiltrText: FC<TProps> = ({
+  needMagnifier = true,
+  myLabel = 'Поиск по ФИО',
+  myWidth = '385px',
+  disabled }) => {
+
   type TOption = {
     key: string,
     content: JSX.Element,
@@ -243,6 +249,7 @@ const TabFiltrText: FC<TProps> = ({ needMagnifier = true, myLabel = 'Поиск 
         optionsListClassName={styles.optionsList}
         visibleOptions={4}
         optionsListWidth='field'
+        disabled={disabled}
         inputProps={{
           onClear: () => setValue(''),
           clear: true,

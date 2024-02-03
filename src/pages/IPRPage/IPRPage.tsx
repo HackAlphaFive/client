@@ -11,7 +11,7 @@ import TableIPRForSubord from '../../components/TableIPRForSubord/TableIPRForSub
 import TableMyIPR from '../../components/TableMyIPR/TableMyIPR';
 import { getUserRole, getUserSimplified } from '../../services/selectors/authSelector';
 import { getMyIPRs, getSubordIPRs } from '../../services/middlewares/IPRsQueries';
-import { getIPRQuery, getSubordIPRsFromStore, getSubordIPRsPending, getSubordIPRsSuccess, getmyIPRsFromStore, getmyIPRsPending, getmyIPRsSuccess } from '../../services/selectors/IPRsSelector';
+import { getIPRQuery, getSubordIPRsFromStore, getMyIPRsFromStore } from '../../services/selectors/IPRsSelector';
 import { useNavigate } from 'react-router';
 import { clearFilter } from '../../services/slices/IPRsSlice';
 
@@ -47,9 +47,7 @@ function IPRPage() {
     setSelectedId(selectedId);
   };
 
-  const myIPRs = useSelector(getmyIPRsFromStore);
-  // const myIPRsPending = useSelector(getmyIPRsPending);
-  // const myIPRsSuccess = useSelector(getmyIPRsSuccess);
+  const myIPRs = useSelector(getMyIPRsFromStore);
   const subordIPRs = useSelector(getSubordIPRsFromStore);
 
   const IPRQuery = useSelector(getIPRQuery);

@@ -6,17 +6,20 @@ import TabFiltrStatus from '../TabFiltrStatus/TabFiltrStatus';
 import { T_IPR } from '../../utils/api/types';
 import IPRRow from '../IPRRow/IPRRow';
 import { useSelector } from '../../services/hooks';
-import { getUserRole } from '../../services/selectors/authSelector';
 import { getUniqId } from '../../utils/utils';
+import { getIsIPRQueryFullish, getMyIPRsPending, getMyIPRsSuccess } from '../../services/selectors/IPRsSelector';
+import { Spinner } from '@alfalab/core-components/spinner';
 
 type TProps = {
   data: Array<T_IPR>;
 }
 
 const TableMyIPR: FC<TProps> = ({ data }): JSX.Element => {
-  const isSuperior = useSelector(getUserRole);
+  const myIPRsPending = useSelector(getMyIPRsPending);
+  const myIPRsSuccess = useSelector(getMyIPRsSuccess);
+  const isIPRQueryFullish = useSelector(getIsIPRQueryFullish);
 
-  const isEmpty = data.length === 0;
+  const isEmpty = !isIPRQueryFullish && !myIPRsPending && myIPRsSuccess === true && !data.length;
 
   return (
     <div className={styles.wrapper}>
@@ -29,20 +32,44 @@ const TableMyIPR: FC<TProps> = ({ data }): JSX.Element => {
         <div className={`${styles.titleWrapper} `}>
           <p className='text text_type_middle text_color_tooltip-dark'>Название</p>
         </div>
+
         <TabFiltrDate calendarWidth={290} disabled={isEmpty} />
+
         <TabFiltrStatus width='188px' disabled={isEmpty} />
-        {data?.length ? data.map(ipr => {
-          return (
-            <IPRRow
-              isLeader={isSuperior}
-              tab='myIPR'
-              ipr={ipr}
-              extraClass={styles.forRow}
-              key={getUniqId()}
-            />
-          )
-        }) : (
-          <div className={`text text_type_middle ${styles.stub}`}>Для Вас не назначен ни один ИПР</div>
+
+        {myIPRsPending && (
+        <div className={styles.forSpinner}>
+          <Spinner size='m' visible={true} />
+        </div>
+        )}
+
+        {!myIPRsPending && myIPRsSuccess && data.length > 0 && data.map(ipr => (
+          <IPRRow
+            // в таблице "мой ипр" текущий юзер не можешь управлять ипр, назначенными ему
+            isLeader={false}
+            tab='myIPR'
+            ipr={ipr}
+            extraClass={styles.forRow}
+            key={getUniqId()}
+          />
+        ))}
+
+        {isIPRQueryFullish && !myIPRsPending && myIPRsSuccess && !data.length && (
+          <div className={styles.forError}>
+            По заданным условиям данных не найдено
+          </div>
+        )}
+
+        {isEmpty && (
+          <div className={styles.forError}>
+            Вам не назначен ни один ИПР
+          </div>
+        )}
+
+        {myIPRsSuccess === false && (
+          <div className={styles.forError}>
+            Произошла ошибка. Пожалуйста, попробуйте ещё раз позднее
+          </div>
         )}
       </Table>
     </div>
