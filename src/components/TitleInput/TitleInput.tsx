@@ -8,7 +8,7 @@ type TProps = {
   title?: string;
 }
 
-const TitleInput: FC<TProps> = ({title}) => {
+const TitleInput: FC<TProps & { onTitleChange?: (title: string) => void }> = ({title = '', onTitleChange}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(title);
   const [error, setError] = useState('');
@@ -40,6 +40,7 @@ const TitleInput: FC<TProps> = ({title}) => {
     setInputValue(value);
     if (isEditing) {
       setError(validateInput(value));
+      onTitleChange?.(value);
     }
   };
 
@@ -47,7 +48,7 @@ const TitleInput: FC<TProps> = ({title}) => {
     <div className={styles.inputContainer}>
       <input
         type="text"
-        className={`${styles.input} ${error ? styles.inputError : (isEditing && !error && (inputValue ?? '').trim() !== '') ? styles.inputSuccess : ''}`}
+        className={`${styles.input} ${error ? styles.inputError : (isEditing && !error && inputValue?.trim() !== '') ? styles.inputSuccess : ''}`}
         placeholder="Введите название ИПР"
         value={inputValue ?? ''}
         onChange={handleChange}
