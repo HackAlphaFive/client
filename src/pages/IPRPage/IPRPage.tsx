@@ -11,8 +11,9 @@ import TableIPRForSubord from '../../components/TableIPRForSubord/TableIPRForSub
 import TableMyIPR from '../../components/TableMyIPR/TableMyIPR';
 import { getUserRole, getUserSimplified } from '../../services/selectors/authSelector';
 import { getMyIPRs, getSubordIPRs } from '../../services/middlewares/IPRsQueries';
-import { getSubordIPRsFromStore, getSubordIPRsPending, getSubordIPRsSuccess, getmyIPRsFromStore, getmyIPRsPending, getmyIPRsSuccess } from '../../services/selectors/IPRsSelector';
+import { getIPRQuery, getSubordIPRsFromStore, getSubordIPRsPending, getSubordIPRsSuccess, getmyIPRsFromStore, getmyIPRsPending, getmyIPRsSuccess } from '../../services/selectors/IPRsSelector';
 import { useNavigate } from 'react-router';
+import { clearFilter } from '../../services/slices/IPRsSlice';
 
 function IPRPage() {
   const dispatch = useDispatch();
@@ -50,13 +51,20 @@ function IPRPage() {
   // const myIPRsPending = useSelector(getmyIPRsPending);
   // const myIPRsSuccess = useSelector(getmyIPRsSuccess);
   const subordIPRs = useSelector(getSubordIPRsFromStore);
-  // const subordIPRsPending = useSelector(getSubordIPRsPending);
-  // const subordIPRsSuccess = useSelector(getSubordIPRsSuccess);
+
+  const IPRQuery = useSelector(getIPRQuery);
 
   useEffect(() => {
-    if (selectedId === 'me') dispatch(getMyIPRs());
-    if (selectedId === 'subordinates') dispatch(getSubordIPRs());
+    console.log('я внутри эффекта смена вкладки');
+    dispatch(clearFilter()); // при смене вкладки очищаются настройки фильтрации
   }, [selectedId]);
+
+  useEffect(() => {
+    console.log('я внутри эффекта смены IPRQuery');
+    console.log({selectedId});
+    if (selectedId === 'me') dispatch(getMyIPRs(IPRQuery));
+    if (selectedId === 'subordinates') dispatch(getSubordIPRs(IPRQuery));
+  }, [IPRQuery, selectedId]);
 
   return (
     <>
@@ -86,11 +94,8 @@ function IPRPage() {
           </ButtonDesktop>
           <Gap size='xl' />
 
-          {subordIPRs.hunky.length > 0 ? (
           <TableIPRForSubord data={subordIPRs} />
-          ) : (
-            <div>ЗАГРУЗКА</div>
-          )}
+
         </>
       )}
 
@@ -98,6 +103,7 @@ function IPRPage() {
         <>
           <Gap size='3xl' />
           <UserTab
+            // TODO добавить условный рендеринг
             avatar={user.photo!}
             username={user.fullname || 'Не найдено'}
             position={user.position || 'Не найдено'}

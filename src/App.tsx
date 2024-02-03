@@ -34,18 +34,29 @@ function App(): JSX.Element {
     if (process.env.NODE_ENV === 'development' && location.pathname === '/client') navigate('/');
 
     const controller = new AbortController();
-    dispatch(login(USER_SUPERIOR.username, USER_SUPERIOR.password, controller.signal));
-    // dispatch(login(USER_SUBORNIDATE_1.username, USER_SUBORNIDATE_1.password, controller.signal));
+
+    dispatch(checkUserAuth(controller.signal));
+
+    if (authPending === false && !localStorage.getItem('accessToken')) {
+      dispatch(login(USER_SUPERIOR.username, USER_SUPERIOR.password, controller.signal));
+      // dispatch(login(USER_SUBORNIDATE_1.username, USER_SUBORNIDATE_1.password, controller.signal));
+    }
 
     return () => controller.abort();
   }, []);
 
   useEffect(() => {
-    if (authSuccess) dispatch(checkUserAuth());
+    const controller = new AbortController();
+    if (authSuccess) dispatch(checkUserAuth(controller.signal));
+
+    return () => controller.abort();
   }, [authSuccess]);
 
   useEffect(() => {
-    if (user) dispatch(setAnotherUsersInState(user));
+    const controller = new AbortController();
+    if (user && user.id) dispatch(setAnotherUsersInState(user, controller.signal));
+
+    return () => controller.abort();
   }, [user]);
 
   useEffect(() => {

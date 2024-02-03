@@ -1,4 +1,5 @@
-import { TResponseGetSomeUser, T_IPR } from '../../utils/api/types';
+import { createSelector } from '@reduxjs/toolkit';
+import { TResponseGetSomeUser, T_IPR, T_IPR_query } from '../../utils/api/types';
 import { getUniqArray_number, handleError } from '../../utils/utils';
 import { getAnotherUser } from '../middlewares/authQueries';
 import { RootState } from '../types';
@@ -11,42 +12,26 @@ export const getmyIPRsFromStore = (state: RootState) => state.iprs.myIPRs;
 
 export const getSubordIPRsPending = (state: RootState) => state.iprs.subordIPRsPending;
 export const getSubordIPRsSuccess = (state: RootState) => state.iprs.subordIPRsSuccess;
-export const getSubordIPRsFromStore = (state: RootState) => {
-  // ЭТО ТОЛЬКО ПЕРВЫЕ ПЯТЬ ИПР БЛИИИИИИИН
-  /*const subordIPRs = state.iprs.subordIPRs.results;
-  if (state.auth.user && subordIPRs.length > 0) {
-    console.log({subordIPRs});
-    const id_of_subordinates_with_IPR_repetitive = subordIPRs.map(ipr => ipr.employee.id);
-    console.log({id_of_subordinates_with_IPR_repetitive});
-    const id_of_subordinates_with_IPR = getUniqArray_number(id_of_subordinates_with_IPR_repetitive);
-    console.log({id_of_subordinates_with_IPR});
+export const getSubordIPRsFromStore = (state: RootState) => state.iprs.subordIPRs.results;
 
-    let result: {
-      hunky: T_IPR[];
-      parasites: TResponseGetSomeUser[];
-    } = {
-      hunky: [],
-      parasites: [],
-    };
-    console.log({result, message: 'result до условия'});
+export const getFilteringIPRStatus = (state: RootState) => state.iprs.filteringIPRStatus;
+export const getFilteringDateStart = (state: RootState) => state.iprs.filteringDateStart;
+export const getFilteringDateEnd = (state: RootState) => state.iprs.filteringDateEnd;
+export const getFilteringPage = (state: RootState) => state.iprs.filteringPage;
+export const getFilteringSubordId = (state: RootState) => state.iprs.filteringSubordId;
 
-    console.log("Внутри условия");
-    const id_of_subordinates = state.auth.user.subordinates;
-    console.log({id_of_subordinates});
-    const id_of_people_without_IPR = id_of_subordinates.filter(id => id_of_subordinates_with_IPR.indexOf(id) === -1);
-    console.log({id_of_people_without_IPR});
+export const getIPRQuery = createSelector(
+  [getFilteringIPRStatus, getFilteringDateStart, getFilteringDateEnd, getFilteringPage, getFilteringSubordId],
+  (status, start, end, page, id) => {
+    const result: T_IPR_query = {};
 
-    Promise.all(id_of_people_without_IPR.map(id => getAnotherUser(id)))
-    .then(parasites => {
-      console.log({parasites});
-      return { hunky: [...subordIPRs], parasites: [...parasites] };
-    })
-    .catch(handleError);
+    if (status) result.status = status;
+    if (start) result.start = start;
+    if (end) result.end = end;
+    if (page) result.page = page;
+    if (status) result.status = status;
+    if (id) result.id = id;
 
-    // Видимо не дожидается всех промисов
-    console.log({result, message: 'возвращаемый result'});
     return result;
-    // Вынести Propmise.all в отдельный запрос и хранить результат в сторе
-  }*/
-  return {hunky: state.iprs.subordIPRs.results, parasites: []};
-};
+  }
+);

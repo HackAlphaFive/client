@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { TResponseIPRsForSubord, TResponseIPRsMy } from "../../utils/api/types";
 import { getMyIPRs, getSubordIPRs } from "../middlewares/IPRsQueries";
+import { StatusList } from "../../utils/types";
 
 type TIPRsInitialState = {
   error: unknown;
@@ -10,6 +11,11 @@ type TIPRsInitialState = {
   subordIPRsPending: boolean;
   subordIPRsSuccess: null | boolean;
   subordIPRs: TResponseIPRsForSubord;
+  filteringIPRStatus: StatusList | null;
+  filteringDateStart: string | null;
+  filteringDateEnd: string | null;
+  filteringPage: number | null;
+  filteringSubordId: number | null;
 };
 
 const emptyIPRs = {
@@ -27,12 +33,60 @@ const IPRsInitialState: TIPRsInitialState = {
   subordIPRsPending: false,
   subordIPRsSuccess: null,
   subordIPRs: emptyIPRs,
+  filteringIPRStatus: null,
+  filteringDateStart: null,
+  filteringDateEnd: null,
+  filteringPage: null,
+  filteringSubordId: null,
 }
 
 const IPRsSlice = createSlice({
   name: 'iprs',
   initialState: IPRsInitialState,
-  reducers: {},
+  reducers: {
+    setFilteringIPRStatus: (state, action: PayloadAction<StatusList>) => {
+      state.filteringIPRStatus = action.payload;
+    },
+    clearFilteringIPRStatus: (state) => {
+      state.filteringIPRStatus = IPRsInitialState.filteringIPRStatus;
+    },
+
+    setFilteringDateStart: (state, action: PayloadAction<string>) => {
+      state.filteringDateStart = action.payload;
+    },
+    clearFilteringDateStart: (state) => {
+      state.filteringDateStart = IPRsInitialState.filteringDateStart;
+    },
+
+    setFilteringDateEnd: (state, action: PayloadAction<string>) => {
+      state.filteringDateEnd = action.payload;
+    },
+    clearFilteringDateEnd: (state) => {
+      state.filteringDateEnd = IPRsInitialState.filteringDateEnd;
+    },
+
+    setFilteringPage: (state, action: PayloadAction<number>) => {
+      state.filteringPage = action.payload;
+    },
+    clearFilteringPage: (state) => {
+      state.filteringPage = IPRsInitialState.filteringPage;
+    },
+
+    setFilteringSubordId: (state, action: PayloadAction<number>) => {
+      state.filteringSubordId = action.payload;
+    },
+    clearFilteringSubordId: (state) => {
+      state.filteringSubordId = IPRsInitialState.filteringSubordId;
+    },
+
+    clearFilter: (state) => {
+      state.filteringIPRStatus = IPRsInitialState.filteringIPRStatus;
+      state.filteringDateStart = IPRsInitialState.filteringDateStart;
+      state.filteringDateEnd = IPRsInitialState.filteringDateEnd;
+      state.filteringPage = IPRsInitialState.filteringPage;
+      state.filteringSubordId = IPRsInitialState.filteringSubordId;
+    },
+  },
   extraReducers: builder => {
     builder.addCase(getMyIPRs.pending, (state) => {
       state.error = '';
@@ -69,6 +123,16 @@ const IPRsSlice = createSlice({
 });
 
 export const {
-
+  setFilteringIPRStatus,
+  clearFilteringIPRStatus,
+  setFilteringDateStart,
+  clearFilteringDateStart,
+  setFilteringDateEnd,
+  clearFilteringDateEnd,
+  setFilteringSubordId,
+  clearFilteringSubordId,
+  setFilteringPage,
+  clearFilteringPage,
+  clearFilter,
 } = IPRsSlice.actions;
 export default IPRsSlice.reducer;

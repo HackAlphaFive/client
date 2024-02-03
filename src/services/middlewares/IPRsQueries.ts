@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { config, handleResponse } from "../../utils/api/api";
-import { TResponseIPRsForSubord, TResponseIPRsMy } from "../../utils/api/types";
+import { config, getQueryString, handleResponse } from "../../utils/api/api";
+import { TResponseIPRsForSubord, TResponseIPRsMy, T_IPR_query } from "../../utils/api/types";
 
 export const getMyIPRs = createAsyncThunk(
   'iprs/getMyIPRs',
-  () => {
+  (payload?: T_IPR_query) => {
     return fetch(
-      `${config.baseUrl}/iprs/my/`,
+      `${config.baseUrl}/iprs/my/${getQueryString(payload)}`,
       {
         method: 'GET',
         headers: {
@@ -21,9 +21,9 @@ export const getMyIPRs = createAsyncThunk(
 
 export const getSubordIPRs = createAsyncThunk(
   'iprs/getSubordIPRs',
-  () => {
+  (payload?: T_IPR_query) => {
     return fetch(
-      `${config.baseUrl}/iprs/subordinates/`,
+      `${config.baseUrl}/iprs/subordinates/${getQueryString(payload)}`,
       {
         method: 'GET',
         headers: {

@@ -1,7 +1,7 @@
 export enum StatusList {
   NoStatus = 'No status',
   Failed = 'Failed',
-  InProgress = 'In Progress',
+  InProgress = 'In progress',
   Done = 'Done',
   Canceled = 'Canceled',
 }

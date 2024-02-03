@@ -17,7 +17,7 @@ export const handleError: TErrorHandler = (text, error = '') => {
 
 export const translateStatus = (status: StatusList | StatusListRU, mode: 'ru-en' | 'en-ru') => {
   if (mode === 'en-ru') {
-    let result;
+    let result: StatusListRU;
     switch (status) {
       case StatusList.NoStatus:
         result = StatusListRU.NoStatus;
@@ -35,9 +35,9 @@ export const translateStatus = (status: StatusList | StatusListRU, mode: 'ru-en'
         result = StatusListRU.Canceled;
         break;
     }
-    return result;
+    return result!;
   } else {
-    let result;
+    let result: StatusList;
     switch (status) {
       case StatusListRU.NoStatus:
         result = StatusList.NoStatus;
@@ -55,7 +55,7 @@ export const translateStatus = (status: StatusList | StatusListRU, mode: 'ru-en'
         result = StatusList.Canceled;
         break;
     }
-    return result;
+    return result!;
   }
 };
 

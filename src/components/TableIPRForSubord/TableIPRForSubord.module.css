@@ -9,3 +9,17 @@
   display: grid;
   grid-template-columns: 36.218% 42.897% 18% 1fr;
 }
+
+.forSpinner {
+  grid-column: span 3;
+  display: flex;
+  height: 120px;
+  justify-content: center;
+}
+
+.forError {
+  padding-top: var(--gap-xl);
+  grid-column: span 3;
+  display: flex;
+  justify-content: center;
+}

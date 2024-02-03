@@ -1,7 +1,14 @@
 import { config, handleResponse } from "../../utils/api/api";
 import { TResponseGetSomeUser, TResponseLogin, TResponseUsersMe, TUser } from "../../utils/api/types";
 import { handleError } from "../../utils/utils";
-import { clearAnotherUsers, clearError, setAnotherUsers, setAuthPending, setAuthSuccess, setUser, setUserPending, setUserSuccess } from "../slices/authSlice";
+import { clearAnotherUsers,
+  clearError,
+  setAnotherUsers,
+  setAuthPending,
+  setAuthSuccess,
+  setUser,
+  setUserPending,
+  setUserSuccess } from "../slices/authSlice";
 import { AppDispatch } from "../types";
 import { USERS } from "../../utils/constants";
 
@@ -95,14 +102,14 @@ export function getUser(signal?: AbortSignal) {
  * @param currentUser текущий юзер, для которого получен токен и данные аккаунта
  * @description Ф-ия заполняет стейт вариантами юзеров, на которых можно свичнуться
  */
-export function setAnotherUsersInState (currentUser: TUser) {
+export function setAnotherUsersInState (currentUser: TUser, signal?: AbortSignal) {
   return (dispatch: AppDispatch) => {
     const idsArray = USERS.map(user => user.id);
     const idsForSearching = idsArray.filter(id => currentUser.id !== id);
 
     dispatch(setAnotherUsers(currentUser));
 
-    return Promise.all([getAnotherUser(idsForSearching[0]), getAnotherUser(idsForSearching[1]), getAnotherUser(idsForSearching[2])])
+    return Promise.all(idsForSearching.map( id => getAnotherUser(id, signal) ))
       .then((result) => {
         const resultWithStatus = result.map(user => ({...user, isSuperior: user.subordinates.length > 0 ? true : false }))
         dispatch(setAnotherUsers(resultWithStatus));
@@ -123,7 +130,7 @@ export function checkUserAuth(signal?: AbortSignal) {
     if (myToken) {
       dispatch(getUser(signal))
         .catch(err => {
-          localStorage.removeItem('accessToken');
+          // localStorage.removeItem('accessToken');
           dispatch(setUser(null));
           dispatch(setUserSuccess(false));
           handleError('Ошибка при получении данных пользователя: ', err);

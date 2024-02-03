@@ -3,7 +3,7 @@ import { StatusList } from "../types";
 /* =============== auth & user =============== */
 
 export type TEmployee = {
-  fullName: string;
+  fullname: string;
   position: string;
   photo: string;
   id: number;
@@ -47,6 +47,17 @@ export type TResponseLogin = {
 
 // Если написано "todo check" – проверка не была осуществлена (через реальный запрос на сервер и изучение ответа в devtools)
 
+export type T_IPR_query = {
+  page?: number;
+  /**
+   * id человека, ИПР которого ищутся
+   */
+  id?: number;
+  status?: StatusList;
+  start?: string;
+  end?: string;
+} | undefined;
+
 export type T_IPR = {
   id: number;
   title: string;
@@ -71,13 +82,10 @@ export type TResponseIPRsMy = {
    */
   count: number;
   /**
-   * номер следующей страницы, относительно переданной в данном ответе
+   * адрес эндпоинта, по которому сервер расположил следующую партию данных
    */
-  next: null | number;
-  /**
-   * номер предыдущей страницы, относительно переданной в данном ответе
-   */
-  previous: null | number;
+  next: null | string;
+  previous: null | string;
   /**
    * массив объектов ИПР. Может быть пустой!
    */
@@ -177,13 +185,10 @@ export type TResponseGetTasks = {
    */
   count: number;
   /**
-   * номер следующей страницы, относительно переданной в данном ответе
+   * адрес эндпоинта, по которому сервер расположил следующую партию данных
    */
-  next: null | number;
-  /**
-   * номер предыдущей страницы, относительно переданной в данном ответе
-   */
-  previous: null | number;
+  next: null | string;
+  previous: null | string;
   /**
    * массив объектов задач. Может быть пустой
    */
@@ -272,18 +277,7 @@ export type TComment = {
  * @description GET /tasks/{id}/comments/
  * @description without accessToken
  */
-export type TResponseGetComments = {
-  /**
-   * число комментариев. Видимо возможна фильтрация?
-   */
-  count: number;
-  /**
-   * пагинация
-   */
-  next: null | number;
-  previous: null | number;
-  results: Array<TComment>;
-};
+export type TResponseGetComments = Array<TComment>;
 
 /**
  * @description POST /tasks/{id}/comments/

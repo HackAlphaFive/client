@@ -35,7 +35,10 @@ const authSlice = createSlice({
       if (Array.isArray(action.payload)) {
         state.anotherUsers = [ ...state.anotherUsers, ...action.payload ]
       } else { // иначе в функцию передан одиночный юзер
-        state.anotherUsers = [ ...state.anotherUsers, action.payload ];
+        const userCurrent = action.payload; // TS не может сразу определить, что будет не массив. Записал в переменную
+        if (!state.anotherUsers.some(user => user.id === userCurrent.id)) {
+          state.anotherUsers = [ ...state.anotherUsers, action.payload ];
+        }
       }
     },
     clearAnotherUsers: (state) => {

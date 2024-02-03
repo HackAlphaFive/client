@@ -10,6 +10,7 @@
 
 .iprRowUserTab {
   max-width: 385px;
+  padding: var(--gap-m);
 }
 
 .iprRowTitle {

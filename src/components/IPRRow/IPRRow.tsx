@@ -39,7 +39,7 @@ const IPRRow: React.FC<IPRRowProps> = ({ isLeader, tab, ipr, employee, extraClas
         // TODO не лучшее решение
         avatar={ipr ? ipr.employee.photo : employee ? employee.photo : ''}
         position={ipr ? ipr.employee.position : employee ? employee.position : 'Сотрудник не найден'}
-        username={ipr ? ipr.employee.fullName : employee ? `${employee.last_name} ${employee.first_name} ${employee.patronymic ?? ''}` : ''}
+        username={ipr ? ipr.employee.fullname : employee ? `${employee.last_name} ${employee.first_name} ${employee.patronymic ?? ''}` : ''}
         cellExtraClassNameCell={styles.iprRowUserTab}
       />
 
