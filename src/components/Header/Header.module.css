@@ -69,12 +69,12 @@
   background-color: var(--color-accent);
   color: var(--color-white);
 }
-
 .popoverMain {
   margin: 5px;
 }
 .popoverHeader {
   color: var(--Main-colors-Headline-text);
+  width: 241px;
   margin: 0;
   font-family: Roboto;
   font-size: 16px;

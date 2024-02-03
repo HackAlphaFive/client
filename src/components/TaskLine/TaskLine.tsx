@@ -19,25 +19,32 @@ import { Radio } from "@alfalab/core-components/radio";
 import { RadioGroup } from "@alfalab/core-components/radio-group";
 import { StatusListRU } from "../../utils/types";
 import TaskForm from "../TaskForm/TaskForm";
+import { getUserRole } from "../../services/selectors/authSelector";
+import { useSelector } from "../../services/hooks";
 
 type TProps = {
   descriptionText: string;
   taskText: string;
+  startTask?: string;
+  endTask?: string;
   date?: string;
   status?: string;
   uniqueId: string | number;
   classNameLine?: string;
+  isTemplate?: boolean;
 };
 
 const TaskLine: FC<TProps> = ({
   descriptionText,
   taskText,
+  startTask,
+  endTask,
   date,
   status,
   uniqueId,
   classNameLine,
+  isTemplate,
 }) => {
-  const jobTitle: string = "director";
   //стейт для выбора статуса
   const [valueStatus, setValueStatus] = useState(
     status ? status : StatusListRU.NoStatus
@@ -75,14 +82,19 @@ const TaskLine: FC<TProps> = ({
   //стейт для записи начальной даты
   const [to, setTo] = useState<number>();
 
-  //Стей для даты старта, отправляемой не бэк
-  const [startDate, setStart] = useState<string>("");
-
-  //Стей для даты окончания, отправляемой не бэк
-  const [endDate, setEnd] = useState<string>("");
-
   //Стейт для редактирования
   const [editMode, setEditMode] = useState(false);
+
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+  const [dateText, setDateText] = useState(
+    date ? date : "Укажите диапазон дат"
+  );
+  const [dates, setDates] = useState({
+    prevDate: { start: startTask, end: endTask },
+    newDate: { start: "", end: "" },
+  });
+
+  const isSupervisor = useSelector(getUserRole);
 
   useEffect(() => {
     if (!isOpenCalendar && !isOpenEdit && !isOpenStatus && !isOpenTask) {
@@ -99,6 +111,7 @@ const TaskLine: FC<TProps> = ({
       uniqueId + "calendarButton",
       uniqueId + "statusButton",
       uniqueId + "taskButton",
+      "modalConfirm",
     ];
     //Функция закрытия поповеров при клике вне
     const closePopover = (
@@ -125,16 +138,39 @@ const TaskLine: FC<TProps> = ({
 
     //Функция закрытия задачи при клике вне, но если открывать выпадашки, то задача не будет закрываться
     const closeTask = (e: MouseEvent, allId: string[]) => {
+      if (isTemplate) {
+        setEditMode(true);
+      }
       const arrElements = allId.map((id) =>
         e.composedPath().includes(document.getElementById(id)!)
       );
       const findTrue = arrElements.find((item) => item === true);
+
+      if (arrElements[3]) {
+        setOpenEdit(false);
+        setOpenCalendar(false);
+        setOpenStatus(false);
+      } else if (arrElements[5]) {
+        setOpenEdit(false);
+      } else if (arrElements[4]) {
+        setOpenCalendar(false);
+      }
+
       if (!findTrue) {
-        setOpenTask(false);
-        window.scrollTo({
-          top: 198,
-          behavior: "smooth",
-        });
+        if (editMode && isTemplate) {
+          handleSave();
+        } else if (editMode) {
+          handleSave();
+        } else {
+          setOpenTask(false);
+          setOpenEdit(false);
+          setOpenCalendar(false);
+          setOpenStatus(false);
+          window.scrollTo({
+            top: 198,
+            behavior: "smooth",
+          });
+        }
       }
     };
     //Ниже функции колбэки, чтобы снимать слушатель
@@ -177,7 +213,7 @@ const TaskLine: FC<TProps> = ({
       document.removeEventListener("click", statusCallback);
       document.removeEventListener("click", taskCallback);
     };
-  }, [isOpenCalendar, isOpenEdit, isOpenStatus, isOpenTask]);
+  }, [isOpenCalendar, isOpenEdit, isOpenStatus, isOpenTask, editMode]);
 
   //Функция обработчик диапазона дат
   const handlerCalendar = (e?: number) => {
@@ -207,32 +243,44 @@ const TaskLine: FC<TProps> = ({
       ? `${year}-${month}-${day}`
       : `${day}.${month}.${year}`;
   }, []);
-
   //Функция возвращает диапазон дат ввиде строки
   const selectedRange = useMemo(() => {
     if (from && to) {
       const selectedFromDate = new Date(from);
       const selectedToDate = new Date(to);
       if (from > to) {
-        setStart(getDateString(selectedToDate, "-"));
-        setEnd(getDateString(selectedFromDate, "-"));
+        setDates({
+          ...dates,
+          newDate: {
+            start: getDateString(selectedToDate, ""),
+            end: getDateString(selectedFromDate, ""),
+          },
+        });
         setOpenCalendar(false);
-        return `${getDateString(selectedToDate, "")} - ${getDateString(
-          selectedFromDate,
-          ""
-        )}`;
+        setDateText(
+          `${getDateString(selectedToDate, "")}-${getDateString(
+            selectedFromDate,
+            ""
+          )}`
+        );
       } else {
-        setStart(getDateString(selectedFromDate, "-"));
-        setEnd(getDateString(selectedToDate, "-"));
+        setDates({
+          ...dates,
+          newDate: {
+            start: getDateString(selectedFromDate, ""),
+            end: getDateString(selectedToDate, ""),
+          },
+        });
         setOpenCalendar(false);
-        return `${getDateString(selectedFromDate, "")} - ${getDateString(
-          selectedToDate,
-          ""
-        )}`;
+        setDateText(
+          `${getDateString(selectedFromDate, "")}-${getDateString(
+            selectedToDate,
+            ""
+          )}`
+        );
       }
     }
   }, [from, to]);
-
   //Функция закрепления рефа за елементом
   const handleUnique = useCallback(
     <T,>(elem: T, state: Dispatch<SetStateAction<T | null>>) => {
@@ -244,6 +292,9 @@ const TaskLine: FC<TProps> = ({
   //Функция открытия/закрытия попофера по клику на иконку
   const openPopoverUnique = useCallback(
     (state: Dispatch<SetStateAction<boolean>>, task = false) => {
+      if (isTemplate && task) {
+        setEditMode(true);
+      }
       if (task) {
         state((isOpen) => !isOpen);
         window.scrollTo({
@@ -272,6 +323,10 @@ const TaskLine: FC<TProps> = ({
     setOpenTask(true);
   };
 
+  const handleSave = () => {
+    setOpenConfirmModal(true);
+  };
+
   return (
     <>
       <div
@@ -280,12 +335,18 @@ const TaskLine: FC<TProps> = ({
           handleUnique<HTMLDivElement>(e, setElementTask)
         }
       >
-        <div
-          id={uniqueId + "taskButton"}
-          onClick={() => openPopoverUnique(setOpenTask, true)}
-          className={styles.taskName}
-        >
-          <a href={"#" + uniqueId + "taskPopover"} className={styles.anchor}>
+        <div id={uniqueId + "taskButton"} className={styles.taskName}>
+          <a
+            onClick={() =>
+              isTemplate && editMode
+                ? handleSave()
+                : editMode
+                ? handleSave()
+                : openPopoverUnique(setOpenTask, true)
+            }
+            href={"#" + uniqueId + "taskPopover"}
+            className={styles.anchor}
+          >
             <ChevronDownMIcon className={styles.taskButton} />
             <p className={styles.taskText}>{taskText}</p>
           </a>
@@ -293,12 +354,10 @@ const TaskLine: FC<TProps> = ({
         <div
           id={uniqueId + "calendarButton"}
           className={
-            jobTitle === "director" && editMode
-              ? styles.taskDate
-              : styles.taskDateOff
+            isSupervisor && editMode ? styles.taskDate : styles.taskDateOff
           }
           onClick={
-            jobTitle === "director" && editMode
+            isSupervisor && editMode
               ? () => openPopoverUnique(setOpenCalendar)
               : undefined
           }
@@ -308,19 +367,17 @@ const TaskLine: FC<TProps> = ({
         >
           <CalendarMIcon
             className={
-              date ? styles.black : selectedRange ? styles.black : styles.grey
+              dateText !== "Укажите диапазон дат" ? styles.black : styles.grey
             }
           />
           <p
             className={
-              date
-                ? styles.textDate
-                : selectedRange
+              dateText !== "Укажите диапазон дат"
                 ? styles.textDate
                 : styles.textDateGrey
             }
           >
-            {from && to ? selectedRange : date ? date : "Укажите диапазон дат"}
+            {dateText}
           </p>
         </div>
         <Popover
@@ -361,7 +418,7 @@ const TaskLine: FC<TProps> = ({
           </p>
         </div>
         <div className={styles.taskIcon}>
-          {jobTitle === "director" ? (
+          {isSupervisor ? (
             <IconButton
               view="primary"
               size={24}
@@ -390,11 +447,16 @@ const TaskLine: FC<TProps> = ({
           preventFlip={true}
           zIndex={41}
           popperClassName={styles.popoverEdit}
-          offset={[-70, 2]}
+          offset={[-74, 2]}
         >
           <ul id={uniqueId + "editPopover"} className={styles.popoverList}>
             <li className={styles.popoverItem} onClick={handleEdit}>
-              <a href={"#" + uniqueId + "taskPopover"} className={styles.blackText}>Редактировать</a>
+              <a
+                href={"#" + uniqueId + "taskPopover"}
+                className={styles.blackText}
+              >
+                Редактировать
+              </a>
             </li>
             <li className={styles.popoverItem}>Удалить</li>
           </ul>
@@ -449,14 +511,17 @@ const TaskLine: FC<TProps> = ({
       >
         <div id={uniqueId + "taskPopover"} className={styles.popoverTask}>
           <TaskForm
+            setDateText={setDateText}
+            date={dates}
             textValue={taskText}
             descriptionValue={descriptionText}
             editMode={editMode}
-            jobtitle={jobTitle}
-            startDate={startDate}
-            status={valueStatus}
-            endDate={endDate}
+            dateText={dateText}
+            setTask={setOpenTask}
             setEditMode={setEditMode}
+            setOpenConfirmModal={setOpenConfirmModal}
+            statusTask={valueStatus}
+            openConfirmModal={openConfirmModal}
           />
           <Сomments />
         </div>

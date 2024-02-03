@@ -13,7 +13,10 @@ import { Popover } from "@alfalab/core-components/popover";
 import { PureCell } from "@alfalab/core-components/pure-cell";
 import { Tooltip } from "@alfalab/core-components/tooltip";
 import { useDispatch, useSelector } from "../../services/hooks";
-import { getAnotherUsersFromState, getUserFromState } from "../../services/selectors/authSelector";
+import {
+  getAnotherUsersFromState,
+  getUserFromState,
+} from "../../services/selectors/authSelector";
 import { getUniqId } from "../../utils/utils";
 import { getUser, login } from "../../services/middlewares/authQueries";
 import { PASSWORD } from "../../utils/constants";
@@ -64,7 +67,11 @@ const Header: FC = () => {
   return (
     <header className={styles.header}>
       <nav className={styles.navigation}>
-        <Link underline={false} href="https://alfabank.ru/" className={styles.link}>
+        <Link
+          underline={false}
+          href="https://alfabank.ru/"
+          className={styles.link}
+        >
           <img src={logo} alt='Логотип "Альфа-Пипл"' className={styles.logo} />
         </Link>
         <Link underline={false} href="https://alfabank.ru/" view="primary">
@@ -106,7 +113,11 @@ const Header: FC = () => {
               <div className={styles.tooltip}>Выберите пользователя.</div>
             }
           >
-            <Circle className={styles.avatar} imageUrl={currentUser?.photo} size={40} />
+            <Circle
+              className={styles.avatar}
+              imageUrl={currentUser?.photo}
+              size={40}
+            />
           </Tooltip>
         </div>
         <Popover
@@ -119,31 +130,43 @@ const Header: FC = () => {
           offset={[-138, 2]}
         >
           <ul id="profilePopover" className={styles.popoverList}>
-            {currentUser && users.length > 0 && users.map(user => { return (
-              <li
-                className={`${styles.popoverItem} ${currentUser.id === user.id ? styles.popoverItemChecked : ''}`}
-                key={getUniqId()}
-                onClick={() => {
-                 dispatch(login(user.username, PASSWORD))
-                 .then(() => dispatch(getUser())); // без then начинается гонка запросов
+            {currentUser &&
+              users.length > 0 &&
+              users.map((user) => {
+                return (
+                  <li
+                    className={`${styles.popoverItem} ${
+                      currentUser.id === user.id
+                        ? styles.popoverItemChecked
+                        : ""
+                    }`}
+                    key={getUniqId()}
+                    onClick={() => {
+                      dispatch(login(user.username, PASSWORD)).then(() =>
+                        dispatch(getUser())
+                      ); // без then начинается гонка запросов
 
-                 setisOpen(false);
-                 navigate('/');
-                }}
-              >
-                <PureCell.Content>
-                  <PureCell.Addon addonPadding="none" verticalAlign="center">
-                    <Circle imageUrl={user.photo} size={40} />
-                  </PureCell.Addon>
-                  <PureCell.Main className={styles.popoverMain}>
-                    <p className={styles.popoverHeader}>
-                      {`${user.last_name} ${user.first_name} ${user.patronymic}`}
-                    </p>
-                    <p className={styles.popoverText}>{user.position}</p>
-                  </PureCell.Main>
-                </PureCell.Content>
-              </li>
-            )})}
+                      setisOpen(false);
+                      navigate("/");
+                    }}
+                  >
+                    <PureCell.Content>
+                      <PureCell.Addon
+                        addonPadding="none"
+                        verticalAlign="center"
+                      >
+                        <Circle imageUrl={user.photo} size={40} />
+                      </PureCell.Addon>
+                      <PureCell.Main className={styles.popoverMain}>
+                        <p className={styles.popoverHeader}>
+                          {`${user.last_name} ${user.first_name} ${user.patronymic}`}
+                        </p>
+                        <p className={styles.popoverText}>{user.position}</p>
+                      </PureCell.Main>
+                    </PureCell.Content>
+                  </li>
+                );
+              })}
           </ul>
         </Popover>
       </div>
