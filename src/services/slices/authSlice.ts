@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { TUser } from "../../utils/api/types";
-import { getAnotherUser } from "../middlewares/authQueries";
+import { TResponseGetSubordinate, TUser } from "../../utils/api/types";
+import { getAnotherUser, getSubordinates } from "../middlewares/authQueries";
 
 type TAuthInitialState = {
   user: TUser | null;
@@ -10,6 +10,9 @@ type TAuthInitialState = {
   userSuccess: boolean | null;
   authPending: boolean;
   authSuccess: boolean | null;
+  subordinates: TResponseGetSubordinate;
+  subordPending: boolean;
+  subordSuccess: null | boolean;
 };
 
 const authInitialState: TAuthInitialState = {
@@ -20,6 +23,9 @@ const authInitialState: TAuthInitialState = {
   userSuccess: null,
   authPending: false,
   authSuccess: null,
+  subordinates: [],
+  subordPending: false,
+  subordSuccess: null,
 }
 
 const authSlice = createSlice({
@@ -36,7 +42,7 @@ const authSlice = createSlice({
         state.anotherUsers = [ ...state.anotherUsers, ...action.payload ]
       } else { // иначе в функцию передан одиночный юзер
         const userCurrent = action.payload; // TS не может сразу определить, что будет не массив. Записал в переменную
-        if (!state.anotherUsers.some(user => user.id === userCurrent.id)) {
+        if (!state.anotherUsers.some(user => user.id === userCurrent.id)) { // иногда текущий юзер записывается в список на свитч дважды - это фиксится данной строкой
           state.anotherUsers = [ ...state.anotherUsers, action.payload ];
         }
       }
@@ -66,6 +72,23 @@ const authSlice = createSlice({
       state.authSuccess = action.payload;
     },
   },
+  extraReducers: builder => {
+    builder.addCase(getSubordinates.pending, (state) => {
+      state.error = '';
+      state.subordPending = true;
+      state.subordSuccess = null;
+    })
+    builder.addCase(getSubordinates.fulfilled, (state, action) => {
+      state.subordinates = action.payload;
+      state.subordPending = false;
+      state.subordSuccess = true;
+    })
+    builder.addCase(getSubordinates.rejected, (state, action) => {
+      state.error = action.payload;
+      state.subordPending = false;
+      state.subordSuccess = false;
+    })
+  }
 });
 
 export const {

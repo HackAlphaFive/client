@@ -42,6 +42,12 @@ export type TResponseLogin = {
 };
 
 /**
+ * @description GET /users/get_subordinates/
+ * @description need accessToken
+ */
+export type TResponseGetSubordinate = Omit<TUser, 'isSuperior'>[];
+
+/**
  * @description GET /users/subordinates_without_ipr/
  * @description need accessToken
  */

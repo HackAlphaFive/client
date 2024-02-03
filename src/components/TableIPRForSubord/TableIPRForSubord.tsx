@@ -6,7 +6,7 @@ import TabFiltrText from '../TabFiltrText/TabFiltrText';
 import { TResponseGetSomeUser, T_IPR } from '../../utils/api/types';
 import IPRRow from '../IPRRow/IPRRow';
 import { useSelector } from '../../services/hooks';
-import { getUserRole } from '../../services/selectors/authSelector';
+import { getSubordinatesFromStore, getUserRole } from '../../services/selectors/authSelector';
 import { getUniqId } from '../../utils/utils';
 import { getIsIPRQueryFullish, getSubordIPRsPending, getSubordIPRsSuccess } from '../../services/selectors/IPRsSelector';
 import { Spinner } from '@alfalab/core-components/spinner';

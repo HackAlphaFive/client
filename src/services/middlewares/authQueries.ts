@@ -1,5 +1,5 @@
 import { config, handleResponse } from "../../utils/api/api";
-import { TResponseGetSomeUser, TResponseLogin, TResponseUsersMe, TUser } from "../../utils/api/types";
+import { TResponseGetSomeUser, TResponseGetSubordinate, TResponseLogin, TResponseUsersMe, TUser } from "../../utils/api/types";
 import { handleError } from "../../utils/utils";
 import { clearAnotherUsers,
   clearError,
@@ -11,6 +11,7 @@ import { clearAnotherUsers,
   setUserSuccess } from "../slices/authSlice";
 import { AppDispatch } from "../types";
 import { USERS } from "../../utils/constants";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 /**
  * Очищает: стейт списка пользователей на выбор, текущего юзера, токены.
@@ -145,3 +146,47 @@ export function checkUserAuth(signal?: AbortSignal) {
     }
   };
 }
+
+/*export const getSubordinates = createAsyncThunk(
+  'auth/getSubordinates',
+  () => {
+
+    let result: TResponseGetSubordinate['results'] = [];
+    let next: string | null;
+
+    const options = {
+      method: 'GET',
+      headers: {
+        ...config.headers,
+        authorization: localStorage.getItem('accessToken')!,
+      },
+    }
+
+    return fetch(`${config.baseUrl}/users/get_subordinates/${query}`, options)
+    .then(handleResponse<TResponseGetSubordinate>)
+    .then((data) => {
+      result = [...data.results];
+      if (data.next) {
+        fetch(data.next, options).then(handleResponse<TResponseGetSubordinate>)
+      }
+    })
+
+  }
+);*/
+
+export const getSubordinates = createAsyncThunk(
+  'auth/getSubordinates',
+  () => {
+    return fetch(
+      `${config.baseUrl}/users/get_subordinates/`,
+      {
+        method: 'GET',
+        headers: {
+          ...config.headers,
+          authorization: localStorage.getItem('accessToken')!,
+        },
+      }
+    )
+    .then(handleResponse<TResponseGetSubordinate>)
+  }
+);

@@ -7,6 +7,12 @@ import { BaseOption } from '@alfalab/core-components/select/shared';
 import Magnifier from '../Icons/Magnifier/Magnifier';
 import { DimensionsListIcons } from '../../utils/types';
 import { Gap } from '@alfalab/core-components/gap';
+import { TResponseGetSubordinate } from '../../utils/api/types';
+import { dataForFilterText } from '../../utils/mock/mock';
+import { useDispatch, useSelector } from '../../services/hooks';
+import { getSubordPending, getSubordSuccess, getSubordinatesFromStore } from '../../services/selectors/authSelector';
+import { getSubordinates } from '../../services/middlewares/authQueries';
+import { Spinner } from '@alfalab/core-components/spinner';
 
 type TProps = {
   needMagnifier?: boolean;
@@ -19,187 +25,35 @@ const TabFiltrText: FC<TProps> = ({
   needMagnifier = true,
   myLabel = 'Поиск по ФИО',
   myWidth = '385px',
-  disabled }) => {
+  disabled,
+}) => {
+
+  const dispatch = useDispatch();
+
+  const subordPending = useSelector(getSubordPending);
+  const subordSuccess = useSelector(getSubordSuccess);
+  const subordinates = useSelector(getSubordinatesFromStore);
 
   type TOption = {
     key: string,
     content: JSX.Element,
   };
 
-  const data = [
-    {
-      id: 1,
-      username: "User01",
-      firstname: "Саша",
-      lastname: "Петров",
-      patronymic: "Иванович",
-      email: "john@email.com",
-      position: "Junior product manager",
-      photo: "https://chillywilly.club/uploads/posts/2023-03/thumbs/1678626035_chillywilly-club-p-portret-merlin-monro-pop-art-art-krasivo-d-62.jpg",
-      superior: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ],
-      subordinates: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ]
-    },
-    {
-      id: 111111111111111,
-      username: "User01",
-      firstname: "Саша",
-      lastname: "Петров",
-      patronymic: "Иванович",
-      email: "john1132@email.com",
-      position: "Junior product manager",
-      photo: "https://chillywilly.club/uploads/posts/2023-03/thumbs/1678626035_chillywilly-club-p-portret-merlin-monro-pop-art-art-krasivo-d-62.jpg",
-      superior: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ],
-      subordinates: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ]
-    },
-    {
-      id: 2,
-      username: "User01",
-      firstname: "Ив11111111111ан",
-      lastname: "Ива11111111нов",
-      patronymic: "Ив1212121анович",
-      email: "john@email.com",
-      position: "Junior product manager",
-      photo: "https://chillywilly.club/uploads/posts/2023-03/thumbs/1678626035_chillywilly-club-p-portret-merlin-monro-pop-art-art-krasivo-d-62.jpg",
-      superior: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ],
-      subordinates: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ]
-    },
-    {
-      id: 3,
-      username: "User01",
-      firstname: "Иван123",
-      lastname: "Иванов123",
-      patronymic: "Иванович123",
-      email: "john@email.com",
-      position: "Junior product manager",
-      photo: "https://chillywilly.club/uploads/posts/2023-03/thumbs/1678626035_chillywilly-club-p-portret-merlin-monro-pop-art-art-krasivo-d-62.jpg",
-      superior: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ],
-      subordinates: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ]
-    },
-    {
-      id: 4,
-      username: "User01",
-      firstname: "Иван333",
-      lastname: "Иванов333",
-      patronymic: "Иванович333",
-      email: "john@email.com",
-      position: "Junior product manager",
-      photo: "https://chillywilly.club/uploads/posts/2023-03/thumbs/1678626035_chillywilly-club-p-portret-merlin-monro-pop-art-art-krasivo-d-62.jpg",
-      superior: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ],
-      subordinates: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ]
-    },
-    {
-      id: 5,
-      username: "User01",
-      firstname: "Иван---",
-      lastname: "Иванов---",
-      patronymic: "Иванович---",
-      email: "john@email.com",
-      position: "Junior product manager",
-      photo: "https://chillywilly.club/uploads/posts/2023-03/thumbs/1678626035_chillywilly-club-p-portret-merlin-monro-pop-art-art-krasivo-d-62.jpg",
-      superior: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ],
-      subordinates: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ]
-    },
-    {
-      id: 6,
-      username: "User01",
-      firstname: "Иван",
-      lastname: "Иванов",
-      patronymic: "Иванович",
-      email: "john@email.com",
-      position: "Junior product manager",
-      photo: "https://chillywilly.club/uploads/posts/2023-03/thumbs/1678626035_chillywilly-club-p-portret-merlin-monro-pop-art-art-krasivo-d-62.jpg",
-      superior: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ],
-      subordinates: [
-        {
-          id: 1,
-          name: "Петров Иван Иванович"
-        }
-      ]
-    },
-  ];
-
-  const options: Array<TOption> = data.map((el) => {
-    return {
-      key: String(el.id),
-      content: (
-        <>
-          <Gap size='xs' />
-          <UserTab
-            avatar={el.photo}
-            username={`${el.lastname} ${el.firstname} ${el.patronymic}`}
-            position={el.position}
-            cellExtraClassNameCell={styles.cell}
-          />
-          <Gap size='xs' />
-        </>
-      )
-    }
-  });
+  const options = !subordinates.length ? null : subordinates.map((el) => ({
+    key: String(el.id),
+    content: (
+      <>
+        <Gap size='xs' />
+        <UserTab
+          avatar={el.photo}
+          username={`${el.last_name} ${el.first_name} ${el.patronymic}`}
+          position={el.position}
+          cellExtraClassNameCell={styles.cell}
+        />
+        <Gap size='xs' />
+      </>
+    )
+  }));
 
   const [showInModal, setShowInModal] = useState(false);
   const [value, setValue] = useState('');
@@ -218,11 +72,13 @@ const TabFiltrText: FC<TProps> = ({
 
   const inputValues = value.replace(/ /g, '').split(',');
 
-  const selectedOptions = options.filter((option) => inputValues.includes(option.key.trim()));
 
-  const selected = options.find((o) => o.key === inputValues[0]) || [];
+  const selectedOptions = options?.filter((option) => inputValues.includes(option.key.trim()));
+
+  const selected = options?.find((o) => o.key === inputValues[0]) || [];
 
   const getFilteredOptions = () => {
+    if (!options) return [{ key: 'spinner', content: <Spinner size='xs' />}];
     return options.some(({ key }) => key === value)
       ? options
       : options.filter((option) => matchOption(option, value));
@@ -250,6 +106,9 @@ const TabFiltrText: FC<TProps> = ({
         visibleOptions={4}
         optionsListWidth='field'
         disabled={disabled}
+        onFocus={() => {
+          dispatch(getSubordinates());
+        }}
         inputProps={{
           onClear: () => setValue(''),
           clear: true,

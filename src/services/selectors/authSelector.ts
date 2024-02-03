@@ -6,6 +6,10 @@ export const getUserPending = (state: RootState) => state.auth.userPending;
 
 export const getUserFromState = (state: RootState) => state.auth.user;
 
+export const getSubordPending = (state: RootState) => state.auth.subordPending;
+export const getSubordSuccess = (state: RootState) => state.auth.subordSuccess;
+export const getSubordinatesFromStore = (state: RootState) => state.auth.subordinates;
+
 const getFirstName = (state: RootState) => state.auth.user?.first_name;
 const getLastName = (state: RootState) => state.auth.user?.last_name;
 const getPatronymic = (state: RootState) => state.auth.user?.patronymic;
