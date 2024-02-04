@@ -5,6 +5,8 @@ import { DimensionsListIcons } from '../../utils/types';
 import { CalendarDesktop } from '@alfalab/core-components/calendar/desktop';
 import styles from './TabFiltrDate.module.css';
 import { usePeriod, usePeriodWithReset } from '@alfalab/core-components/calendar/usePeriod';
+import { useDispatch } from '../../services/hooks';
+import { setFilteringDateEnd, setFilteringDateStart } from '../../services/slices/IPRsSlice';
 
 type TProps = {
   calendarWidth?: number;
@@ -12,6 +14,8 @@ type TProps = {
 };
 
 function TabFiltrDate({ calendarWidth = 340, disabled }: TProps) {
+  const dispatch = useDispatch();
+
   type TMySelected = {
     front: string,
     back: {
@@ -23,7 +27,7 @@ function TabFiltrDate({ calendarWidth = 340, disabled }: TProps) {
   const [mySelected, setMySelected] = useState<TMySelected>();
 
   const options = [{ key: '0', content: '' }];
-  const isClarification = true;
+  const isClarification = false;
   const allowSelectionFromEmptyRange = false;
 
   const {
@@ -66,11 +70,13 @@ function TabFiltrDate({ calendarWidth = 340, disabled }: TProps) {
     if (selectedFrom && selectedTo) {
       const selectedFromDate = new Date(selectedFrom);
       const selectedToDate = new Date(selectedTo);
-      const valueFront = `${getDateString(selectedFromDate)}–${getDateString(selectedToDate)}`;
       const valueBack = {
         start: `${getDateString(selectedFromDate, 'back')}`,
         end: `${getDateString(selectedToDate, 'back')}`,
       };
+      dispatch(setFilteringDateStart(valueBack.start));
+      dispatch(setFilteringDateEnd(valueBack.end));
+      const valueFront = `${getDateString(selectedFromDate)}–${getDateString(selectedToDate)}`;
       setMySelected({ front: valueFront, back: valueBack });
       return valueFront;
     }

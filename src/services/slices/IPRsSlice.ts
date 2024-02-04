@@ -5,12 +5,15 @@ import { StatusList } from "../../utils/types";
 
 type TIPRsInitialState = {
   error: unknown;
+
   myIPRsPending: boolean;
   myIPRsSuccess: null | boolean;
-  myIPRs: TResponseIPRsMy,
+  myIPRs: TResponseIPRsMy;
+
   subordIPRsPending: boolean;
   subordIPRsSuccess: null | boolean;
   subordIPRs: TResponseIPRsForSubord;
+
   filteringIPRStatus: StatusList | null;
   filteringDateStart: string | null;
   filteringDateEnd: string | null;

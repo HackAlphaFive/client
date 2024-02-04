@@ -6,9 +6,9 @@ import { RootState } from '../types';
 
 export const getIPRsError = (state: RootState) => state.iprs.error;
 
-export const getmyIPRsPending = (state: RootState) => state.iprs.myIPRsPending;
-export const getmyIPRsSuccess = (state: RootState) => state.iprs.myIPRsSuccess;
-export const getmyIPRsFromStore = (state: RootState) => state.iprs.myIPRs;
+export const getMyIPRsPending = (state: RootState) => state.iprs.myIPRsPending;
+export const getMyIPRsSuccess = (state: RootState) => state.iprs.myIPRsSuccess;
+export const getMyIPRsFromStore = (state: RootState) => state.iprs.myIPRs;
 
 export const getSubordIPRsPending = (state: RootState) => state.iprs.subordIPRsPending;
 export const getSubordIPRsSuccess = (state: RootState) => state.iprs.subordIPRsSuccess;
@@ -34,4 +34,12 @@ export const getIPRQuery = createSelector(
 
     return result;
   }
+);
+
+/**
+ * хоть один критерий фильтрации выставлен
+ */
+export const getIsIPRQueryFullish = createSelector(
+  [getFilteringIPRStatus, getFilteringDateStart, getFilteringDateEnd, getFilteringPage, getFilteringSubordId],
+  (status, start, end, page, id) => [status, start, end, page, id].some(param => param !== null)
 );

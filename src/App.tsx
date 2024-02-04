@@ -61,6 +61,21 @@ function App(): JSX.Element {
 
   useEffect(() => {
     if (user) {
+      // users --------------------------------------------------------------
+      /*fetch(`${config.baseUrl}/users/get_subordinates/`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+        },
+      });*/
+      /*fetch(`${config.baseUrl}/users/get_subordinates/?page=2`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+        },
+      });*/
       // TASKS ------------------------------------------------------------------
       /*fetch(`${config.baseUrl}/iprs/28/tasks/82/`, {
         method: 'PATCH',
@@ -113,6 +128,13 @@ function App(): JSX.Element {
           employee: 2,
         }),
       });*/
+      /*fetch(`${config.baseUrl}/iprs/subordinates/22/`, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          authorization: localStorage.getItem('accessToken')!,
+        },
+      });*/
       /*fetch(`${config.baseUrl}/iprs/subordinates/28/`, {
         method: 'PATCH',
         headers: {
@@ -128,7 +150,7 @@ function App(): JSX.Element {
           status: 'No status',
         }),
       });*/
-      /*fetch(`${config.baseUrl}/iprs/my/`, {
+      /*fetch(`${config.baseUrl}/users/subordinates_without_ipr/`, {
         method: 'GET',
         headers: {
           "Content-Type": "application/json;charset=utf-8",

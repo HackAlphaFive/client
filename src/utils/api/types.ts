@@ -41,6 +41,23 @@ export type TResponseLogin = {
   token: string;
 };
 
+/**
+ * @description GET /users/get_subordinates/
+ * @description need accessToken
+ */
+export type TResponseGetSubordinate = Omit<TUser, 'isSuperior'>[];
+
+/**
+ * @description GET /users/subordinates_without_ipr/
+ * @description need accessToken
+ */
+export type TResponseSubordWithoutIPR = {
+  count: number;
+  next: null | string;
+  previous: null | string;
+  results: Array<TEmployee>;
+};
+
 
 
 /* =============== IPRs =============== */
@@ -61,9 +78,6 @@ export type T_IPR_query = {
 export type T_IPR = {
   id: number;
   title: string;
-  /**
-   * Имя Фамилия ИЛИ ВОТ ТАК ↓ TODO
-   */
   employee: TEmployee;
   /**
    * Имя Фамилия ← создателя ИПР
@@ -188,7 +202,7 @@ export type TResponseGetTasks = {
   /**
    * число страниц, на которых помещаются задачи, попадающие под критерии фильтрации.
    * По 5 штук на страницу. Хотя на фронте задачи не пагинириуются, а скролятся.
-   * Потому НЕ передаём page в query
+   * Потому придётся делать второй запрос на основе ключа next первого запроса. И так далее
    */
   count: number;
   /**
