@@ -28,6 +28,7 @@ const TableMyIPR: FC<TProps> = ({ data }): JSX.Element => {
         // gridParamsColumns='58.232% 20.884% 20.884%' // строка немного уже шапки - потому появлялась маленькая вертикальная полоска серого фона шапки
         gridParamsColumns='58.232% 20.884% 1fr' // фикс серой полоски
         gridParamsAutoRows='120px'
+        extraClass={styles.table}
       >
         <div className={`${styles.titleWrapper} `}>
           <p className='text text_type_middle text_color_tooltip-dark'>Название</p>

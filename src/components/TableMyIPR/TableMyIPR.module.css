@@ -40,3 +40,7 @@
   display: flex;
   justify-content: center;
 }
+
+.table {
+  min-height: calc(76px + 120px * 5);
+}
