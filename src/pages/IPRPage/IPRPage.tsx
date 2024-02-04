@@ -38,7 +38,7 @@ function IPRPage() {
   const subordIPRs = useSelector(getSubordIPRsFromStore);
   const IPRQuery = useSelector(getIPRQuery);
 
-  const [pagesCount, setPagesCount] = useState(1);
+  const [pagesCount, setPagesCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
 
 
@@ -48,7 +48,10 @@ function IPRPage() {
   /**
    * обработчик смены вкладки "ИПР сотрудников" – "Мой ИПР"
    */
-  const handleChange = (event: React.MouseEvent<Element, MouseEvent>, { selectedId }: { selectedId: string | number }) => {
+  const handleChange = (
+    event: React.MouseEvent<Element, MouseEvent>,
+    { selectedId }: { selectedId: string | number }
+  ) => {
     setSelectedId(selectedId);
   };
 
@@ -72,7 +75,14 @@ function IPRPage() {
     if (selectedId === 'subordinates') dispatch(getSubordIPRs(IPRQuery));
   }, [IPRQuery, selectedId]);
 
+  useEffect(() => {
+    if (selectedId === 'me') {
 
+    }
+    if (selectedId === 'subordinates') {
+
+    }
+  }, [myIPRs, subordIPRs]);
 
   return (
     <>

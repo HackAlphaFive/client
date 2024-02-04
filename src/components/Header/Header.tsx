@@ -18,7 +18,7 @@ import {
   getUserFromState,
 } from "../../services/selectors/authSelector";
 import { getUniqId } from "../../utils/utils";
-import { getUser, login } from "../../services/middlewares/authQueries";
+import { getUser, getToken } from "../../services/middlewares/authQueries";
 import { PASSWORD } from "../../utils/constants";
 import { useNavigate } from "react-router";
 
@@ -142,7 +142,7 @@ const Header: FC = () => {
                     }`}
                     key={getUniqId()}
                     onClick={() => {
-                      dispatch(login(user.username, PASSWORD)).then(() =>
+                      dispatch(getToken(user.username, PASSWORD)).then(() =>
                         dispatch(getUser())
                       ); // без then начинается гонка запросов
 
