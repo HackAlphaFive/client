@@ -23,9 +23,8 @@
 - **React Router** для навигации.
 - **UI Kit - Core Components** для дизайна интерфейса.
 
-## Live версия
-
-[Деплой на GH Pages](https://hackalphafive.github.io/client/)
+### Live версия
+Доступ к рабочему приложению можно получить здесь: [Деплой на GH Pages](https://hackalphafive.github.io/client/)
 
 ## Начало Работы
 
@@ -95,3 +94,10 @@ yarn start
 ### Стилизация
 * [UI Kit заказчика](https://core-ds.github.io/core-components/master/?path=/docs/instructions-installation--docs)
 * [Figma команды дизайнеров](https://www.figma.com/file/IQp1iggI9ttZYN4Bp9FRbA/%D0%94%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD-ALFA-%D0%98%D0%9F%D0%A0?type=design&node-id=326-12643&mode=design&t=7qgGkH5Ixp97kBR8-0)
+
+### Команда
+
+* [Maksim Buchkov](https://github.com/Kargobober)
+* [Alexey Tutrin](https://github.com/TutrinAlexey)
+* [Pavel Zakharov](https://github.com/FrontEnd-Guy)
+
