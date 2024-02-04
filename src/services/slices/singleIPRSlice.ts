@@ -1,41 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { config, handleResponse } from '../../utils/api/api';
-import { TBodyRequestChangeIPR, TResponseChangeIPR, TResponseGetIPRById, T_IPR } from '../../utils/api/types';
-
-export const getIPRById = createAsyncThunk(
-  'singleIPR/getById',
-  (id: string) => {
-    return fetch(
-      `${config.baseUrl}/iprs/subordinates/${id}/}`,
-      {
-        method: 'GET',
-        headers: {
-          ...config.headers,
-          authorization: localStorage.getItem('accessToken')!,
-        },
-      }
-    )
-      .then(handleResponse<TResponseGetIPRById>)
-  }
-);
-
-export const updateIPRById = createAsyncThunk(
-  'singleIPR/updateById',
-  (data: { body: TBodyRequestChangeIPR; id: string | number }) => {
-    return fetch(
-      `${config.baseUrl}/iprs/subordinates/${data.id}/}`,
-      {
-        method: 'PATCH',
-        headers: {
-          ...config.headers,
-          authorization: localStorage.getItem('accessToken')!,
-        },
-        body: JSON.stringify(data.body),
-      }
-    )
-      .then(handleResponse<TResponseChangeIPR>)
-  }
-);
+import { createSlice } from '@reduxjs/toolkit';
+import { T_IPR } from '../../utils/api/types';
+import { getIPRById, updateIPRById } from '../middlewares/singleIPRQueries';
 
 type TSingleIPRInitialState = {
   currentIPR: null | T_IPR;
@@ -54,7 +19,13 @@ const initialState: TSingleIPRInitialState = {
 const singleIPRSlice = createSlice({
   name: 'singleIPR',
   initialState,
-  reducers: {},
+  reducers: {
+    clearCurrentIPR: (state) => {
+      state.currentIPR = null;
+      state.singleIPRPending = false;
+      state.singleIPRSuccess = null;
+    },
+  },
   extraReducers: builder => {
     builder.addCase(getIPRById.pending, (state) => {
       state.error = '';
@@ -90,4 +61,8 @@ const singleIPRSlice = createSlice({
   }
 });
 
+
+export const {
+  clearCurrentIPR,
+} = singleIPRSlice.actions;
 export default singleIPRSlice.reducer;

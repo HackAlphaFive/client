@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router';
 import { clearFilter, setFilteringPage } from '../../services/slices/IPRsSlice';
 import { Pagination } from '@alfalab/core-components/pagination';
 import styles from './IPRPage.module.css';
+import { clearCurrentIPR } from '../../services/slices/singleIPRSlice';
 
 function IPRPage() {
   const dispatch = useDispatch();
@@ -166,7 +167,10 @@ function IPRPage() {
           <ButtonDesktop
             view='accent'
             leftAddons={<Add />}
-            onClick={() => navigate('./edit')}
+            onClick={() => {
+              dispatch(clearCurrentIPR());
+              navigate('./create')
+            }}
           >
             Создать новый ИПР
           </ButtonDesktop>

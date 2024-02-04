@@ -113,18 +113,19 @@ function App(): JSX.Element {
         }),
       });*/
       // IPRS ------------------------------------------------------------------
-      /*fetch(`${config.baseUrl}/iprs/subordinates/`, {
-        method: 'POST',
+      /*fetch(`${config.baseUrl}/iprs/subordinates/34/`, {
+        method: 'PATCH',
         headers: {
           "Content-Type": "application/json;charset=utf-8",
           authorization: localStorage.getItem('accessToken')!,
         },
         body: JSON.stringify({
-          title: "title",
-          description: "descrip",
+          // title: "title",
+          // description: "descrip",
           // start_date: '2024-04-04',
           // end_date: '2024-04-04',
-          employee: 2,
+          // employee: 2,
+          status: 'Done',
         }),
       });*/
       /*fetch(`${config.baseUrl}/iprs/subordinates/22/`, {
@@ -184,7 +185,7 @@ function App(): JSX.Element {
           <Route index element={<HomePage />} />
           <Route path='ipr' element={<IPRPage />} />
 
-          <Route path='ipr/edit' element={<FullIPR />} />
+          <Route path='ipr/create' element={<FullIPR />} />
           <Route path='ipr/:id' element={<FullIPR />} />
 
           <Route path='*' element={<Navigate to={`/${NAME_FOR_404}`} />} />
