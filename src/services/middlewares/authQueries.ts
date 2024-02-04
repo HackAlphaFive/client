@@ -204,3 +204,15 @@ export const getSubordinates = createAsyncThunk(
     .then(handleResponse<TResponseGetSubordinate>)
   }
 );
+
+export const getUserById = createAsyncThunk('auth/getUserById', (id: number | string) => {
+  return fetch(`${config.baseUrl}/users/${id}/`, {
+    method: 'GET',
+    headers: {
+      ...config.headers,
+      authorization: localStorage.getItem('accessToken')!,
+    }
+  }
+  )
+    .then(handleResponse<TResponseGetSomeUser>);
+});

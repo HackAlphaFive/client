@@ -65,7 +65,12 @@ export const translateStatus = (status: StatusList | StatusListRU, mode: 'ru-en'
  * @returns "17.10.2023"
  * @
  *  */
-export const formatDate = (isoString: string) => {
+export const formatDate = (isoString: string, formate: string = '.') => {
+  if(formate === '.'){
   const [yyyy, mm, dd] = isoString.split('-');
-  return `${dd}.${mm}.${yyyy}`;
+  return `${dd}.${mm}.${yyyy}`;}
+  else {
+    const [dd, mm, yyyy] = isoString.split('.')
+    return `${yyyy}-${mm}-${dd}`
+  }
 };
