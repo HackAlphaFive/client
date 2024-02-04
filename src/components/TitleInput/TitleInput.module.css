@@ -28,9 +28,9 @@
   text-overflow: ellipsis;
 }
 
-.inputSuccess{
+/*.inputSuccess{
   border: 1px solid var(--Input-Success, #17D055);
-}
+}*/
 
 .inputError {
   border: 1px solid var(--Input-Error, #F14539);

@@ -7,6 +7,8 @@ import styles from './IPRRow.module.css';
 import { formatDate, translateStatus } from '../../utils/utils';
 import { TUser, T_IPR } from '../../utils/api/types';
 import { useNavigate } from 'react-router';
+import { useDispatch } from '../../services/hooks';
+import { getIPRById } from '../../services/middlewares/singleIPRQueries';
 
 type IPRRowProps = {
   isLeader: boolean | undefined;
@@ -21,6 +23,7 @@ type IPRRowProps = {
 
 const IPRRow: React.FC<IPRRowProps> = ({ isLeader, tab, ipr, employee, extraClass }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   /**
    * вызывать если ipr не undefined
@@ -29,7 +32,7 @@ const IPRRow: React.FC<IPRRowProps> = ({ isLeader, tab, ipr, employee, extraClas
     navigate(`./${ipr!.id}`);
   }
   const openCreateIPRPage = () => {
-    navigate(`./edit`);
+    navigate(`./create`);
   }
 
   // Содержимое для вкладки "ИПР сотрудников"

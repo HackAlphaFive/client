@@ -7,7 +7,7 @@ import { Radio } from '@alfalab/core-components/radio';
 import styles from './TabFiltrStatus.module.css';
 import { Gap } from '@alfalab/core-components/gap';
 import { useDispatch, useSelector } from '../../services/hooks';
-import { clearFilteringIPRStatus, setFilteringIPRStatus } from '../../services/slices/IPRsSlice';
+import { clearFilteringIPRStatus, clearFilteringPage, setFilteringIPRStatus } from '../../services/slices/IPRsSlice';
 import { getFilteringIPRStatus } from '../../services/selectors/IPRsSelector';
 
 type TProps = {
@@ -78,10 +78,10 @@ function TabFiltrStatus({width = '206px', mode = 'ipr', label = 'Статус И
           const value = options.filter(option => option.key === key)[0].content.props.children;
           // setSelected(translateStatus(value, 'ru-en') as StatusList | undefined);
           if (value === 'Все статусы') {
-            console.log('я очищаю фильтр по статусу');
-            dispatch(clearFilteringIPRStatus())
+            dispatch(clearFilteringPage());
+            dispatch(clearFilteringIPRStatus());
           } else {
-            console.log('я устанавливаю новую фильтрацию по статусу');
+            dispatch(clearFilteringPage());
             dispatch(setFilteringIPRStatus(translateStatus(value, 'ru-en') as StatusList));
           }
         }}

@@ -9,11 +9,12 @@ import TableIPRForSubord from '../../components/TableIPRForSubord/TableIPRForSub
 import TableMyIPR from '../../components/TableMyIPR/TableMyIPR';
 import { getUserRole, getUserSimplified } from '../../services/selectors/authSelector';
 import { getMyIPRs, getSubordIPRs } from '../../services/middlewares/IPRsQueries';
-import { getIPRQuery, getSubordIPRsFromStore, getMyIPRsFromStore } from '../../services/selectors/IPRsSelector';
+import { getIPRQuery, getSubordIPRsFromStore, getMyIPRsFromStore, getMyIPRsPending, getSubordIPRsPending, getFilteringPage } from '../../services/selectors/IPRsSelector';
 import { useNavigate } from 'react-router';
-import { clearFilter } from '../../services/slices/IPRsSlice';
+import { clearFilter, setFilteringPage } from '../../services/slices/IPRsSlice';
 import { Pagination } from '@alfalab/core-components/pagination';
 import styles from './IPRPage.module.css';
+import { clearCurrentIPR } from '../../services/slices/singleIPRSlice';
 
 function IPRPage() {
   const dispatch = useDispatch();
@@ -34,24 +35,38 @@ function IPRPage() {
   const user = useSelector(getUserSimplified);
   const isSupervisor = useSelector(getUserRole);
 
+  const myIPRsPending = useSelector(getMyIPRsPending);
   const myIPRs = useSelector(getMyIPRsFromStore);
+  const subordIPRsPending = useSelector(getSubordIPRsPending);
   const subordIPRs = useSelector(getSubordIPRsFromStore);
+
   const IPRQuery = useSelector(getIPRQuery);
 
-  const [pagesCount, setPagesCount] = useState(1);
-  const [currentPage, setCurrentPage] = useState(0);
+  const filtrByPage = useSelector(getFilteringPage);
+
+  // в компоненте Pagination нумерация начинается с нуля, иначе некорректное отображение
+  const [pagesCountIndex, setPagesCountIndex] = useState(0);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
 
-  const handlePageChange = () => {};
+  const handlePageChange = (payload: number) => {
+    dispatch(setFilteringPage(payload + 1));
+  };
 
 
   /**
    * обработчик смены вкладки "ИПР сотрудников" – "Мой ИПР"
    */
-  const handleChange = (event: React.MouseEvent<Element, MouseEvent>, { selectedId }: { selectedId: string | number }) => {
+  const handleChange = (
+    event: React.MouseEvent<Element, MouseEvent>,
+    { selectedId }: { selectedId: string | number }
+  ) => {
     setSelectedId(selectedId);
   };
 
+  useEffect(() => {
+    filtrByPage && setCurrentPageIndex(filtrByPage - 1);
+  });
 
   useEffect(() => {
     if (!isSupervisor) {
@@ -65,6 +80,9 @@ function IPRPage() {
 
   useEffect(() => {
     dispatch(clearFilter()); // при смене вкладки очищаются настройки фильтрации
+    // ↓↓ фикс галочки у пагинации, когда ты за рукля переключаешься на свои ипр, а у тебя их на одну страницу
+    setPagesCountIndex(0);
+    setCurrentPageIndex(0);
   }, [selectedId]);
 
   useEffect(() => {
@@ -72,7 +90,60 @@ function IPRPage() {
     if (selectedId === 'subordinates') dispatch(getSubordIPRs(IPRQuery));
   }, [IPRQuery, selectedId]);
 
+  useEffect(() => {
+    if (selectedId === 'me' && !myIPRsPending) {
+      setPagesCountIndex(myIPRs.count === 0 ? 0 : (Math.ceil(myIPRs.count / 5) - 1)); // index становился отрицательным
+      let currentPageIndex: number;
+      switch(myIPRs.next) {
+        case null:
+          currentPageIndex = pagesCountIndex === 0 ? 0 : pagesCountIndex;
+          break;
+        default:
+          switch(myIPRs.previous) {
+            case null:
+              currentPageIndex = 0;
+              break;
+            default:
+              const index_of_substr_page_for_next = myIPRs.next.indexOf('page='); // a1
+              const index_of_substr_pageNum_for_next = index_of_substr_page_for_next + 5; // a2
+              const next_page_index = Number(myIPRs.next.slice(index_of_substr_pageNum_for_next, index_of_substr_pageNum_for_next + 1)) - 1 // TODO если номер след. страницы из двух цифр - будут баги
 
+              const index_of_substr_page_for_previous = myIPRs.previous.indexOf('page=');
+              const index_of_substr_pageNum_for_previous = index_of_substr_page_for_previous + 5;
+              const previous_page_index = Number(myIPRs.next.slice(index_of_substr_pageNum_for_previous, index_of_substr_pageNum_for_previous + 1)) - 1 // TODO
+
+              currentPageIndex = (next_page_index - previous_page_index);
+          }
+      }
+      setCurrentPageIndex(currentPageIndex);
+    }
+    if (selectedId === 'subordinates' && !subordIPRsPending) {
+      setPagesCountIndex(subordIPRs.count === 0 ? 0 : (Math.ceil(subordIPRs.count / 5) - 1));
+      let currentPageIndex: number;
+      switch(subordIPRs.next) {
+        case null:
+          currentPageIndex = pagesCountIndex === 0 ? 0 : pagesCountIndex;
+          break;
+        default:
+          switch(subordIPRs.previous) {
+            case null:
+              currentPageIndex = 0;
+              break;
+            default:
+              const index_of_substr_page_for_next = subordIPRs.next.indexOf('page='); // a1
+              const index_of_substr_pageNum_for_next = index_of_substr_page_for_next + 5; // a2
+              const next_page_index = Number(subordIPRs.next.slice(index_of_substr_pageNum_for_next, index_of_substr_pageNum_for_next + 1)) - 1 // TODO если номер след. страницы из двух цифр - будут баги
+
+              const index_of_substr_page_for_previous = subordIPRs.previous.indexOf('page=');
+              const index_of_substr_pageNum_for_previous = index_of_substr_page_for_previous + 5;
+              const previous_page_index = Number(subordIPRs.next.slice(index_of_substr_pageNum_for_previous, index_of_substr_pageNum_for_previous + 1)) - 1 // TODO
+
+              currentPageIndex = (next_page_index - previous_page_index);
+          }
+      }
+      setCurrentPageIndex(currentPageIndex);
+    }
+  }, [myIPRs, subordIPRs, myIPRsPending, subordIPRsPending]);
 
   return (
     <>
@@ -96,13 +167,16 @@ function IPRPage() {
           <ButtonDesktop
             view='accent'
             leftAddons={<Add />}
-            onClick={() => navigate('./edit')}
+            onClick={() => {
+              dispatch(clearCurrentIPR());
+              navigate('./create')
+            }}
           >
             Создать новый ИПР
           </ButtonDesktop>
           <Gap size='xl' />
 
-          <TableIPRForSubord data={subordIPRs} />
+          <TableIPRForSubord data={subordIPRs.results} />
 
         </>
       )}
@@ -125,9 +199,9 @@ function IPRPage() {
       <Gap size='2xl'/>
       <div id='paginationIPR' className={styles.paginationWrapper}>
         <Pagination
-          currentPageIndex={currentPage}
-          pagesCount={pagesCount}
-          onPageChange={handlePageChange}
+          currentPageIndex={currentPageIndex}
+          pagesCount={pagesCountIndex}
+          onPageChange={(payload) => handlePageChange(payload)}
 
           className={styles.paginationButton}
           hideArrows={true}

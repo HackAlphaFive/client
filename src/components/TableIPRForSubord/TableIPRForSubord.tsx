@@ -29,6 +29,7 @@ const TableIPRForSubord: FC<TProps> = ({ data }) => {
     <Table
       gridParamsColumns='36.218% 42.897% 1fr'
       gridParamsAutoRows='120px'
+      extraClass={styles.table}
     >
       <TabFiltrText disabled={isEmpty} />
 

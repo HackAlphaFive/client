@@ -17,10 +17,12 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
  * Очищает: стейт списка пользователей на выбор, текущего юзера, токены.
  * Получает с сервера новые токены
  */
-export function login(username: string, password: string, signal?: AbortSignal) {
+export function getToken(username: string, password: string, signal?: AbortSignal) {
+  console.log('getToken запуск - на получение токена');
   return (dispatch: AppDispatch) => {
 
     dispatch(setAuthPending(true));
+    dispatch(setAuthSuccess(null));
     dispatch(clearAnotherUsers());
     dispatch(setUser(null));
     localStorage.removeItem('refreshToken');
@@ -40,6 +42,7 @@ export function login(username: string, password: string, signal?: AbortSignal) 
     )
       .then(handleResponse<TResponseLogin>)
       .then(data => {
+        console.log('getToken поставлен токен');
         localStorage.setItem('accessToken', `Bearer ${data.token}`);
         dispatch(setAuthSuccess(true));
       })
@@ -48,6 +51,7 @@ export function login(username: string, password: string, signal?: AbortSignal) 
         handleError('Ошибка при получении токена: ', err)
       })
       .finally(() => {
+        console.log('getToken завершение');
         dispatch(setAuthPending(false));
       });
   }
@@ -72,6 +76,7 @@ export const getAnotherUser = (id: number, signal?: AbortSignal) => {
 
 // вызывается внутри checkUserAuth
 export function getUser(signal?: AbortSignal) {
+  console.log('getUser запуск');
   return (dispatch: AppDispatch) => {
     dispatch(setUserPending(true));
     return fetch(
@@ -91,9 +96,11 @@ export function getUser(signal?: AbortSignal) {
       })
       .then(data => {
         dispatch(clearError());
+        console.log('getUser записал юзера в стейт');
         // записали данные о текущем пользователе
         dispatch(setUser({ ...data, isSuperior: data.subordinates.length > 0 ? true : false }));
         dispatch(setUserSuccess(true));
+        dispatch(setAuthSuccess(true));
       });
       // нет catch, т.к. он есть в checkUserAuth
   };
@@ -125,23 +132,30 @@ export function setAnotherUsersInState (currentUser: TUser, signal?: AbortSignal
  * и сохраняет его в стейт. Может очищать стейт юзера!
  */
 export function checkUserAuth(signal?: AbortSignal) {
+  console.log('checkUserAuth запуск');
   return (dispatch: AppDispatch) => {
     dispatch(setAuthPending(true));
     const myToken = localStorage.getItem('accessToken');
     if (myToken) {
+      console.log('checkUserAuth if true токен имеется');
       dispatch(getUser(signal))
         .catch(err => {
-          // localStorage.removeItem('accessToken');
+          console.log('checkUserAuth, catch err, удаляю токен');
+          localStorage.removeItem('accessToken');
+          console.log('checkUserAuth, catch err, зануляю стейт юзера');
           dispatch(setUser(null));
           dispatch(setUserSuccess(false));
-          handleError('Ошибка при получении данных пользователя: ', err);
+          handleError('checkUserAuth catch handleError --→: ', err);
         })
         .finally(() => {
+          console.log('checkUserAuth заверешение, auth&user pending → false');
           dispatch(setAuthPending(false));
           dispatch(setUserPending(false));
         });
     } else {
+      console.log('checkUserAuth else, нет токена, зануляю стейт юзера');
       dispatch(setAuthPending(false));
+      dispatch(setAuthSuccess(false));
       dispatch(setUser(null));
     }
   };

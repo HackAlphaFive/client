@@ -40,8 +40,10 @@ const authSlice = createSlice({
     // редьюсер для сохранения других возможных пользователей (в рамках MVP)
     setAnotherUsers: (state, action: PayloadAction<TUser | TUser[]>) => {
       // если payload является массивом, то
-      if (Array.isArray(action.payload)) {
-        state.anotherUsers = [ ...state.anotherUsers, ...action.payload ]
+      if (Array.isArray(action.payload) && state.anotherUsers.length === 4) {
+        state.anotherUsers = [ ...state.anotherUsers ];
+      } else if (Array.isArray(action.payload)) {
+        state.anotherUsers = [ ...state.anotherUsers, ...action.payload ];
       } else { // иначе в функцию передан одиночный юзер
         const userCurrent = action.payload; // TS не может сразу определить, что будет не массив. Записал в переменную
         if (!state.anotherUsers.some(user => user.id === userCurrent.id)) { // иногда текущий юзер записывается в список на свитч дважды - это фиксится данной строкой

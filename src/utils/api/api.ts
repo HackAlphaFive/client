@@ -18,13 +18,13 @@ export async function handleResponse<T>(response: Response) {
 export function getQueryString (data: T_IPR_query) {
   if (data === undefined || Object.entries(data).length === 0) return ''; // сервер сам назначает page=1, если не передать ничего в query
 
-  const { page, status, start, end, id } = data;
+  const { page, status, start, end, lastName } = data;
 
   let isFirst: boolean = true;
 
   let _page: string;
   let _status: string;
-  let _id: string;
+  let _lastName: string;
   let _start: string;
   let _end: string;
 
@@ -47,31 +47,31 @@ export function getQueryString (data: T_IPR_query) {
   }
 
   if (start && isFirst) {
-    _start = `start=${start}`;
+    _start = `start_date=${start}`;
     isFirst = false;
   } else if (start) {
-    _start = `&start=${start}`;
+    _start = `&start_date=${start}`;
   } else {
     _start = '';
   }
 
   if (end && isFirst) {
-    _end = `end=${end}`;
+    _end = `end_date=${end}`;
     isFirst = false;
   } else if (end) {
-    _end = `&end=${end}`;
+    _end = `&end_date=${end}`;
   } else {
     _end = '';
   }
 
-  if (id && isFirst) {
-    _id = `employee=${id}`;
+  if (lastName && isFirst) {
+    _lastName = `employee__last_name=${lastName}`;
     isFirst = false;
-  } else if (id) {
-    _id = `&employee=${id}`;
+  } else if (lastName) {
+    _lastName = `&employee__last_name=${lastName}`;
   } else {
-    _id = '';
+    _lastName = '';
   }
 
-  return `?${_page}${_status}${_id}${_start}${_end}`;
+  return `?${_page}${_status}${_lastName}${_start}${_end}`;
 }

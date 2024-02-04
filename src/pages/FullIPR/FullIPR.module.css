@@ -60,6 +60,19 @@
   width: 288px;
   height: 288px;
   border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.avatarStub {
+  border-radius: 50%;
+  border: 2px dashed var(--color-tooltip);
+  width: 288px;
+  height: 292px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* padding: 0 0 90px 0; */
 }
 
 .buttonsWrapper {

@@ -67,9 +67,9 @@ export type TResponseSubordWithoutIPR = {
 export type T_IPR_query = {
   page?: number;
   /**
-   * id человека, ИПР которого ищутся
+   * фамилия человека, ИПР которого ищутся
    */
-  id?: number;
+  lastName?: string;
   status?: StatusList;
   start?: string;
   end?: string;

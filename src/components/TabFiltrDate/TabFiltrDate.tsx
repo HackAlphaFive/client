@@ -6,7 +6,7 @@ import { CalendarDesktop } from '@alfalab/core-components/calendar/desktop';
 import styles from './TabFiltrDate.module.css';
 import { usePeriod, usePeriodWithReset } from '@alfalab/core-components/calendar/usePeriod';
 import { useDispatch } from '../../services/hooks';
-import { setFilteringDateEnd, setFilteringDateStart } from '../../services/slices/IPRsSlice';
+import { clearFilteringPage, setFilteringDateEnd, setFilteringDateStart } from '../../services/slices/IPRsSlice';
 
 type TProps = {
   calendarWidth?: number;
@@ -74,6 +74,7 @@ function TabFiltrDate({ calendarWidth = 340, disabled }: TProps) {
         start: `${getDateString(selectedFromDate, 'back')}`,
         end: `${getDateString(selectedToDate, 'back')}`,
       };
+      dispatch(clearFilteringPage());
       dispatch(setFilteringDateStart(valueBack.start));
       dispatch(setFilteringDateEnd(valueBack.end));
       const valueFront = `${getDateString(selectedFromDate)}–${getDateString(selectedToDate)}`;
