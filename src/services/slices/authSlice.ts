@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { TResponseGetSubordinate, TUser } from "../../utils/api/types";
-import { getAnotherUser, getSubordinates } from "../middlewares/authQueries";
+import { TResponseGetSomeUser, TResponseGetSubordinate, TUser } from "../../utils/api/types";
+import { getAnotherUser, getSubordinates, getUserById } from "../middlewares/authQueries";
 
 type TAuthInitialState = {
   user: TUser | null;
@@ -13,6 +13,7 @@ type TAuthInitialState = {
   subordinates: TResponseGetSubordinate;
   subordPending: boolean;
   subordSuccess: null | boolean;
+  superior: null | TResponseGetSomeUser,
 };
 
 const authInitialState: TAuthInitialState = {
@@ -26,6 +27,7 @@ const authInitialState: TAuthInitialState = {
   subordinates: [],
   subordPending: false,
   subordSuccess: null,
+  superior: null,
 }
 
 const authSlice = createSlice({
@@ -87,6 +89,15 @@ const authSlice = createSlice({
       state.error = action.payload;
       state.subordPending = false;
       state.subordSuccess = false;
+    })
+    builder.addCase(getUserById.pending, (state) => {
+      state.error = '';
+    })
+    builder.addCase(getUserById.fulfilled, (state, action) => {
+      state.superior = action.payload;
+    })
+    builder.addCase(getUserById.rejected, (state, action) => {
+      state.error = action.payload;
     })
   }
 });

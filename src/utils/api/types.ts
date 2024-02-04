@@ -234,7 +234,7 @@ export type TBodyRequestCreateTask = {
   /**
    * id ИПР, к которому относится создаваемая задача
    */
-  ipr: number; // id передаётся ещё и в path. Зачем?
+  ipr: number | string; // id передаётся ещё и в path. Зачем?
 };
 
 export type TResponseCreateTask = TTask;
@@ -247,12 +247,13 @@ export type TResponseCreateTask = TTask;
 export type TBodyRequestChangeTaskSuperior = {
   title?: string;
   description?: string;
-  status?: Exclude<StatusList, StatusList.InProgress | StatusList.NoStatus | StatusList.Done>;
+  status?: Exclude<StatusList, StatusList.InProgress  | StatusList.Done>;
   start_date?: string;
   end_date?: string;
 };
+
 export type TBodyRequestChangeTaskEmployee = {
-  status: Exclude<StatusList, StatusList.Failed | StatusList.NoStatus | StatusList.Canceled>;
+  status: string;
 };
 
 export type TResponseChangeTask = {

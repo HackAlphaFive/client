@@ -8,28 +8,38 @@ import { getUserRole } from "../../services/selectors/authSelector";
 import { useDispatch, useSelector } from "../../services/hooks";
 import SuccessfulModal from "../SuccessfulModal/SuccessfulModal";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
-import { isTemplate } from "../../services/selectors/taskSelector";
+import {
+  getTasksQuery,
+  getTasksToIPR,
+  isTemplate,
+} from "../../services/selectors/taskSelector";
 import {
   setTemplate,
   setTemplateElement,
 } from "../../services/slices/taskSlice";
+import { useParams } from "react-router";
+import {
+  deleteTask,
+  getTaskByIdIPR,
+  patchTaskBySuperior,
+  postTask,
+} from "../../services/middlewares/taskQueries";
+import { usePrevious } from "@alfalab/core-components/select/utils";
+import { formatDate, translateStatus } from "../../utils/utils";
+import { StatusList } from "../../utils/types";
+import { getComments } from "../../services/middlewares/commentsQueries";
 
 type TProps = {
-  statusTask: string;
+  statusTask: StatusList;
+  uniqueId: number;
   setDateText: React.Dispatch<React.SetStateAction<string>>;
   dateText: string;
   textValue: string;
   descriptionValue: string;
   editMode: boolean;
   date: {
-    prevDate: {
-      start: string | undefined;
-      end: string | undefined;
-    };
-    newDate: {
-      start: string;
-      end: string;
-    };
+    startDate: string | undefined;
+    endDate: string | undefined;
   };
   openConfirmModal: boolean;
   setTask: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,6 +52,7 @@ const TaskForm: FC<TProps> = ({
   descriptionValue,
   editMode,
   dateText,
+  uniqueId,
   date,
   openConfirmModal,
   setDateText,
@@ -53,21 +64,26 @@ const TaskForm: FC<TProps> = ({
   const [textareaValue, setTextareaValue] = useState<string>(descriptionValue);
   const [openModalStatus, SetOpenModalStatus] = useState(false);
   const [isFocus, setFocus] = useState(false);
+  const { id } = useParams();
   const isSupervisor = useSelector(getUserRole);
+  const dispatch = useDispatch();
+  const template = useSelector(isTemplate);
+  const tasksToIpr = useSelector(getTasksToIPR);
+  const tasksQuery = useSelector(getTasksQuery);
+  const task = tasksToIpr?.find((task) => task.id === uniqueId);
+
   const [values, setValues] = useState({
     prevValues: {
       text: textValue,
       description: descriptionValue,
-      date: `${date.prevDate.start}-${date.prevDate.end}`,
+      date: (task?.start_date && task.end_date) ? `${formatDate(task?.start_date!)}-${formatDate(task?.end_date!)}` : '',
     },
     newValues: {
       text: inputValue,
       description: textareaValue,
-      date: dateText,
+      date: `${date.startDate}-${date.endDate}`,
     },
   });
-  const dispatch = useDispatch();
-  const template = useSelector(isTemplate);
 
   const handleChange = (
     e:
@@ -86,10 +102,10 @@ const TaskForm: FC<TProps> = ({
       newValues: {
         text: inputValue,
         description: textareaValue,
-        date: dateText,
+        date: `${date.startDate}-${date.endDate}`,
       },
     });
-  }, [inputValue, textareaValue, date]);
+  }, [inputValue, textareaValue, date.endDate, date.startDate]);
 
   //Функция обработчик изменений в  инпутах в задачи
   const changeInForm = useMemo(() => {
@@ -113,43 +129,31 @@ const TaskForm: FC<TProps> = ({
     const task = {
       title: inputValue,
       description: textareaValue,
-      status: statusTask,
-      start_date:
-        date.newDate.start.length === 0
-          ? date.prevDate.start
-          : date.newDate.start,
-      end_date:
-        date.newDate.end.length === 0 ? date.prevDate.end : date.newDate.end,
+      start_date: formatDate(date.startDate!, "-"),
+      end_date: formatDate(date.endDate!, "-"),
     };
-    setValues({
-      ...values,
-      prevValues: { ...values.prevValues, date: dateText },
-    });
+    dispatch(patchTaskBySuperior({ body: task, iprId: id!, taskId: uniqueId }));
     setEditMode(false);
     setFocus(false);
     SetOpenModalStatus(true);
+    dispatch(getTaskByIdIPR({ tasksQuery, id: id! }));
   };
   const handleCreateTask = () => {
     const task = {
       title: inputValue,
-      // ipr: iprId,
       description: textareaValue,
-      start_date:
-        date.newDate.start.length === 0
-          ? date.prevDate.start
-          : date.newDate.start,
-      end_date:
-        date.newDate.end.length === 0 ? date.prevDate.end : date.newDate.end,
+      start_date: formatDate(date.startDate!, "-"),
+      end_date: formatDate(date.endDate!, "-"),
+      ipr: id!
     };
-    setValues({
-      ...values,
-      prevValues: { ...values.prevValues, date: dateText },
-    });
+    dispatch(postTask({body: task, iprId: id!}))
     setEditMode(false);
     setFocus(false);
+    setTimeout(() => {
+      dispatch(setTemplateElement(null));
+      dispatch(setTemplate(false));
+    }, 1200);
     SetOpenModalStatus(true);
-    setTimeout(() =>{dispatch(setTemplateElement(null));
-    dispatch(setTemplate(false))}, 1200);
   };
 
   //Обработчик кнопки отменить
@@ -158,11 +162,7 @@ const TaskForm: FC<TProps> = ({
     setTextareaValue(descriptionValue);
     setEditMode(false);
     setFocus(false);
-    setDateText(
-      date.prevDate.start?.length === 0 && date.prevDate.end?.length === 0
-        ? "Укажите диапазон дат"
-        : `${date.prevDate.start}-${date.prevDate.end}`
-    );
+    setDateText(`${task?.start_date}-${task?.end_date}`);
   };
 
   const handleDeleteButton = () => {
@@ -229,8 +229,6 @@ const TaskForm: FC<TProps> = ({
             </Button>
             <Button
               view="primary"
-              // nowrap={true}
-              // textResizing='fill'
               className={styles.saveButton}
               leftAddons={<PlusMediumMIcon fill="white" />}
               disabled={

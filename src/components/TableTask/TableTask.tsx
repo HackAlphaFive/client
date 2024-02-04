@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useMemo, useState } from "react";
+import React, { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import TaskLine from "../TaskLine/TaskLine";
 import styles from "./TableTask.module.css";
 import { StatusList, StatusListRU } from "../../utils/types";
@@ -12,6 +12,11 @@ import { useDispatch, useSelector } from "../../services/hooks";
 import { getUserRole } from "../../services/selectors/authSelector";
 import { ButtonDesktop } from "@alfalab/core-components/button/desktop";
 import {
+  getChangeTaskSuccess,
+  getCreatedTaskSuccess,
+  getDeleteTaskSuccess,
+  getTasksQuery,
+  getTasksToIPR,
   isTemplate,
   templateTask,
 } from "../../services/selectors/taskSelector";
@@ -19,6 +24,8 @@ import {
   setTemplate,
   setTemplateElement,
 } from "../../services/slices/taskSlice";
+import { useParams } from "react-router";
+import { getTaskByIdIPR } from "../../services/middlewares/taskQueries";
 
 export const MockTasks = [
   {
@@ -54,24 +61,33 @@ type TProps = {
 };
 
 const TableTask: FC<TProps> = ({ children, data }): JSX.Element => {
+  const {id} = useParams();
+  const dispatch = useDispatch();
   const isSupervisor = useSelector(getUserRole);
   const template = useSelector(isTemplate);
   const templateElement = useSelector(templateTask);
-  const dispatch = useDispatch();
+  const tasksQuery = useSelector(getTasksQuery)
+  const tasksToIpr = useSelector(getTasksToIPR)
+  const taskIsChange = useSelector(getChangeTaskSuccess)
+  const taskIsCreated = useSelector(getCreatedTaskSuccess)
+  const taskIsDelete = useSelector(getDeleteTaskSuccess)
 
+  useEffect(() => {
+    if(id) dispatch(getTaskByIdIPR({tasksQuery, id}))
+  },[taskIsChange, taskIsCreated, taskIsDelete])
   const addTaskButton = () => {
       dispatch(setTemplate(true));
       dispatch(
         setTemplateElement({
           isTemplate: true,
           classNameLine: styles.row,
-          taskText: `Задача ${MockTasks.length + 1}`,
-          descriptionText: `Описание задачи ${MockTasks.length + 1}`,
+          taskText: `Задача №${tasksToIpr.length + 1}`,
+          status: StatusList.NoStatus,
+          descriptionText: `Описание задачи №${tasksToIpr.length + 1}`,
           uniqueId: getUniqId(),
         })
       );
   };
-
   return (
     <Table
       gridParamsColumns='58.232% 20.884% 20.884%'
@@ -83,8 +99,8 @@ const TableTask: FC<TProps> = ({ children, data }): JSX.Element => {
       </div>
       <TabFiltrDate calendarWidth={290} />
       <TabFiltrStatus width="188px" label="Статус задачи" />
-      {MockTasks &&
-        MockTasks.map((task, index) => {
+      {tasksToIpr &&
+        tasksToIpr.map((task:TTask, index:number) => {
           const start = formatDate(task.start_date);
           const end = formatDate(task.end_date);
           return (
@@ -96,7 +112,7 @@ const TableTask: FC<TProps> = ({ children, data }): JSX.Element => {
               endTask={end}
               taskText={task.title}
               date={`${start}-${end}`}
-              status={translateStatus(task.status, "en-ru")}
+              status={task.status}
               uniqueId={task.id}
             />
           );
@@ -106,6 +122,7 @@ const TableTask: FC<TProps> = ({ children, data }): JSX.Element => {
           isTemplate={templateElement.isTemplate}
           classNameLine={templateElement.classNameLine}
           taskText={templateElement.taskText}
+          status={templateElement.status}
           descriptionText={templateElement.descriptionText}
           uniqueId={templateElement.uniqueId}
         />
