@@ -349,6 +349,7 @@ const TaskLine: FC<TProps> = ({
 
   const handleDeleteButton = () => {
     setEditMode(false);
+    setOpenEdit(false)
     dispatch(setTemplateElement(null));
     dispatch(setTemplate(false));
   };

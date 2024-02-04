@@ -84,7 +84,7 @@ const TableTask: FC<TProps> = ({ children, data }): JSX.Element => {
           taskText: `Задача №${tasksToIpr.length + 1}`,
           status: StatusList.NoStatus,
           descriptionText: `Описание задачи №${tasksToIpr.length + 1}`,
-          uniqueId: tasksToIpr.length + 1,
+          uniqueId: getUniqId(),
         })
       );
   };
