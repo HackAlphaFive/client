@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { config, handleResponse } from "../../utils/api/api";
-import { TBodyRequestChangeIPR, TResponseChangeIPR, TResponseGetIPRById } from "../../utils/api/types";
+import { TBodyRequestChangeIPR, TBodyRequestCreateIPR, TResponseChangeIPR, TResponseCreateIPR, TResponseGetIPRById } from "../../utils/api/types";
 
 type TGetIPRPayload = {
   isSuperior: boolean;
@@ -40,5 +40,23 @@ export const updateIPRById = createAsyncThunk(
       }
     )
       .then(handleResponse<TResponseChangeIPR>)
+  }
+);
+
+export const createIPR = createAsyncThunk(
+  'singleIPR/createIPR',
+  (data: TBodyRequestCreateIPR) => {
+    return fetch(
+      `${config.baseUrl}/iprs/subordinates/`,
+      {
+        method: 'POST',
+        headers: {
+          ...config.headers,
+          authorization: localStorage.getItem('accessToken')!,
+        },
+        body: JSON.stringify(data),
+      }
+    )
+      .then(handleResponse<TResponseCreateIPR>)
   }
 );

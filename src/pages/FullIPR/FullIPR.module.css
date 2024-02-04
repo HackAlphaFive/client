@@ -64,12 +64,16 @@
   object-position: center;
 }
 
-/* .avatarStub {
+.avatarStub {
+  border-radius: 50%;
+  border: 2px dashed var(--color-tooltip);
   width: 288px;
+  height: 292px;
   display: flex;
   justify-content: center;
-  padding: 0 0 90px 0;
-} */
+  align-items: center;
+  /* padding: 0 0 90px 0; */
+}
 
 .buttonsWrapper {
   display: grid;

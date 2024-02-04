@@ -14,6 +14,7 @@ import { getSubordPending, getSubordSuccess, getSubordinatesFromStore } from '..
 import { getSubordinates } from '../../services/middlewares/authQueries';
 import { Spinner } from '@alfalab/core-components/spinner';
 import { clearFilteringPage, clearFilteringSubordLastName, setFilteringSubordLastName } from '../../services/slices/IPRsSlice';
+import { setIdForCreate, setPhoto } from '../../services/slices/singleIPRSlice';
 
 type TProps = {
   needMagnifier?: boolean;
@@ -52,7 +53,9 @@ const TabFiltrText: FC<TProps> = ({
           cellExtraClassNameCell={styles.cell}
           onClick={() => {
             dispatch(clearFilteringPage());
-            dispatch(setFilteringSubordLastName(el.last_name))}
+            dispatch(setFilteringSubordLastName(el.last_name));
+            dispatch(setIdForCreate(el.id));
+            dispatch(setPhoto(el.photo))}
           }
         />
         <Gap size='xs' />

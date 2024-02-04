@@ -6,15 +6,18 @@ import { Radio } from '@alfalab/core-components/radio';
 import styles from './TabForStatus.module.css';
 import { Gap } from '@alfalab/core-components/gap';
 import { useDispatch, useSelector } from '../../services/hooks';
+import { TFormData } from './FullIPR';
+import { getIntermediateStatus } from '../../services/selectors/singleIPRSelector';
+import { setIntermideateStatus } from '../../services/slices/singleIPRSlice';
 
 type TProps = {
   mode: 'empty' | 'existing';
   disabled?: boolean;
-  existingStatus?: StatusList;
 }
 
-const TabForStatus: FC<TProps> = ({ mode, disabled, existingStatus }): JSX.Element => {
+const TabForStatus: FC<TProps> = ({ mode, disabled }): JSX.Element => {
   const dispatch = useDispatch();
+  const intermediateStatus = useSelector(getIntermediateStatus);
 
   const width = '193px';
   const options = [
@@ -34,7 +37,7 @@ const TabForStatus: FC<TProps> = ({ mode, disabled, existingStatus }): JSX.Eleme
         size='xl'
         valueRenderer={({ selected }) => {
           if (mode === 'empty') return StatusListRU.NoStatus;
-          if (mode === 'existing' && existingStatus) return existingStatus;
+          if (intermediateStatus) return translateStatus(intermediateStatus, 'en-ru');
         }}
         Arrow={mode === 'empty' ? ()=><div></div> : undefined}
         optionsListClassName={styles.popover}
@@ -53,8 +56,9 @@ const TabForStatus: FC<TProps> = ({ mode, disabled, existingStatus }): JSX.Eleme
           </div>
         )}}
         onChange={(payload) => {
-          const key = payload.selected?.key;
-          const value = options.filter(option => option.key === key)[0].content.props.children;
+          const key = payload.selected?.key!;
+          const value = options.filter(option => option.key === key)[0].content.props.children as StatusListRU;
+          dispatch(setIntermideateStatus(translateStatus(value, 'ru-en') as StatusList));
         }}
       />
       {mode === 'existing' && <span className={`text text_type_small text_color_tooltip ${styles.statusTooltip}`}>Изменить статус ИПР</span>}
