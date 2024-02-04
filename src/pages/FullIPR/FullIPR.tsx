@@ -67,7 +67,12 @@ const FullIPR: FC = (): JSX.Element => {
       dispatch(clearFilter())
       dispatch(setPhoto(''))
     }
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    setWasChanged(true)
+    intermediateStatus && setFormData(prev => ({ ...prev, status: translateStatus(intermediateStatus, 'en-ru') as StatusListRU}))
+  }, [intermediateStatus]);
 
   useEffect(() => {
     if (idFromURL && isSuperior !== undefined) {
