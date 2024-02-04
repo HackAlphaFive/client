@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from '../../services/store';
-import { fetchIprById, updateIprById } from '../../services/slices/singleIPRSlice';
+import { getIPRById, updateIPRById } from '../../services/slices/singleIPRSlice';
 
 import { Link } from '@alfalab/core-components/link';
 import { ButtonDesktop } from '@alfalab/core-components/button/desktop';
@@ -17,11 +17,11 @@ import { StatusList, StatusListRU } from '../../utils/types';
 
 import styles from './FullIPR.module.css';
 
-const defaultStatus = { label: StatusListRU.NoStatus, value: StatusList.NoStatus };
+const defaultStatus = StatusListRU.NoStatus;
 
 type FormData = {
   title: string;
-  status: string;
+  status: StatusListRU;
 };
 
 const FullIPR: FC = (): JSX.Element => {
@@ -32,8 +32,8 @@ const FullIPR: FC = (): JSX.Element => {
   const [mode, setMode] = useState<'empty' | 'existing'>('empty');
   const [wasChanged, setWasChanged] = useState(false);
   const [isValid, setIsValid] = useState(false);
-  const [initialData, setInitialData] = useState<FormData>({ title: '', status: defaultStatus.value });
-  const [formData, setFormData] = useState<FormData>({ title: '', status: defaultStatus.value });
+  const [initialData, setInitialData] = useState<FormData>({ title: '', status: defaultStatus });
+  const [formData, setFormData] = useState<FormData>({ title: '', status: defaultStatus });
 
   const loadedTitle = useSelector(() => '');
   const loadedStatus = useSelector(() => '');
@@ -42,7 +42,7 @@ const FullIPR: FC = (): JSX.Element => {
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchIprById(id));
+      dispatch(getIPRById(id));
     }
   }, [dispatch, id]);
 
@@ -55,8 +55,8 @@ const FullIPR: FC = (): JSX.Element => {
   }, [location]);
 
   useEffect(() => {
-    setInitialData({ title: loadedTitle, status: loadedStatus });
-    setFormData({ title: loadedTitle, status: loadedStatus });
+    // setInitialData({ title: loadedTitle, status: loadedStatus });
+    // setFormData({ title: loadedTitle, status: loadedStatus });
   }, []);
 
   // Функция для обновления formData при изменении
@@ -78,7 +78,7 @@ const FullIPR: FC = (): JSX.Element => {
   // Обработчик для кнопки "Сохранить ИПР"
   const handleSave = () => {
     if (id) {
-      dispatch(updateIprById({ id: id, data: formData }));
+      // dispatch(updateIPRById({ id: id, body: formData }));
       navigate('/ipr'); // Или перенаправление куда-либо после сохранения
     }
   };
@@ -124,9 +124,9 @@ const FullIPR: FC = (): JSX.Element => {
           <TitleInput title={title} onTitleChange={(title) => handleDataChange({ title })} />
 
           <Gap size='xl'/>
-          <StatusDropdown
+          {/* <StatusDropdown
             currentStatus={formData.status}
-            onStatusChange={(status) => handleDataChange({ status })}/>
+            onStatusChange={(status) => handleDataChange({ status })}/> */}
         </form>
           <img src={photo} alt="Аватарка сотрудника" className={styles.avatar}/>
       </div>

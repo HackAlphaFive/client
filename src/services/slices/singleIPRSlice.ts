@@ -1,65 +1,92 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { config, handleResponse } from '../../utils/api/api';
+import { TBodyRequestChangeIPR, TResponseChangeIPR, TResponseGetIPRById, T_IPR } from '../../utils/api/types';
 
-export const fetchIprById = createAsyncThunk(
-  'iprs/fetchById',
-  async (id: string, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(`/iprs/${id}/`);
-      return response.data;
-    } catch (err) {
-      if (err instanceof axios.AxiosError) {
-        return rejectWithValue(err.response?.data);
+export const getIPRById = createAsyncThunk(
+  'singleIPR/getById',
+  (id: string) => {
+    return fetch(
+      `${config.baseUrl}/iprs/subordinates/${id}/}`,
+      {
+        method: 'GET',
+        headers: {
+          ...config.headers,
+          authorization: localStorage.getItem('accessToken')!,
+        },
       }
-      return rejectWithValue('An unexpected error occurred');
-    }
+    )
+      .then(handleResponse<TResponseGetIPRById>)
   }
 );
 
-export const updateIprById = createAsyncThunk(
-  'iprs/updateById',
-  async ({ id, data }: { id: string, data: { title: string; status: string; description?: string; start_date?: string; end_date?: string; }}, { rejectWithValue }) => {
-    try {
-      const response = await axios.patch(`/iprs/${id}/`, data);
-      return response.data;
-    } catch (err) {
-      if (err instanceof axios.AxiosError) {
-        return rejectWithValue(err.response?.data);
+export const updateIPRById = createAsyncThunk(
+  'singleIPR/updateById',
+  (data: { body: TBodyRequestChangeIPR; id: string | number }) => {
+    return fetch(
+      `${config.baseUrl}/iprs/subordinates/${data.id}/}`,
+      {
+        method: 'PATCH',
+        headers: {
+          ...config.headers,
+          authorization: localStorage.getItem('accessToken')!,
+        },
+        body: JSON.stringify(data.body),
       }
-      return rejectWithValue('An unexpected error occurred');
-    }
+    )
+      .then(handleResponse<TResponseChangeIPR>)
   }
 );
+
+type TSingleIPRInitialState = {
+  currentIPR: null | T_IPR;
+  singleIPRPending: boolean;
+  singleIPRSuccess: null | boolean;
+  error: unknown;
+};
+
+const initialState: TSingleIPRInitialState = {
+  currentIPR: null,
+  singleIPRPending: false,
+  singleIPRSuccess: null,
+  error: '',
+}
 
 const singleIPRSlice = createSlice({
-  name: 'singleIpr',
-  initialState: {
-    currentIpr: null,
-    loading: false,
-    error: null as string | null,
-  },
+  name: 'singleIPR',
+  initialState,
   reducers: {},
-extraReducers: (builder) => {
-  builder
-    .addCase(fetchIprById.pending, (state) => {
-      state.loading = true;
+  extraReducers: builder => {
+    builder.addCase(getIPRById.pending, (state) => {
+      state.error = '';
+      state.singleIPRPending = true;
+      state.singleIPRSuccess = null;
     })
-    .addCase(fetchIprById.fulfilled, (state, action) => {
-      state.currentIpr = action.payload;
-      state.loading = false;
-      state.error = null;
+    builder.addCase(getIPRById.fulfilled, (state, action) => {
+      state.singleIPRPending = false;
+      state.singleIPRSuccess = true;
+      state.currentIPR = action.payload;
     })
-    .addCase(fetchIprById.rejected, (state, action) => {
-      state.error = action.payload as string | null;
-      state.loading = false;
+    builder.addCase(getIPRById.rejected, (state, action) => {
+      state.error = action;
+      state.singleIPRPending = false;
+      state.singleIPRSuccess = false;
     })
-    .addCase(updateIprById.fulfilled, (state, action) => {
-      state.currentIpr = action.payload;
-      state.error = null;
+
+    builder.addCase(updateIPRById.pending, (state) => {
+      state.error = '';
+      state.singleIPRPending = true;
+      state.singleIPRSuccess = null;
     })
-    .addCase(updateIprById.rejected, (state, action) => {
-      state.error = action.payload as string | null;
-    });
+    builder.addCase(updateIPRById.fulfilled, (state, action) => {
+      state.singleIPRPending = false;
+      state.singleIPRSuccess = true;
+      state.currentIPR = action.payload;
+    })
+    builder.addCase(updateIPRById.rejected, (state, action) => {
+      state.error = action;
+      state.singleIPRPending = false;
+      state.singleIPRSuccess = false;
+    })
   }
 });
 
