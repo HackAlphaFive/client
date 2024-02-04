@@ -23,6 +23,10 @@
 - **React Router** для навигации.
 - **UI Kit - Core Components** для дизайна интерфейса.
 
+## Live версия
+
+[Деплой на GH Pages](https://hackalphafive.github.io/client/)
+
 ## Начало Работы
 
 ### Предварительные Требования
