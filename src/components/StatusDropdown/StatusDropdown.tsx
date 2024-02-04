@@ -1,22 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ReactComponent as Chevron } from '../../assets/Chevron.svg';
-import {ReactComponent as CheckedIcon} from '../../assets/status-icons/checked.svg';
-import {ReactComponent as UncheckedIcon} from '../../assets/status-icons/unchecked.svg';
+import { ReactComponent as CheckedIcon } from '../../assets/status-icons/checked.svg';
+import { ReactComponent as UncheckedIcon } from '../../assets/status-icons/unchecked.svg';
 import styles from './StatusDropdown.module.css';
 import { StatusList, StatusListRU } from '../../utils/types';
 
 const statuses = [
-  // { label: StatusListRU.NoStatus, value: StatusList.NoStatus },
   { label: StatusListRU.Failed, value: StatusList.Failed },
-  // { label: StatusListRU.InProgress, value: StatusList.InProgress },
   { label: StatusListRU.Done, value: StatusList.Done },
   { label: StatusListRU.Canceled, value: StatusList.Canceled }
 ];
 
-const defaultStatus = { label: StatusListRU.NoStatus, value: StatusList.NoStatus };
+type StatusDropdownProps = {
+  currentStatus: string;
+  onStatusChange: (status: string) => void;
+};
 
-const StatusDropdown = () => {
-  const [status, setStatus] = useState(defaultStatus);
+const StatusDropdown: React.FC<StatusDropdownProps> = ({ currentStatus, onStatusChange }) => {
+  const [status, setStatus] = useState(currentStatus);
   const [shown, setShown] = useState(false);
   const statusRef = useRef<HTMLDivElement>(null);
 
@@ -33,22 +34,25 @@ const StatusDropdown = () => {
     };
   }, []);
 
-  const handleStatusClick = (newStatus: typeof statuses[number]) => {
-    setStatus(newStatus);
+  const handleStatusClick = (newStatus: { label: string; value: string }) => {
+    onStatusChange(newStatus.value);
+    setStatus(newStatus.value);
     setShown(false);
   };
+
+  const currentStatusLabel = statuses.find(s => s.value === status)?.label || '';
 
   return (
     <div ref={statusRef} className={styles.statusDropdownContainer}>
       <div className={styles.statusLabel} onClick={() => setShown(!shown)}>
-        <span>{status.label}</span>
+        <span>{currentStatusLabel}</span>
         <Chevron className={`${styles.chevronIcon} ${shown && styles.chevronIconRotated}`} />
       </div>
       {shown && (
         <ul className={styles.statusDropdown}>
           {statuses.map((s) => (
             <li className={`${styles.statusItem} ${s.value === 'Done' && styles.statusDone} ${s.value === 'Canceled' && styles.statusCanceled}`} key={s.value} onClick={() => handleStatusClick(s)}>
-              {s.value === status.value ? <CheckedIcon/> : <UncheckedIcon/>}
+              {s.value === status ? <CheckedIcon/> : <UncheckedIcon/>}
               {s.label}
             </li>
           ))}
