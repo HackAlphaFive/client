@@ -16,6 +16,7 @@ const getPatronymic = (state: RootState) => state.auth.user?.patronymic;
 const getUserPosition = (state: RootState) => state.auth.user?.position;
 const getUserPhoto = (state: RootState) => state.auth.user?.photo;
 const getUserId = (state: RootState) => state.auth.user?.id;
+export const getUserName = (state: RootState) => state.auth.user?.username
 
 export const getUserSimplified = createSelector(
   [getFirstName, getLastName, getPatronymic, getUserPosition, getUserPhoto, getUserId],
@@ -37,4 +38,6 @@ export const getAuthPending = (state: RootState) => state.auth.authPending;
  * @description TODO нейминг некорректный? Нужно isUserSuperior например??
  */
 export const getUserRole = (state: RootState) => state.auth.user?.isSuperior;
+
+export const SuperiorInfo = (state: RootState) => state.auth.superior
 

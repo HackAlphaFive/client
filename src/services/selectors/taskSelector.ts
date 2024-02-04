@@ -5,6 +5,8 @@ import { T_Task_query } from "../../utils/api/types";
 export const isTemplate = (state: RootState) => state.task.isTemplate;
 export const templateTask = (state: RootState) => state.task.templateElement;
 
+export const getTaskError = (state:RootState) => state.task.error
+
 export const getTasksToIPR = (state: RootState) => state.task.tasksToIPR;
 export const getTasksToIPRPending = (state: RootState) =>
   state.task.tasksToIPRPending;
@@ -23,14 +25,16 @@ export const getChangeTaskPending = (state: RootState) =>
 export const getChangeTaskSuccess = (state: RootState) =>
   state.task.changeTaskSuccess;
 
+export const getDeleteTaskPending = (state: RootState) => state.task.deleteTaskPending
+export const getDeleteTaskSuccess = (state: RootState) => state.task.deleteTaskSuccess
+
+
 export const getFilteringTaskStatus = (state: RootState) =>
   state.task.filteringTaskStatus;
 export const getFilteringTaskDateEnd = (state: RootState) =>
   state.task.filteringTaskDateEnd;
 export const getFilteringTaskDateStart = (state: RootState) =>
   state.task.filteringTaskDateStart;
-export const getFilteringTaskPage = (state: RootState) =>
-  state.task.filteringTaskPage;
 
 export const getTasksQuery = createSelector(
   [getFilteringTaskStatus, getFilteringTaskDateEnd, getFilteringTaskDateStart],
@@ -40,5 +44,7 @@ export const getTasksQuery = createSelector(
     if (status) result.status = status;
     if (start) result.start = start;
     if (end) result.end = end;
+
+    return result;
   }
 );

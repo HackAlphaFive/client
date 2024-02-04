@@ -17,10 +17,25 @@ import { IconButton } from "@alfalab/core-components/icon-button";
 import { Calendar } from "@alfalab/core-components/calendar";
 import { Radio } from "@alfalab/core-components/radio";
 import { RadioGroup } from "@alfalab/core-components/radio-group";
-import { StatusListRU } from "../../utils/types";
+import { StatusList, StatusListRU } from "../../utils/types";
 import TaskForm from "../TaskForm/TaskForm";
 import { getUserRole } from "../../services/selectors/authSelector";
-import { useSelector } from "../../services/hooks";
+import { useDispatch, useSelector } from "../../services/hooks";
+import { translateStatus } from "../../utils/utils";
+import {
+  deleteTask,
+  patchTaskByEmployee,
+} from "../../services/middlewares/taskQueries";
+import { useParams } from "react-router";
+import {
+  setTemplate,
+  setTemplateElement,
+} from "../../services/slices/taskSlice";
+import { getComments } from "../../services/middlewares/commentsQueries";
+import {
+  getCommentsContainer,
+  getSendCommentSuccess,
+} from "../../services/selectors/commentsSelector";
 
 type TProps = {
   descriptionText: string;
@@ -28,8 +43,8 @@ type TProps = {
   startTask?: string;
   endTask?: string;
   date?: string;
-  status?: string;
-  uniqueId: string | number;
+  status: StatusList;
+  uniqueId: number;
   classNameLine?: string;
   isTemplate?: boolean;
 };
@@ -46,9 +61,7 @@ const TaskLine: FC<TProps> = ({
   isTemplate,
 }) => {
   //стейт для выбора статуса
-  const [valueStatus, setValueStatus] = useState(
-    status ? status : StatusListRU.NoStatus
-  );
+  const [valueStatus, setValueStatus] = useState<StatusList>(status);
   //стейт для открытия и закрытия поповера с удалением/редактированием
   const [isOpenEdit, setOpenEdit] = useState(false);
 
@@ -82,6 +95,9 @@ const TaskLine: FC<TProps> = ({
   //стейт для записи начальной даты
   const [to, setTo] = useState<number>();
 
+  const [startDate, setStartDate] = useState<string | undefined>(startTask);
+  const [endDate, setEndDate] = useState<string | undefined>(endTask);
+
   //Стейт для редактирования
   const [editMode, setEditMode] = useState(false);
 
@@ -89,12 +105,12 @@ const TaskLine: FC<TProps> = ({
   const [dateText, setDateText] = useState(
     date ? date : "Укажите диапазон дат"
   );
-  const [dates, setDates] = useState({
-    prevDate: { start: startTask, end: endTask },
-    newDate: { start: "", end: "" },
-  });
-
   const isSupervisor = useSelector(getUserRole);
+  const commentSend = useSelector(getSendCommentSuccess);
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const comments = useSelector(getCommentsContainer);
+
 
   useEffect(() => {
     if (!isOpenCalendar && !isOpenEdit && !isOpenStatus && !isOpenTask) {
@@ -249,13 +265,8 @@ const TaskLine: FC<TProps> = ({
       const selectedFromDate = new Date(from);
       const selectedToDate = new Date(to);
       if (from > to) {
-        setDates({
-          ...dates,
-          newDate: {
-            start: getDateString(selectedToDate, ""),
-            end: getDateString(selectedFromDate, ""),
-          },
-        });
+        setStartDate(getDateString(selectedToDate, ""));
+        setEndDate(getDateString(selectedFromDate, ""));
         setOpenCalendar(false);
         setDateText(
           `${getDateString(selectedToDate, "")}-${getDateString(
@@ -264,13 +275,8 @@ const TaskLine: FC<TProps> = ({
           )}`
         );
       } else {
-        setDates({
-          ...dates,
-          newDate: {
-            start: getDateString(selectedFromDate, ""),
-            end: getDateString(selectedToDate, ""),
-          },
-        });
+        setStartDate(getDateString(selectedFromDate, ""));
+        setEndDate(getDateString(selectedToDate, ""));
         setOpenCalendar(false);
         setDateText(
           `${getDateString(selectedFromDate, "")}-${getDateString(
@@ -313,7 +319,21 @@ const TaskLine: FC<TProps> = ({
     _: React.ChangeEvent<Element> | React.MouseEvent<Element, MouseEvent>,
     payload: { value: string }
   ) => {
-    setValueStatus(payload.value);
+    let status = "";
+    if (payload.value === "In progress") {
+      setValueStatus(StatusList.InProgress);
+      status = StatusList.InProgress;
+    } else {
+      setValueStatus(StatusList.Done);
+      status = StatusList.Done;
+    }
+    dispatch(
+      patchTaskByEmployee({
+        status: status,
+        iprId: id!,
+        taskId: uniqueId,
+      })
+    );
     setOpenStatus(false);
   };
 
@@ -325,6 +345,12 @@ const TaskLine: FC<TProps> = ({
 
   const handleSave = () => {
     setOpenConfirmModal(true);
+  };
+
+  const handleDeleteButton = () => {
+    setEditMode(false);
+    dispatch(setTemplateElement(null));
+    dispatch(setTemplate(false));
   };
 
   return (
@@ -404,9 +430,11 @@ const TaskLine: FC<TProps> = ({
         <div className={styles.taskStatus}>
           <p
             className={
-              valueStatus === StatusListRU.Done
+              valueStatus === StatusList.Done
                 ? styles.textStatusGreen
-                : valueStatus === StatusListRU.NoStatus
+                : valueStatus === StatusList.Canceled
+                ? styles.textStatusRed
+                : valueStatus === StatusList.NoStatus
                 ? styles.textStatusGrey
                 : styles.textStatus
             }
@@ -414,7 +442,7 @@ const TaskLine: FC<TProps> = ({
               handleUnique<HTMLParagraphElement>(e, setElementStatus)
             }
           >
-            {valueStatus}
+            {translateStatus(valueStatus as StatusList, "en-ru")}
           </p>
         </div>
         <div className={styles.taskIcon}>
@@ -458,7 +486,16 @@ const TaskLine: FC<TProps> = ({
                 Редактировать
               </a>
             </li>
-            <li className={styles.popoverItem}>Удалить</li>
+            <li
+              className={styles.popoverItem}
+              onClick={() =>
+                isTemplate
+                  ? handleDeleteButton()
+                  : dispatch(deleteTask({ iprId: id!, taskId: uniqueId }))
+              }
+            >
+              Удалить
+            </li>
           </ul>
         </Popover>
         <Popover
@@ -482,8 +519,8 @@ const TaskLine: FC<TProps> = ({
                   <p className={styles.radioText}>{StatusListRU.InProgress}</p>
                 }
                 block={true}
-                value={StatusListRU.InProgress}
-                checked={valueStatus === StatusListRU.InProgress}
+                value={StatusList.InProgress}
+                checked={valueStatus === StatusList.InProgress}
                 circleClassName={styles.greyBg}
               />
               <Radio
@@ -492,8 +529,8 @@ const TaskLine: FC<TProps> = ({
                   <p className={styles.radioTextGreen}>{StatusListRU.Done}</p>
                 }
                 block={true}
-                value={StatusListRU.Done}
-                checked={valueStatus === StatusListRU.Done}
+                value={StatusList.Done}
+                checked={valueStatus === StatusList.Done}
                 contentClassName={styles.radioTextGreen}
               />
             </RadioGroup>
@@ -512,7 +549,9 @@ const TaskLine: FC<TProps> = ({
         <div id={uniqueId + "taskPopover"} className={styles.popoverTask}>
           <TaskForm
             setDateText={setDateText}
-            date={dates}
+            date={{ startDate, endDate }}
+            // date={dates}
+            uniqueId={uniqueId}
             textValue={taskText}
             descriptionValue={descriptionText}
             editMode={editMode}
@@ -520,10 +559,10 @@ const TaskLine: FC<TProps> = ({
             setTask={setOpenTask}
             setEditMode={setEditMode}
             setOpenConfirmModal={setOpenConfirmModal}
-            statusTask={valueStatus}
+            statusTask={valueStatus as StatusList}
             openConfirmModal={openConfirmModal}
           />
-          <Сomments />
+          <Сomments uniqueId={uniqueId} />
         </div>
       </Popover>
     </>
