@@ -5,15 +5,16 @@ import { PureCell } from "@alfalab/core-components/pure-cell";
 import styles from './UserTab.module.css';
 
 type TProps = {
-  avatar: string,
-  username: string,
-  position: string,
-  cellExtraClassNameCell?: string,
+  avatar: string;
+  username: string;
+  position: string;
+  cellExtraClassNameCell?: string;
+  onClick?: () => void;
 };
 
-const UserTab: FC<TProps> = ({ avatar, username, position, cellExtraClassNameCell }) => {
+const UserTab: FC<TProps> = ({ avatar, username, position, cellExtraClassNameCell, onClick }) => {
   return (
-    <PureCell className={`${styles.cell} ${cellExtraClassNameCell}`}>
+    <PureCell className={`${styles.cell} ${cellExtraClassNameCell}`} onClick={onClick}>
       <PureCell.Graphics verticalAlign='center'>
         <Circle imageUrl={avatar} size={64}/>
       </PureCell.Graphics>

@@ -18,7 +18,7 @@ type TIPRsInitialState = {
   filteringDateStart: string | null;
   filteringDateEnd: string | null;
   filteringPage: number | null;
-  filteringSubordId: number | null;
+  filteringSubordLastName: string | null;
 };
 
 const emptyIPRs = {
@@ -40,7 +40,7 @@ const IPRsInitialState: TIPRsInitialState = {
   filteringDateStart: null,
   filteringDateEnd: null,
   filteringPage: null,
-  filteringSubordId: null,
+  filteringSubordLastName: null,
 }
 
 const IPRsSlice = createSlice({
@@ -75,11 +75,11 @@ const IPRsSlice = createSlice({
       state.filteringPage = IPRsInitialState.filteringPage;
     },
 
-    setFilteringSubordId: (state, action: PayloadAction<number>) => {
-      state.filteringSubordId = action.payload;
+    setFilteringSubordLastName: (state, action: PayloadAction<string>) => {
+      state.filteringSubordLastName = action.payload;
     },
-    clearFilteringSubordId: (state) => {
-      state.filteringSubordId = IPRsInitialState.filteringSubordId;
+    clearFilteringSubordLastName: (state) => {
+      state.filteringSubordLastName = IPRsInitialState.filteringSubordLastName;
     },
 
     clearFilter: (state) => {
@@ -87,7 +87,7 @@ const IPRsSlice = createSlice({
       state.filteringDateStart = IPRsInitialState.filteringDateStart;
       state.filteringDateEnd = IPRsInitialState.filteringDateEnd;
       state.filteringPage = IPRsInitialState.filteringPage;
-      state.filteringSubordId = IPRsInitialState.filteringSubordId;
+      state.filteringSubordLastName = IPRsInitialState.filteringSubordLastName;
     },
   },
   extraReducers: builder => {
@@ -132,8 +132,8 @@ export const {
   clearFilteringDateStart,
   setFilteringDateEnd,
   clearFilteringDateEnd,
-  setFilteringSubordId,
-  clearFilteringSubordId,
+  setFilteringSubordLastName,
+  clearFilteringSubordLastName,
   setFilteringPage,
   clearFilteringPage,
   clearFilter,

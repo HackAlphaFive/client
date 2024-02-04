@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from '../../services/hooks';
 import { getSubordPending, getSubordSuccess, getSubordinatesFromStore } from '../../services/selectors/authSelector';
 import { getSubordinates } from '../../services/middlewares/authQueries';
 import { Spinner } from '@alfalab/core-components/spinner';
+import { clearFilteringPage, clearFilteringSubordLastName, setFilteringSubordLastName } from '../../services/slices/IPRsSlice';
 
 type TProps = {
   needMagnifier?: boolean;
@@ -49,6 +50,10 @@ const TabFiltrText: FC<TProps> = ({
           username={`${el.last_name} ${el.first_name} ${el.patronymic}`}
           position={el.position}
           cellExtraClassNameCell={styles.cell}
+          onClick={() => {
+            dispatch(clearFilteringPage());
+            dispatch(setFilteringSubordLastName(el.last_name))}
+          }
         />
         <Gap size='xs' />
       </>
@@ -110,7 +115,11 @@ const TabFiltrText: FC<TProps> = ({
           dispatch(getSubordinates());
         }}
         inputProps={{
-          onClear: () => setValue(''),
+          onClear: () => {
+            setValue('');
+            dispatch(clearFilteringPage());
+            dispatch(clearFilteringSubordLastName());
+          },
           clear: true,
           leftAddons: needMagnifier ? (<Magnifier size={DimensionsListIcons.l} classNameWrapper={styles.magnifier} />) : undefined,
         }}
