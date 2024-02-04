@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link as RouterLink, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { AppDispatch } from '../../services/store';
+import { fetchIprById, updateIprById } from '../../services/slices/singleIPRSlice';
 
 import { Link } from '@alfalab/core-components/link';
 import { ButtonDesktop } from '@alfalab/core-components/button/desktop';
@@ -25,6 +27,7 @@ type FormData = {
 const FullIPR: FC = (): JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch: AppDispatch = useDispatch();
 
   const [mode, setMode] = useState<'empty' | 'existing'>('empty');
   const [wasChanged, setWasChanged] = useState(false);
@@ -34,6 +37,14 @@ const FullIPR: FC = (): JSX.Element => {
 
   const loadedTitle = useSelector(() => '');
   const loadedStatus = useSelector(() => '');
+
+  const { id } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchIprById(id));
+    }
+  }, [dispatch, id]);
 
   useEffect(() => {
     if (location.pathname.indexOf('ipr/edit') !== -1) {
@@ -66,9 +77,10 @@ const FullIPR: FC = (): JSX.Element => {
 
   // Обработчик для кнопки "Сохранить ИПР"
   const handleSave = () => {
-    console.log('Сохраняем данные ИПР:', formData);
-    // Здесь должен быть код для сохранения данных
-    navigate('/ipr'); // Или перенаправление куда-либо после сохранения
+    if (id) {
+      dispatch(updateIprById({ id: id, data: formData }));
+      navigate('/ipr'); // Или перенаправление куда-либо после сохранения
+    }
   };
 
   const photo = useSelector(() => '');
