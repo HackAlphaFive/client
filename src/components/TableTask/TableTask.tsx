@@ -73,7 +73,9 @@ const TableTask: FC<TProps> = ({ children, data }): JSX.Element => {
   };
 
   return (
-    <Table gridParams="58.232% 20.884% 20.884%">
+    <Table
+      gridParamsColumns='58.232% 20.884% 20.884%'
+    >
       <div className={`${styles.titleWrapper} `}>
         <p className="text text_type_middle text_color_tooltip-dark">
           Список задач

@@ -6,7 +6,12 @@ import { CalendarDesktop } from '@alfalab/core-components/calendar/desktop';
 import styles from './TabFiltrDate.module.css';
 import { usePeriod, usePeriodWithReset } from '@alfalab/core-components/calendar/usePeriod';
 
-function TabFiltrDate({ calendarWidth = 340 }: { calendarWidth?: number }) {
+type TProps = {
+  calendarWidth?: number;
+  disabled?: boolean;
+};
+
+function TabFiltrDate({ calendarWidth = 340, disabled }: TProps) {
   type TMySelected = {
     front: string,
     back: {
@@ -95,6 +100,7 @@ function TabFiltrDate({ calendarWidth = 340 }: { calendarWidth?: number }) {
   return (
     <div>
       <SelectDesktop
+        disabled={disabled}
         options={options}
         placeholder='Дата'
         multiple={false}

@@ -1,31 +1,28 @@
 .iprRow {
-  display: flex;
-  align-items: center;
-  background: #FFF;
   border-bottom: 1px solid #BABBC2;
-  height: 120px;
-  width: 100%;
+  background: var(--color-white);
+  transition: all .3s;
+}
+
+.iprRow:hover {
+  background: var(--color-cell);
 }
 
 .iprRowUserTab {
   max-width: 385px;
+  padding: var(--gap-m);
 }
 
 .iprRowTitle {
-  display: flex;
-  flex: 1;
-  height: 100%;
-  padding: 16px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  padding: var(--gap-m);
 
-  color: var(--Main-colors-Main-text, #353539);
-  font-family: Roboto;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px; /* 150% */
+  /* Выравнивание текста по высоте строки */
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .iprRowTitleEmpty {
@@ -38,15 +35,6 @@
   display: flex;
   align-items: center;
   padding: 16px;
-  height: 100%;
-  width: 222px;
-
-  color: var(--Main-colors-Main-text, #353539);
-  font-family: Roboto;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 20px; /* 142.857% */
 }
 
 .calendarIcon {
@@ -56,23 +44,18 @@
 }
 
 .iprRowStatus {
-  height: 100%;
-  width: 142px;
   padding: 16px;
+  /* Выравнивание текста по высоте строки */
+  box-sizing: border-box;
+  height: 100%;
   display: flex;
-  align-items: center;
-
-  color: var(--Main-colors-Main-text, #353539);
-  font-family: Roboto;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .iprRowStatusEmpty {
-  font-size: 14px;
-  line-height: 20px; /* 142.857% */
+
 }
 
 .iprRowBtn {
@@ -81,10 +64,15 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  width: 56px;
   cursor: pointer;
-  padding: 16px;
+  /* padding: 16px; */
   box-sizing: border-box;
+  transition: all .3s;
+  width: 100%;
+}
+
+.iprRowBtn:hover {
+  background-color: var(--color-input-hover);
 }
 
 .iprRowBtnAdd {

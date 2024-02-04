@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TabsDesktop, Tab } from '@alfalab/core-components/tabs/desktop';
 import { Gap } from '@alfalab/core-components/gap';
-import { useSelector } from '../../services/hooks';
+import { useDispatch, useSelector } from '../../services/hooks';
 import { ButtonDesktop } from '@alfalab/core-components/button/desktop';
 import { ReactComponent as Add } from '../../assets/Add.svg';
 import UserTab from '../../components/UserTab/UserTab';
@@ -10,8 +10,15 @@ import TableTask from '../../components/TableTask/TableTask';
 import TableIPRForSubord from '../../components/TableIPRForSubord/TableIPRForSubord';
 import TableMyIPR from '../../components/TableMyIPR/TableMyIPR';
 import { getUserRole, getUserSimplified } from '../../services/selectors/authSelector';
+import { getMyIPRs, getSubordIPRs } from '../../services/middlewares/IPRsQueries';
+import { getIPRQuery, getSubordIPRsFromStore, getSubordIPRsPending, getSubordIPRsSuccess, getmyIPRsFromStore, getmyIPRsPending, getmyIPRsSuccess } from '../../services/selectors/IPRsSelector';
+import { useNavigate } from 'react-router';
+import { clearFilter } from '../../services/slices/IPRsSlice';
 
 function IPRPage() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const user = useSelector(getUserSimplified);
   const isSupervisor = useSelector(getUserRole);
 
@@ -40,6 +47,25 @@ function IPRPage() {
     setSelectedId(selectedId);
   };
 
+  const myIPRs = useSelector(getmyIPRsFromStore);
+  // const myIPRsPending = useSelector(getmyIPRsPending);
+  // const myIPRsSuccess = useSelector(getmyIPRsSuccess);
+  const subordIPRs = useSelector(getSubordIPRsFromStore);
+
+  const IPRQuery = useSelector(getIPRQuery);
+
+  useEffect(() => {
+    console.log('я внутри эффекта смена вкладки');
+    dispatch(clearFilter()); // при смене вкладки очищаются настройки фильтрации
+  }, [selectedId]);
+
+  useEffect(() => {
+    console.log('я внутри эффекта смены IPRQuery');
+    console.log({selectedId});
+    if (selectedId === 'me') dispatch(getMyIPRs(IPRQuery));
+    if (selectedId === 'subordinates') dispatch(getSubordIPRs(IPRQuery));
+  }, [IPRQuery, selectedId]);
+
   return (
     <>
       <h1 className='text text_type_heading1'>Индивидиуальный план развития (ИПР)</h1>
@@ -62,12 +88,14 @@ function IPRPage() {
           <ButtonDesktop
             view='accent'
             leftAddons={<Add />}
+            onClick={() => navigate('./edit')}
           >
             Создать новый ИПР
           </ButtonDesktop>
           <Gap size='xl' />
 
-          <TableIPRForSubord />
+          <TableIPRForSubord data={subordIPRs} />
+
         </>
       )}
 
@@ -75,14 +103,14 @@ function IPRPage() {
         <>
           <Gap size='3xl' />
           <UserTab
+            // TODO добавить условный рендеринг
             avatar={user.photo!}
             username={user.fullname || 'Не найдено'}
             position={user.position || 'Не найдено'}
           />
           <Gap size='4xl' />
 
-          <TableMyIPR />
-          <TableTask />
+          <TableMyIPR data={myIPRs.results} />
         </>
       )}
     </>
