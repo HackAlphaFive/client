@@ -197,6 +197,7 @@ const TaskForm: FC<TProps> = ({
           fieldClassName={
             inputValue.length === 0 || isFocus ? "" : styles.fieldInput
           }
+          inputClassName={styles.inputClassName}
         />
         <p
           className={`text_color_main text_type_middle ${styles.textDescription}`}

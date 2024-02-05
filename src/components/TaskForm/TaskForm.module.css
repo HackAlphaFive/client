@@ -28,8 +28,16 @@
   max-height: 248px;
   padding: 2px 11px;
 }
+.textareaForm:disabled{
+  color: #353539;
+  -webkit-text-fill-color: #353539;
+}
 .fieldInput {
   margin-bottom: 24px;
+}
+.inputClassName:disabled{
+  color: #353539;
+  -webkit-text-fill-color: #353539;
 }
 .modal {
   width: 471px;
