@@ -100,4 +100,3 @@ yarn start
 * [Maksim Buchkov](https://github.com/Kargobober)
 * [Alexey Tutrin](https://github.com/TutrinAlexey)
 * [Pavel Zakharov](https://github.com/FrontEnd-Guy)
-

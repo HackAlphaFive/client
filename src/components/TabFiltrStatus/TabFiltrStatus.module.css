@@ -1,0 +1,19 @@
+.done {
+  color: var(--color-success);
+}
+
+.canceled {
+  color: var(--color-failure);
+}
+
+.item {
+  /* пришлось уточнить шрифт для данного компонента, иначе растягивается высота после выбора опции */
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.popover {
+  box-sizing: border-box;
+  padding: 20px 0 0 12px;
+}

@@ -1,0 +1,105 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1280px;
+  margin: var(--gap-2xl) auto var(--gap-5xl);
+}
+.searchInput {
+  width: 372px;
+  margin-right: 55px;
+}
+.navigation {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.logo {
+  width: 144px;
+  height: 29px;
+  object-fit: contain;
+  position: relative;
+  top: 4px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+}
+.alertButton:hover {
+  background-color: rgb(186, 187, 194);
+}
+.avatar {
+  margin-left: 24px;
+  padding: 1px;
+  transition: transform 0.3s ease-in-out;
+}
+.avatar:hover {
+  transform: scale(1.2, 1.2);
+  cursor: pointer;
+}
+.popover {
+  border-radius: 5px;
+}
+.popoverList {
+  list-style-type: none;
+  margin: 0;
+  padding: 5px;
+}
+.popoverItem {
+  padding: 5px;
+  border-bottom: 2px solid white;
+  border-radius: 10px;
+  transition: border-bottom 0.3s ease-in-out;
+}
+.popoverItem:nth-of-type(1) {
+  margin-bottom: 5px;
+}
+.popoverItem:hover {
+  cursor: pointer;
+  border-bottom: 2px solid #353539;
+}
+
+.popoverItem:active{
+  border-bottom: 2px solid var(--color-success);
+}
+
+.popoverItemChecked {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+.popoverMain {
+  margin: 5px;
+}
+.popoverHeader {
+  color: var(--Main-colors-Headline-text);
+  width: 241px;
+  margin: 0;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+.popoverText {
+  margin: 0;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  color: #1f2022;
+}
+.tooltipText {
+  width: 150px;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  color: #353539;
+}
+.link {
+  margin-right: 45px;
+}

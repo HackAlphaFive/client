@@ -1,0 +1,85 @@
+.iprRow {
+  border-bottom: 1px solid #BABBC2;
+  background: var(--color-white);
+  transition: all .3s;
+}
+
+.iprRow:hover {
+  background: var(--color-cell);
+}
+
+.iprRowUserTab {
+  max-width: 385px;
+  padding: var(--gap-m);
+}
+
+.iprRowTitle {
+  padding: var(--gap-m);
+
+  /* Выравнивание текста по высоте строки */
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.iprRowTitleEmpty {
+  color: var(--Main-colors-Secondary-text, #797A7E);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.iprRowDates{
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.calendarIcon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+}
+
+.iprRowStatus {
+  padding: 16px;
+  /* Выравнивание текста по высоте строки */
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.iprRowStatusEmpty {
+
+}
+
+.iprRowBtn {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  cursor: pointer;
+  /* padding: 16px; */
+  box-sizing: border-box;
+  transition: all .3s;
+  width: 100%;
+}
+
+.iprRowBtn:hover {
+  background-color: var(--color-input-hover);
+}
+
+.iprRowBtnAdd {
+  background-color: var(--Main-colors-Black-main, #000);;
+}
+
+.chevronIcon {
+  width: 24px;
+  height: 24px;
+}

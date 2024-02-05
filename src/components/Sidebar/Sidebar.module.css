@@ -1,0 +1,27 @@
+.sidebar {
+  background-color: var(--white-color);
+}
+
+.sidebarList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebarItem {
+  padding: 12px 0 0;
+}
+
+.sidebarLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebarLinkBack {
+  color: var(--Main-colors-Headline-text, #0B1F35);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+}

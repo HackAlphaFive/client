@@ -1,0 +1,46 @@
+.wrapper {
+  --form-control-disabled-bg-color: var(--color-cell);
+}
+.titleWrapper {
+  padding: var(--gap-m);
+  display: flex;
+  align-items: center;
+}
+
+.forRow {
+  grid-column: span 3;
+  display: grid;
+  grid-template-columns: 58.232% 20.884% 18% 1fr;
+}
+
+.stub {
+  box-sizing: border-box;
+  grid-column: span 3;
+  border: 3px solid var(--color-cell);
+  background-color: var(--color-white);
+  padding: 16px;
+  /* Выравнивание текста по высоте строки */
+  height: 100%;
+  display: flex;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.forSpinner {
+  grid-column: span 3;
+  display: flex;
+  height: 120px;
+  justify-content: center;
+}
+
+.forError {
+  padding-top: var(--gap-xl);
+  grid-column: span 3;
+  display: flex;
+  justify-content: center;
+}
+
+.table {
+  min-height: calc(76px + 120px * 5);
+}

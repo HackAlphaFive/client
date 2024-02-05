@@ -1,9 +1,24 @@
-body {
-  width: 100%;
+:root:root {
+  --color-white: #fff;
+  --color-accent: #EF3124;
+  --color-success: #17D055;
+  --color-failure: #F14539;
+  --color-tooltip: #BABBC2;
+  --color-tooltip-dark: #797A7E;
+  --color-cell: #F3F4F6;
+  --form-control-bg-color: #F3F4F6;
+  --color-button-hover: #29292C;
+  --color-input-hover: #DDDFE2;
 }
 
-.text_centered {
-  text-align: center;
+body {
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  /* вертиклаьный скролл включаем всегда, чтобы не было скачков контента, когда ширина экрана > 1280px */
+  overflow-y: scroll;
+  overflow-x: auto;
 }
 
 .elem_centered {
@@ -15,4 +30,94 @@ body {
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+
+
+/* ------- ТИПОГРАФИКА ------- */
+.text {
+  margin: 0;
+  padding: 0;
+}
+
+.text_color_main {
+  color: var(--Main-colors-Main-text, #353539);
+}
+
+.text_color_tooltip {
+  color: var(--Main-colors-Tooltip-text, var(--color-tooltip));
+}
+
+.text_color_tooltip-dark {
+  color: var(--color-tooltip-dark);
+}
+
+.text_type_heading1 {
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 48px;
+  color: var(--Main-colors-Headline-text, #0B1F35);
+}
+
+.text_type_heading2 {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--Main-colors-Headline-text, #0B1F35);
+}
+
+.text_type_heading3 {
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+  /* у данного стиля и стилей меньше размером цвет назначается через добавление класса text_color_main */
+}
+
+.text_type_large {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.text_type_middle {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.text_type_small {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.text_centered {
+  text-align: center;
+}
+
+.text_ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-tooltip);
+  border-radius: 3px;
+}
+
+/* Класс для плавного скролла */
+* {
+  scroll-behavior: smooth;
 }

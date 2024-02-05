@@ -1,11 +1,13 @@
 import React from 'react';
 import reportWebVitals from "./reportWebVitals";
 import './index.css';
-import App from './components/App/App';
+import App from './App';
 import { Provider } from "react-redux";
 import { store } from "./services/store";
 import { BrowserRouter } from "react-router-dom";
 import { createRoot } from 'react-dom/client';
+
+const BASENAME = process.env.NODE_ENV === 'development' ? "" : "/client";
 
 const domNode = document.getElementById('root');
 const root = createRoot(domNode!);
@@ -13,7 +15,7 @@ const root = createRoot(domNode!);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename={BASENAME}>
         <App />
       </BrowserRouter>
     </Provider>
